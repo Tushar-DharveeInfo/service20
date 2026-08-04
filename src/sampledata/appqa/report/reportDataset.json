@@ -1,0 +1,37 @@
+{
+  "data": {
+    "_datatable_mrw08gtg_xihdk8g": [
+      {
+        "ColumnList": [
+          { "PName": "NoteTitle", "PropertyLabel": "Title" },
+          { "PName": "NoteType", "PropertyLabel": "Type" },
+          { "PName": "CreatedBy", "PropertyLabel": "Created By" },
+          { "PName": "LastUpdated", "PropertyLabel": "Last Updated" }
+        ],
+        "Dataset": [
+          {
+            "NoteTitle": "UPS inspection",
+            "NoteType": "Maintenance",
+            "CreatedBy": "Admin",
+            "LastUpdated": "2026-07-22"
+          },
+          {
+            "NoteTitle": "Battery check",
+            "NoteType": "Ops",
+            "CreatedBy": "ops.oncall",
+            "LastUpdated": "2026-07-20"
+          },
+          {
+            "NoteTitle": "COLO-UPS-1 capacity note",
+            "NoteType": "Capacity",
+            "CreatedBy": "demo.user",
+            "LastUpdated": "2026-07-18"
+          }
+        ]
+      }
+    ],
+    "_image_mrw06tn2_9d7p653": [],
+    "_image_mrw072on_ppgx00b": [],
+    "_image_mrw07zrh_5axx56i": []
+  }
+}

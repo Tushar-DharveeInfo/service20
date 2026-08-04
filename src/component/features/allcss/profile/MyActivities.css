@@ -1,0 +1,13 @@
+.nz-my-activities-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nz-my-activities-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-1);
+}

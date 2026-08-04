@@ -1,0 +1,25 @@
+/*
+ * SAMPLE DATA: expapi /deployment/env response while the deployment APIs are
+ * disabled. Values mirror the DEPLOYMENT_* keys in public/config.js.
+ */
+import type { IDeploymentEnv, IDeploymentEnvResponse } from "../../component/shared/allinterface/IApiResponse";
+
+/* Deployment variables the app reads after startup. */
+const sampleDeploymentEnv: IDeploymentEnv[] = [
+    { key: "DEPLOYMENT", value: "OnPremises" },
+    { key: "DEPLOYMENT_N20_API_URL", value: "/n20api" },
+    { key: "DEPLOYMENT_N20_API_BASEURL", value: "https://n20a.netzoom.com" },
+    { key: "DEPLOYMENT_DCMLISTENER_API_URL", value: "/dcmlistener" },
+    { key: "DEPLOYMENT_EXPSERVER_API_URL", value: "/expapi" },
+    { key: "DEPLOYMENT_NZINTHUB_API_URL", value: "/nzinthubapi" },
+    { key: "DEPLOYMENT_DATE_INSTALLED", value: "2026-06-01" },
+    { key: "DEPLOYMENT_DATE_LASTUPDATED", value: "2026-06-01" }
+];
+
+/* Same shape the interceptor returns for POST /expapi/deployment/env. */
+const sampleDeploymentEnvResponse: IDeploymentEnvResponse = {
+    valid: true,
+    env: sampleDeploymentEnv
+};
+
+export { sampleDeploymentEnv, sampleDeploymentEnvResponse };
