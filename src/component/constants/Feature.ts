@@ -88,21 +88,22 @@ enum AppQA {
     Message = "46",
 }
 
-// Profile menu feature ids (see sampledata/auth/ServiceFeature.json)
+// Profile menu feature ids (see public/feature.json)
 enum ProfileEnums {
     Profile = "100",
-    EULA = "102",
     MyProfile = "104",
     MyActivities = "106",
     MySubscriptions = "108",
 }
 
-// Products menu feature ids
+// Buy / Products menu feature ids
 enum ProductsEnums {
-    Products = "120",
-    NetZoom = "122",
-    VisioStencils = "124",
-    Other = "126",
+    Buy = "120",
+    Purchase = "122",
+    EULA = "124",
+    NetZoom = "126",
+    VisioStencils = "128",
+    Other = "130",
 }
 
 // Services menu feature ids
@@ -118,6 +119,19 @@ enum DownloadEnums {
     Download = "200",
     DownloadVisioStencils = "202",
     DownloadNetZoom = "204",
+}
+
+// FAQ menu feature ids
+enum FaqEnums {
+    FAQ = "300",
+    VisioStencils = "302",
+    NetZoom = "304",
+}
+
+// Purchase QA feature ids (under Buy > Purchase)
+enum PurchaseEnums {
+    Cart = "1222",
+    Orders = "1224",
 }
 
 //Menus for appqa settings 
@@ -421,6 +435,7 @@ enum RightMouseMenuGrid {
 export {
     FEnums, FeatureMenuRange, AppQA, AppQARange
     , ProfileEnums, ProductsEnums, ServicesEnums, DownloadEnums
+    , FaqEnums, PurchaseEnums
     , SettingGroups, SettingSubgroups
     , EntitesGroups, EntitiesSubGroups
     , SettingsTreeRange, EntitiesTreeRange

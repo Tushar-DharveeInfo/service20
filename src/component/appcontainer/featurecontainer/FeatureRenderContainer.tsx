@@ -1,9 +1,46 @@
 
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { DownloadEnums, ProductsEnums, ProfileEnums, ServicesEnums } from '../../constants/Feature.ts'
 import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx'
 import { Loader } from '../../shared/loader/Loader.tsx'
 import { IFeatureRenderContainer } from '../allinterface/IFeatureRenderContainer.ts'
+import { GenerateReport } from '../../features/generatereport/GenerateReport.tsx'
+
+/* Loads public/reportTemplate.json and passes it as required GenerateReport prop. */
+const GenerateReportHost = () => {
+    const [reportTemplate, setReportTemplate] = useState<Record<string, unknown> | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        void fetch(`${import.meta.env.BASE_URL}reportTemplate.json`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load reportTemplate.json (${response.status})`);
+                }
+                return response.json() as Promise<Record<string, unknown>>;
+            })
+            .then((json) => {
+                if (!cancelled) setReportTemplate(json);
+            })
+            .catch((error) => {
+                console.error('GenerateReportHost: failed to load public/reportTemplate.json', error);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    if (!reportTemplate) {
+        return <Loader />;
+    }
+
+    return (
+        <GenerateReport
+            uniqueName="feature-generate-report"
+            reportTemplate={reportTemplate}
+        />
+    );
+};
 
 const Eula = lazy(() => import('../../features/profile/eula/Eula.tsx'))
 const MyProfile = lazy(() => import('../../features/profile/myprofile/MyProfile.tsx'))
@@ -21,10 +58,10 @@ const DownloadNetZoom = lazy(() => import('../../features/download/downloadnetzo
 /* Features that own the whole content area instead of the explorer tree.
    FeatureContainer reads this list to decide which side to render. */
 const FeaturesWithOwnLayout: string[] = [
-    ProfileEnums.EULA,
     ProfileEnums.MyProfile,
     ProfileEnums.MyActivities,
     ProfileEnums.MySubscriptions,
+    ProductsEnums.EULA,
     ProductsEnums.NetZoom,
     ProductsEnums.VisioStencils,
     ProductsEnums.Other,
@@ -49,19 +86,6 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
     }
 
     switch (featureContainerProps.featureId) {
-
-        case ProfileEnums.EULA:
-            return (
-                <ErrorBoundary>
-                    <Suspense fallback={<Loader />}>
-                        <Eula
-                            uniqueName={'feature-profile-eula'}
-                            featureId={featureContainerProps.featureId}
-                            headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} />
-                    </Suspense>
-                </ErrorBoundary>
-            );
 
         case ProfileEnums.MyProfile:
             return (
@@ -102,6 +126,19 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
+        case ProductsEnums.EULA:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <Eula
+                            uniqueName={'feature-products-eula'}
+                            featureId={featureContainerProps.featureId}
+                            headerText={featureContainerProps.headerText}
+                            handleShowUserMessage={handleShowUserMessage} />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
         case ProductsEnums.NetZoom:
             return (
                 <ErrorBoundary>
@@ -132,11 +169,12 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <OtherProducts
+                        <GenerateReportHost />
+                        {/* <OtherProducts
                             uniqueName={'feature-products-other'}
                             featureId={featureContainerProps.featureId}
                             headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} />
+                            handleShowUserMessage={handleShowUserMessage} /> */}
                     </Suspense>
                 </ErrorBoundary>
             );

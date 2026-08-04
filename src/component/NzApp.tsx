@@ -17,7 +17,6 @@ import { IDeploymentEnv, IDeploymentEnvResponse } from './shared/allinterface/IA
 import { AppContainer } from '../component/appcontainer/AppContainer';
 import { FnSetSessionStorageItem } from './appcontainer/allcommon/FnSetSessionStorageItem';
 import { sampleFeatureRecords } from '../sampledata/auth/ServiceFeatureSampleData';
-import { sampleSiteHierarchyRecords } from '../sampledata/auth/SiteHierarchySampleData';
 import { sampleLoginUserJson } from '../sampledata/auth/LoginUserSampleData';
 import { sampleDeploymentEnvResponse } from '../sampledata/auth/DeploymentEnvSampleData';
 import { sampleSessionId, sampleSessionVariables } from '../sampledata/auth/AuthorizationSampleData';
@@ -115,18 +114,10 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
                 return;
             }
 
-            if (
-                !sampleSiteHierarchyRecords
-                || !Array.isArray(sampleSiteHierarchyRecords.Site)
-                || !sampleSiteHierarchyRecords.Site.length
-            ) {
-                reportFatalError("SiteHierarchy data not found");
-                return;
-            }
+
 
             mainAppContext.setFeatureRecords(sampleFeatureRecords);
             mainAppContext.setAllFeatureRecords(sampleFeatureRecords);
-            explorerTreeContext.setSiteHierarchyRecords(sampleSiteHierarchyRecords);
 
             const userProfileRecord = FnHandleAPIResponse(sampleLoginUserJson, "Dataset");
             if (

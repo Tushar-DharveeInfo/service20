@@ -1,9 +1,7 @@
 
 import { useState, createContext, useMemo, useCallback } from "react";
 import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
-import { EM } from "../../interceptors/EndPoints";
 import { FnHandleAPIResponse } from "../../allcommon/basic/FnHandleAPIResponse";
-import { axiosInterceptor } from "../../interceptors/Interceptor";
 import { IStatusBar } from "../allinterface/IStatusBar";
 import { IReport, IReportProfileItem } from "../allinterface/IReport";
 

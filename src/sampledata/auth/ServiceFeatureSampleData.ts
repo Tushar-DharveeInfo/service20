@@ -2,7 +2,7 @@
  * SAMPLE DATA: feature records from ServiceFeature.json for InitSession replacement.
  * JSON already uses app-shaped fields (_Feature, SortOrder, DefaultQA, …).
  */
-import serviceFeatureSample from "./ServiceFeature.json";
+import serviceFeatureSample from "./feature.json";
 import type { IFeatureItem } from "../../component/shared/context/allinterface/IMainApp";
 
 type ServiceFeatureRecord = {
@@ -65,8 +65,9 @@ const mapServiceFeatureToFeatureItem = (record: ServiceFeatureRecord): IFeatureI
         FilterForm: record.FilterForm ?? "",
         SearchPrompt: record.SearchPrompt ?? null,
         IsNZ: toBool(record.IsNZ, true),
-        EntID: record.EntID ?? "",
-        RecID: record.RecID ?? "",
+        // feature.json often omits EntID; empty EntID makes every menu group match as "selected" and open.
+        EntID: record.EntID ? String(record.EntID) : featureId,
+        RecID: record.RecID ? String(record.RecID) : featureId,
         LastUpdated: record.LastUpdated ?? "",
     };
 };

@@ -1,5 +1,3 @@
-
-import { axiosInterceptor } from "../../shared/interceptors/Interceptor";
 import { IStatusBar } from "../../shared/context/allinterface/IStatusBar";
 import { IFetchProps } from "../allinterface/IStatusBarContainer";
 
@@ -8,21 +6,12 @@ type FetchResult = {
     data: unknown;
 };
 
+/* Remote axios interceptor removed — resolves as a no-op failure. */
 const FnCallApiToFetchWithResult = (
-    args: IFetchProps,
-    statusBarContext: IStatusBar
+    _args: IFetchProps,
+    _statusBarContext: IStatusBar
 ): Promise<FetchResult> => {
-    return new Promise((resolve) => {
-        axiosInterceptor(
-            {
-                ...args,
-                setFetchData: (data: unknown, status?: string) => {
-                    resolve({ data, status });
-                },
-            },
-            statusBarContext
-        );
-    });
+    return Promise.resolve({ status: undefined, data: null });
 };
 
-export { FnCallApiToFetchWithResult }
+export { FnCallApiToFetchWithResult };

@@ -1,10 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { useStatusBarContext } from '../../context/hooks/StatusBarHooks';
-import { axiosInterceptor } from '../../interceptors/Interceptor';
 import { Kebab24x24 } from '@n20a/libicon';
 import '../../allcss/menu/NodeMenu.css';
-import { EM, NODE, PROPERTY } from '../../interceptors/EndPoints';
 import { RightMouseMenuTreeNode } from '../../../constants/Feature';
 import { FEnums } from '../../../constants/Feature';
 import { KebabMenuRange } from '../../../constants/Feature';

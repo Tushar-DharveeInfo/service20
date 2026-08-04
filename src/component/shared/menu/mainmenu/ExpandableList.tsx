@@ -184,7 +184,9 @@ const ExpandableList = (props: IExpandableList) => {
             const hasSubMenu = subMenuLength > 0;
 
             mainMenu.forEach((ele: IMenuItem) => {
-                const isClickedItem = ele.EntID === item.EntID;
+                const isClickedItem =
+                    (ele.EntID && item.EntID && String(ele.EntID) === String(item.EntID)) ||
+                    (ele._Feature != null && item._Feature != null && String(ele._Feature) === String(item._Feature));
                 const elementHasSubMenu = !!ele.subMenu?.length;
 
                 if (isClickedItem) {

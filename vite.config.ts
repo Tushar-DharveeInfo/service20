@@ -7,39 +7,7 @@ export default defineConfig({
 
   server: {
     open: true,
-    port: 4000,
-    proxy: {
-      '/expapi': {
-        target: 'https://n20a.netzoom.com',
-        changeOrigin: true,
-        secure: false
-      },
-      '/dcmlistener': {
-        target: 'https://n20a.netzoom.com',
-        changeOrigin: true,
-        secure: false
-      },
-      '/nzinthubapi': {
-        target: 'https://n20a.netzoom.com',
-        changeOrigin: true,
-        secure: false
-      },
-      '/n20api': {
-        target: 'https://n20a.netzoom.com',
-        changeOrigin: true,
-        secure: false
-      },
-      '/api': {
-        target: 'https://n20a.netzoom.com',
-        changeOrigin: true,
-        secure: false,
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.setHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
-          });
-        }
-      }
-    }
+    port: 3000,
   },
   build: {
     minify: 'esbuild',
@@ -68,9 +36,7 @@ export default defineConfig({
               return 'vendor-primereact';
             }
 
-            // Let Vite handle @n20a libraries automatically
-            // Manually chunking them causes circular dependencies with react-router
-
+            // Let Vite handle libraries automatically; note: Manually chunking them causes circular dependencies with react-router
             // 4. Charts and visualization
             if (id.includes('ag-charts')) {
               return 'vendor-charts';
@@ -97,31 +63,10 @@ export default defineConfig({
           //slash-bounded matching (/appqaentities/, /appqamessage/, /appqaalerts/, /appqareminder/, /appqareport/, /appqadelegate/, /appqatask/), ensuring shared interface files in allinterface/ stay in app-appqa
           // Check specific components first before general appqa pattern
           if (id.includes('/appqa')) {
-            // AppqaEntities gets its own chunk
-            if (id.includes('/appqaentities/')) {
-              return 'app-appqaentities';
-            }
-
             // Individual chunks for components without circular dependencies
             if (id.includes('/appqamessage/')) {
               return 'app-appqamessage';
             }
-            // appqaalerts has a circular dependency with app-appqa — keep it in app-appqa
-            if (id.includes('/appqareminder/')) {
-              return 'app-appqareminder';
-            }
-            if (id.includes('/appqareport/')) {
-              return 'app-appqareport';
-            }
-
-            // Large components that can be separated (no circular dependencies)
-            if (id.includes('/appqadelegate/')) {
-              return 'app-appqadelegate';
-            }
-            if (id.includes('/appqatask/')) {
-              return 'app-appqatask';
-            }
-
             // All other appqa components must stay together to avoid circular dependencies
             // appqahelp is used by appqaentities, appcontainer, settings, appqasettings — cannot isolate
             // appqasettings imports appqahelp which is too widely shared
@@ -129,8 +74,7 @@ export default defineConfig({
             return 'app-appqa';
           }
 
-          // Let Vite handle other app code chunking automatically
-          // This avoids circular dependencies between app-* and vendor-* chunks
+          // Let Vite handle other app code chunking automatically; note: Manually chunking app code causes circular dependencies with appqa
         },
         // Asset file naming pattern (CSS is combined into single file due to cssCodeSplit: false)
         assetFileNames: 'assets/[name]-[hash][extname]',
@@ -165,15 +109,7 @@ export default defineConfig({
           dep.includes('vendor-primereact')   // PrimeReact (grid, dialogs)
         );
 
-        // If loading the main app, also preload critical app chunks
-        // Uncomment and adjust based on your initial route needs:
-        // const criticalAppChunks = deps.filter(dep =>
-        //   dep.includes('app-layout') ||      // Main layout component
-        //   dep.includes('app-auth')           // Authentication chunk
-        // );
-
         return criticalVendors;
-        // return [...criticalVendors, ...criticalAppChunks]; // Combine both if needed
       }
     }
   }
