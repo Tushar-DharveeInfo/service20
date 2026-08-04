@@ -1,7 +1,7 @@
 
 import { AuthSession } from "@n20a/libauth";
 import { ISession } from "../component/shared/context/allinterface/ISession";
-type Stage = 1 | 2 | 3;
+type Stage = 1 | 2;
 interface IAuthorizeResult {
     sessionId: string;
     sessionVariables: ISession[];

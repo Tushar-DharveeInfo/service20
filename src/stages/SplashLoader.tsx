@@ -57,17 +57,12 @@ const SplashLoader = ({
         >
             <div className="nz-logo-container">
                 <div className="nz-loader-below">
-                    {currentStage === 2 ? (
+
+                    {allowSplashScreen ? (
                         <div className="nz-loader-content">
-                            <div className="nz-icon-loader"></div>
+                            <Welcome name={loadingMessage} />
                         </div>
-                    ) : (
-                        allowSplashScreen ? (
-                            <div className="nz-loader-content">
-                                <Welcome name={loadingMessage} />
-                            </div>
-                        ) : <></>
-                    )}
+                    ) : <></>}
                 </div>
             </div>
 

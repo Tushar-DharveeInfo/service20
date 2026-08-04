@@ -1,19 +1,10 @@
-import { ISession } from "../shared/context/allinterface/ISession";
-
-
-interface IDeploymentVar {
-    [key: string]: string | number | boolean | null;
-}
+import { AuthSession } from "@n20a/libauth";
 
 interface INzApp {
     uniqueName: string;
-    sessionId: string;
-    sessionVariables: ISession[];
-    deploymentVars: IDeploymentVar[];
-    apiBaseUrl: string;
-    isNewSession: boolean
+    user: AuthSession;
     onSuccess: () => void;
     onError: (error: string) => void;
 }
 
-export type { INzApp, IDeploymentVar }
+export type { INzApp }
