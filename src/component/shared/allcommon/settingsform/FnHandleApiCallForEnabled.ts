@@ -1,4 +1,3 @@
-import { SettingsIntegrationFormUniquName } from "../../../constants/AppqaEnums";
 import { IEnabledApiResult } from "../../allinterface/settingsform/ISettingsLibForm";
 
 /* Integration enable checks — remote EXPAPI calls removed. */
@@ -8,7 +7,7 @@ const FnHandleApiCallForEnabled = async (
 ): Promise<IEnabledApiResult | null> => {
     try {
         void containerName;
-        void SettingsIntegrationFormUniquName;
+
         return null;
     } catch (error) {
         console.error("Error in call API for integration: ", error);

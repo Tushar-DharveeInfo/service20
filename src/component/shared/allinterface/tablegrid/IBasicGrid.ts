@@ -3,7 +3,9 @@ import { CellClickedEvent, CellMouseDownEvent, ColDef, FirstDataRenderedEvent, G
 import { AgGridReact } from "ag-grid-react";
 import { IFeatureItem } from "../menu/INodeMenu";
 import { IActionImageForSubMenu } from "../basic/IActionImageList";
-import { ICablingGridSection } from "../../../features/allinterface/cabling/ICablingGrid";
+
+/* Cabling section payload for grid context (cabling feature not in this build). */
+type ICablingGridSection = Record<string, unknown>;
 
 interface IBasicGridColDef extends ColDef {
     DisplayControl?: string; // display control like input,select,textarea etc.

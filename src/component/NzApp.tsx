@@ -7,7 +7,6 @@ import './allcss/NzApp.css';
 import themes from './theme/theme-provider.json';
 import { useSessionContext } from './shared/context/hooks/SessionHooks';
 import { useMainAppContext } from './shared/context/hooks/MainAppHooks';
-import { useExplorerTreeContext } from './shared/context/hooks/ExplorerTreeHooks';
 import { AppContextWrapper } from './shared/context/AppContextWrapper';
 import { NodeHeight, SubMenuHeight } from '../component/appcontainer/alldefaultprops/DefaultPropsAppContainer';
 import { GlobalStyles } from './theme/GlobalStyles';
@@ -42,7 +41,6 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
 
     const sessionContext = useSessionContext();
     const mainAppContext = useMainAppContext();
-    const explorerTreeContext = useExplorerTreeContext();
 
     const reportFatalError = useCallback(
         (message: string, err?: unknown) => {

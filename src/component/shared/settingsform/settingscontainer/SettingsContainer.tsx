@@ -14,11 +14,8 @@ import { SettingsInstanceList } from '../settingsinstancelist/SettingsInstanceLi
 import { YesNoFormContainer } from '../../basic/yesnoformcontainer/YesNoFormContainer.tsx'
 import { FnUpdateProfileStringForEnabled } from '../../allcommon/settingsform/FnUpdateProfileStringForEnabled.ts';
 import { unstable_batchedUpdates } from 'react-dom';
-import { SettingGroups } from '../../../constants/Feature.ts';
 import { getMuForSite } from '../../context/contextandprovider/ExplorerTree.tsx';
 import { SettingsLibForm } from '../settingslibform/SettingsLibForm.tsx';
-import { FnCheckAndUpdateBaseUrl } from '../../allcommon/settingsform/FnCheckAndUpdateBaseUrl.ts';
-import Help from '../../Help.tsx';
 import { FnParseJsonSafely } from '../../../appcontainer/allcommon/FnParseJsonSafely.ts';
 import { handleFormControlsKeyDown, handleFormControlsBubbleKeyDown } from '../../allcommon/basic/FnHandleContainerKeyDown';
 
@@ -50,13 +47,7 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
                 );
 
                 const selectedListItem = appqaSettingsContext?.selectedProfileItem ? appqaSettingsContext.selectedProfileItem : actionLabelItems[0];
-                if (subGroup === SettingGroups.Api && selectedListItem.profileString) {
-                    const updatedProfileString = FnCheckAndUpdateBaseUrl(selectedListItem.profileString);
-                    if (updatedProfileString) {
-                        selectedListItem.profileString = updatedProfileString;
-                        formContainerProps.handleSaveAction?.(updatedProfileString, selectedListItem.actionCode, true)
-                    }
-                }
+
                 setSelectedItem(selectedListItem);
                 setIsAddMode(false);
             }
@@ -246,24 +237,13 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
         setIsAddMode(false);
 
         sessionStorage.setItem("focusedControl", "");
-        if (formContainerProps.group === SettingGroups.Integration) {
-            appqaSettingsContext?.setJsonStringForViewer(undefined);
-            appqaSettingsContext?.setIsFormValid(undefined);
-        }
+
 
         if (actionCode) {
             const filteredRecord = actionListItems.find((item) => { return item.actionCode === actionCode });
             if (filteredRecord) {
-                if (formContainerProps.subGroup === SettingGroups.Api) {
-                    const updatedProfileString = FnCheckAndUpdateBaseUrl(filteredRecord.profileString);
-                    if (updatedProfileString) {
-                        filteredRecord.profileString = updatedProfileString;
-                        formContainerProps.handleSaveAction?.(updatedProfileString, actionCode, true)
-                    }
-                }
-                else {
-                    filteredRecord.profileString = await FnUpdateProfileStringForEnabled(filteredRecord.profileString, filteredRecord.subGroupName);
-                }
+
+                filteredRecord.profileString = await FnUpdateProfileStringForEnabled(filteredRecord.profileString, filteredRecord.subGroupName);
                 unstable_batchedUpdates(() => {
                     appqaSettingsContext?.setSelectedProfileItem(filteredRecord);
                     setSelectedItem(filteredRecord);

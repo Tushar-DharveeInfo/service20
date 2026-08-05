@@ -32,37 +32,6 @@ const isMenuItem = (item: unknown): item is IMenuItem => {
     );
 };
 
-// Feature type constants
-// const AUDIT_FEATURES = [
-//     FEnums.AuditSession.toString(),
-//     FEnums.InventoryCollection.toString(),
-//     FEnums.InventoryConfiguration.toString()
-// ];
-
-// const IT_FEATURES = [
-//     FEnums.ModelBusinessService.toString(),
-//     FEnums.ManageBusinessService.toString()
-// ];
-
-// const STORE_FEATURES = [
-//     FEnums.InventoryManagement.toString(),
-//     FEnums.InventoryConfiguration.toString()
-// ];
-
-// const CHANGE_FEATURES = [
-//     FEnums.MoveAddChange.toString(),
-//     FEnums.ConfigureDevice.toString(),
-//     FEnums.EditPowerCabling.toString(),
-//     FEnums.EditNetworkCabling.toString(),
-//     FEnums.EditFloorLayout.toString(),
-//     FEnums.DCMConsole.toString(),
-//     FEnums.Discover.toString(),
-//     FEnums.Monitor.toString(),
-//     FEnums.Server.toString(),
-//     FEnums.CloudCompute.toString(),
-//     FEnums.VirtualCompute.toString()
-// ];
-
 const AppContainer = (appContainerProps: IAppContainer) => {
     const [searchParams] = useSearchParams();
     const siteId = searchParams.get("siteid");
@@ -95,114 +64,10 @@ const AppContainer = (appContainerProps: IAppContainer) => {
         };
     }, [mainAppContext.featureRecords]);
 
-    // const audit_f = useGetFeatureLabels("Audit");
-    // const it_f = useGetFeatureLabels("IT");
-    // const change_f = useGetFeatureLabelsByFeatureTag("change");
-    // const store_f = useGetFeatureLabels("Store");
 
-    // console.log("audit features", AUDIT_FEATURES);
-    // console.log("audit features from context", audit_f);
-    // console.log("it features", IT_FEATURES);
-    // console.log("it features from context", it_f);
-    // console.log("change features", CHANGE_FEATURES);
-    // console.log("change features from context", change_f);
-    // console.log("store features", STORE_FEATURES);
-    // console.log("store features from context", store_f);
 
     const callApiToUpdateSession = async (isForFeature: boolean, payload: IMenuItem) => {
-        // const handleUpdateSessionApiResponse = (updateSessionApiResponse: unknown, status?: string) => {
-        //     if (status === "200" && updateSessionApiResponse && typeof updateSessionApiResponse === "object" && 'jsonSessionOutput' in updateSessionApiResponse) {
-        //         const extractedData = FnHandleAPIResponse(updateSessionApiResponse.jsonSessionOutput, 'Dataset');
-        //         if (extractedData && Array.isArray(extractedData)) {
-        //             sessionContext.setSessionList(extractedData);
-        //         }
-        //     }
-        // }
 
-        // let jsonstring: ISession[] = [];
-        // if (payload._Feature && isForFeature) {
-        //     jsonstring.push(
-        //         { VariableContext: "Feature", VariableName: "FeatureID", SessionValue: payload._Feature ? payload._Feature.toString() : "" },
-        //         { VariableContext: "Feature", VariableName: "FeatureName", SessionValue: payload.Label },
-        //         { VariableContext: "Feature", VariableName: "MenuName", SessionValue: payload.parentName },
-        //         { VariableContext: "Feature", VariableName: "AppQAID", SessionValue: "" },
-        //         { VariableContext: "Feature", VariableName: "AppQAName", SessionValue: "" },
-        //         { VariableContext: "Feature", VariableName: "AppQAMenuName", SessionValue: "" },
-        //         { VariableContext: "Feature", VariableName: "AppQAFeatureName", SessionValue: "" }
-        //     );
-        // }
-        // else {
-        //     jsonstring.push(
-        //         { VariableContext: "Feature", VariableName: "AppQAID", SessionValue: payload._Feature ? payload._Feature.toString() : "" },
-        //         { VariableContext: "Feature", VariableName: "AppQAName", SessionValue: payload.Label }
-        //     );
-        // }
-        // if (isForFeature) {
-        //     if (payload._Feature && AUDIT_FEATURES.includes(payload._Feature.toString()) && selectedFeatureIdRef.current && AUDIT_FEATURES.includes(selectedFeatureIdRef.current)) {
-        //         jsonstring.push(
-        //             { VariableContext: "AuditSessionNode", VariableName: "AuditSessionID", SessionValue: "" },
-        //             { VariableContext: "AuditSessionNode", VariableName: "AuditSessionName", SessionValue: "" }
-        //         );
-        //     }
-        //     else if (payload._Feature && AUDIT_FEATURES.includes(payload._Feature.toString()) && selectedFeatureIdRef.current && !AUDIT_FEATURES.includes(selectedFeatureIdRef.current)) {
-        //         jsonstring.push(
-        //             { VariableContext: "Location", VariableName: "RoomID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "RoomName", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "FloorID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "FloorName", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "LocationID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "LocationName", SessionValue: "" }
-        //         );
-        //     }
-        //     else if (payload._Feature && CHANGE_FEATURES.includes(payload._Feature.toString())) {
-        //         jsonstring.push(
-        //             { VariableContext: "Location", VariableName: "RoomID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "RoomName", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "FloorID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "FloorName", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "LocationID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "LocationName", SessionValue: "" },
-        //             { VariableContext: "Node", VariableName: "SelectedNodeID", SessionValue: "" },
-        //             { VariableContext: "Node", VariableName: "SelectedNodeName", SessionValue: "" },
-        //             { VariableContext: "Node", VariableName: "SelectedNodeEntity", SessionValue: "" }
-        //         );
-        //     }
-        //     else if (payload._Feature && STORE_FEATURES.includes(payload._Feature.toString()) && selectedFeatureIdRef.current && STORE_FEATURES.includes(selectedFeatureIdRef.current)) {
-        //         jsonstring.push(
-        //             { VariableContext: "Inventory", VariableName: "InventoryID", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "InventoryName", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "StoreID", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "StoreName", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "BinID", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "BinName", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "MfgName", SessionValue: "" },
-        //             { VariableContext: "Inventory", VariableName: "EqTypeName", SessionValue: "" }
-        //         );
-        //     }
-        //     else if (payload._Feature && IT_FEATURES.includes(payload._Feature.toString()) && selectedFeatureIdRef.current && IT_FEATURES.includes(selectedFeatureIdRef.current)) {
-        //         jsonstring.push(
-        //             { VariableContext: "BusinessServiceNode", VariableName: "BusinessServiceID", SessionValue: "" },
-        //             { VariableContext: "BusinessServiceNode", VariableName: "BusinessServiceName", SessionValue: "" }
-        //         );
-        //     }
-        //     else {
-        //         jsonstring.push(
-        //             { VariableContext: "Location", VariableName: "LocationID", SessionValue: "" },
-        //             { VariableContext: "Location", VariableName: "LocationName", SessionValue: "" },
-        //             { VariableContext: "DeviceNode", VariableName: "AssetID", SessionValue: "" },
-        //             { VariableContext: "DeviceNode", VariableName: "AssetName", SessionValue: "" }
-        //         );
-        //     }
-        // }
-        // if (jsonstring.length) {
-        //     await axiosInterceptor({
-        //         url: SESSION.UpdateSession,
-        //         data: {
-        //             jsonSession: JSON.stringify(jsonstring)
-        //         },
-        //         setFetchData: handleUpdateSessionApiResponse
-        //     }, statusBarContext)
-        // }
     }
 
     const handleMenuSelect = async (

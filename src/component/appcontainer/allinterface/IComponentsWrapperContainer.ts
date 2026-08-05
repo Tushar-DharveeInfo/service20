@@ -1,5 +1,3 @@
-import { IChartProfile } from "../../shared/allinterface/charts/INZChart";
-
 
 
 interface IOverlayContainer {
@@ -32,21 +30,13 @@ interface IPropsComponent {
         */
     props: Record<string, any>;
 }
-interface IChartContainer {
-    isVisible: boolean,
-    chartWidth: number;
-    chartHeight: number;
-    chartRows: number;
-    chartColumns: number;
-    chartProfiles?: IChartProfile[];
-}
+
 interface IComponentsWrapperContainer {
     uniqueName: string;
     featureId: string;
     helptipContainer: IHelptipContainer;
     statusBarContainer: IStatusBarContainer
     PropsComponent: IPropsComponent;
-    chartContainer: IChartContainer;
     overlayContainer?: IOverlayContainer;
 }
 export type { IComponentsWrapperContainer }

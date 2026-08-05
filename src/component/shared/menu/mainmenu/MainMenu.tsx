@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react'
-import { EntitiesTreeRange, SettingsTreeRange } from '../../../constants/Feature'
 import { useSessionContext } from '../../context/hooks/SessionHooks'
 import { FnGetIconForSubMenu } from '../../allcommon/menu/FnGetIconForSubMenu'
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable'
@@ -76,32 +75,6 @@ const MainMenu = (menuProps: IMainMenu) => {
 
 
         setSubMenuData(listOfMainMenu, menuProps.selectedFeature, updated_feature_data)
-      } else if (menuProps.uniqueName === "setting-menu") {
-        let groupList = menuProps.featureData.filter((element: any) => {
-          return element.MenuID === element._Feature && element._Feature >= SettingsTreeRange.MIN && element._Feature < SettingsTreeRange.MAX
-        })
-        groupList = groupList.sort((a: any, b: any) => a.Label.localeCompare(b.Label));
-        if (!menuProps.selectedFeature) {
-          setSelectedFeatureItem(groupList[0]);
-        }
-        setSubMenuData(groupList)
-      } else if (menuProps.uniqueName === "appqa-entities") {
-        let groupList = menuProps.featureData.filter((element) => {
-          return element._Feature && element.MenuID === element._Feature && Number(element._Feature) >= EntitiesTreeRange.MIN && Number(element._Feature) < EntitiesTreeRange.MAX
-        })
-        groupList = groupList.sort((a: any, b: any) => a.Label.localeCompare(b.Label));
-        if (!menuProps.selectedFeature) {
-          setSelectedFeatureItem(groupList[0]);
-        }
-        setSubMenuData(groupList)
-      } else if (menuProps.uniqueName === "configure") {
-        let groupList = menuProps.featureData.filter((element: any) => {
-          return element.MenuID === element._Feature
-        })
-        // if (!menuProps.selectedFeature) {
-        //   setSelectedFeatureItem(groupList[0]);
-        // }
-        setSubMenuData(groupList)
       } else if (menuProps.isShowExpandableList) {
 
         setSubMenuData(menuProps.featureData)

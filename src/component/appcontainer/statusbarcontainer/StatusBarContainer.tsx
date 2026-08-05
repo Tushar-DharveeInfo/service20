@@ -10,11 +10,9 @@ import { IStatusBarContainer, IStatusBarItem } from '../allinterface/IStatusBarC
 import { ISession } from '../../shared/context/allinterface/ISession';
 import { IErrorData } from '../../shared/allinterface/IApiResponse';
 import { Label } from '../../shared/basic/label/Label';
-import { AppQA, FEnums } from '../../constants/Feature';
 import { StatusBarCard } from './statusbarcard/StatusBarCard';
 import { StatusBarTitleContainer } from './statusbartitlecontainer/StatusBarTitleContainer';
 import { YesNoFormContainer } from '../../shared/basic/yesnoformcontainer/YesNoFormContainer';
-import { SettingGroups, SettingSubgroups } from '../../constants/Feature';
 import { FnConvertDateToUtcOrUtcToDate } from '../allcommon/FnConvertDateToUtcOrUtcToDate';
 import { FnGetAppDateFormat } from '../../shared/allcommon/basic/FnGetAppDateFormat';
 import { FnSortStatusBarCards } from '../allcommon/FnSortStatusBarCards';
@@ -117,12 +115,7 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
         };
     }, [sessionContext.SessionList]);
 
-    // Caches DCIM statistics records used in status bar title data.
-    useEffect(() => {
-        if (mainAppContext.apRecords?.length) {
-            dcimStatsRef.current = mainAppContext.apRecords.filter((item) => item.GroupName === SettingGroups.AboutNetZoom && item.SubGroupName === SettingSubgroups.DCIMStatistics);
-        }
-    }, [mainAppContext.apRecords])
+
 
     // Ensures alert profile records are available for notification rendering.
     useEffect(() => {
@@ -286,25 +279,7 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
                     arr.push(entry); // insert new
                 }
             };
-            // dcim stats
-            // if (dcimStatsRef.current?.length) {
-            //     const totalSites =
-            //         dcimStatsRef.current.find(
-            //             (item) =>
-            //                 item.GroupName === SettingGroups.AboutNetZoom &&
-            //                 item.SubGroupName === SettingSubgroups.DCIMStatistics &&
-            //                 item.Name === "StatsSites"
-            //         )?.Value ?? "";
-            //     updateArray("Sites", totalSites);
-            // }
-            // // session var
-            // if (sessionVarRef.current?.length) {
-            //     const siteName =
-            //         sessionVarRef.current.find(
-            //             (item) => item.VariableName?.toLowerCase() === "sitename"
-            //         )?.SessionValue ?? "";
-            //     updateArray("Site", siteName);
-            // }
+
             /* -------------------------
              * Append ONLY ONE after Sites|Site (ORDER FIX)
              * ------------------------- */

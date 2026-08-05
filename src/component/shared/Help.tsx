@@ -13,11 +13,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { ActionImage } from './basic/actionimage/ActionImage';
 import { Close24x24 } from '@n20a/libicon';
 import { FnGetCssVariable } from '../appcontainer/allcommon/FnGetCssVariable';
-import { IFnCreateForensiclog } from '../appcontainer/allinterface/IFnCreateForensiclog';
-import { FnCreateForensiclog } from '../appcontainer/allcommon/FnCreateForensiclog';
-import { useSessionContext } from './context/hooks/SessionHooks';
-import { useStatusBarContext } from './context/hooks/StatusBarHooks';
-import { LogGroupName, LogName, LogSubGroupName } from '../appcontainer/alldefaultprops/DefaultPropsForensiclog';
 import { Label } from './basic/label/Label';
 import { OverlayTab } from './basic/overlaytab/OverlayTab';
 import { PdfDownloadOverlay } from '../features/pdfviewer/PdfDownloadOverlay.tsx';
@@ -88,8 +83,6 @@ const Help = (helpProps: IHelp) => {
     const [isUserGuideUrlValidated, setIsUserGuideUrlValidated] = useState<boolean>(false);
     const localPdfUrl = helpProps.pdfUrl ?? "/privatedocs/docs.pdf";
     const mainAppContext = useMainAppContext();
-    const sessionContext = useSessionContext();
-    const statusBarContext = useStatusBarContext();
     const USER_GUIDE_URL = FnGetEnvVariableByKey(envVarEnums.USER_GUIDE_URL);
 
     useEffect(() => {
@@ -134,18 +127,6 @@ const Help = (helpProps: IHelp) => {
                         "Remote Help Documentation is not available.",
                         response.statusText
                     );
-
-                    const payloadLog: IFnCreateForensiclog = {
-                        GroupName: LogGroupName.ForensicLogTemplate,
-                        SubGroupName: LogSubGroupName.Help,
-                        LogName: LogName.RemoteHelp,
-                        logType: 'UserAction',
-                        _Forensiclog: LogSubGroupName.Help,
-                        sessionContext: sessionContext,
-                        statusBarContext: statusBarContext,
-                        RefTableItems: mainAppContext.refTableRecords
-                    }
-                    FnCreateForensiclog(payloadLog)
                 }
 
             } catch (error) {

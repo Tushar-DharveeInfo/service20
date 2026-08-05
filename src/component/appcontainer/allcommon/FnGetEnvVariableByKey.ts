@@ -11,18 +11,13 @@ const FnGetEnvVariableByKey = (key: string): string | null => {
         (window as Window & {
             APP_CONFIG?: { VITE_API_AT?: string };
         }).APP_CONFIG?.VITE_API_AT ?? "n20api";
-    const defaultApiUrl = isProd
-        ? `${origin}/${api}`
-        : `/${api}`;
+
     const envVars = getDeploymentVars() as Record<string, any>[] | undefined;
     const value =
         envVars?.find(item =>
             item.key?.toLowerCase().endsWith(key.trim().toLowerCase())
         )?.value ?? null;
 
-    if (key.toLowerCase() === "n20_api_url") {
-        return value ?? defaultApiUrl;
-    }
     return value;
 }
 

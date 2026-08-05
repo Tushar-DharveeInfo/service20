@@ -9,8 +9,6 @@ import { IMenuImage } from "../../shared/allinterface/menu/IMenuImage"
 import { IMenuItem } from "../../shared/allinterface/menu/IMainMenu"
 import { ITitleContainer } from "../allinterface/ITitleContainer"
 import { AppQA } from "../../constants/Feature"
-// import { SettingGroups, SettingSubgroups } from "../../constants/Feature"
-// import { FnGetApplicationParameter } from "../../appqa/allcommon/FnGetApplicationParameter"
 import { MenuImage } from "../../shared/menu/menuimage/MenuImage"
 import { AppQaMenuContainer } from "./appqamenucontainer/AppQaMenuContainer"
 
@@ -68,18 +66,6 @@ const TitleContainer = (titleContainerProps: ITitleContainer) => {
     }, [titleContainerProps.isMenuOpen])
 
 
-    // useEffect(() => {
-    //     // Load licensee logo tooltip text from application parameters.
-    //     const getTooltipFromAp = async () => {
-    //         if (mainAppContext.apRecords) {
-    //             const licenseeTooltip = FnGetApplicationParameter(SettingGroups.AdminConfiguration, SettingSubgroups.Configure, mainAppContext.apRecords, undefined, "LicenseeLogoTooltip");
-    //             if (licenseeTooltip && licenseeTooltip.length && licenseeTooltip[0].Value) {
-    //                 setLicenseeLogoTooltip(licenseeTooltip[0].Value ?? licenseeTooltip[0].DefaultAPValue);
-    //             }
-    //         }
-    //     }
-    //     getTooltipFromAp();
-    // }, [mainAppContext.apRecords])
 
 
 

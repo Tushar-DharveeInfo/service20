@@ -30,7 +30,6 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
                         <AppqaSignout uniqueName={'app-qa-signout'} />
-                        {/* <AppqaReport uniqueName={'app-qa-signout'} featureId={'app-qa-signout'} /> */}
                     </Suspense>
                 </ErrorBoundary>
             );

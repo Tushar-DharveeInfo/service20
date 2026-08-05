@@ -6,10 +6,8 @@ import { IFeatureRouteContainer } from '../allinterface/IFeatureRouteContainer';
 import { useHelpTipContext } from '../../shared/context/hooks/HelptipHooks';
 import { useStatusBarContext } from '../../shared/context/hooks/StatusBarHooks';
 import { useMainAppContext } from '../../shared/context/hooks/MainAppHooks';
-import { SettingGroups, SettingSubgroups } from '../../constants/Feature';
 import { AppQARange } from '../../constants/Feature';
 import { IMenuItem } from '../../shared/allinterface/menu/IMainMenu';
-import { FeaturesThatShareExplorer } from '../alldefaultprops/DefaultPropsWorkContainer';
 import { FeatureContainer } from './FeatureContainer';
 import { ComponentsWrapperContainer } from '../componentswrappercontainer/ComponentsWrapperContainer';
 import { FnGetLoggedInStatusMessage } from '../allcommon/FnGetLoggedInStatusMessage';
@@ -34,7 +32,6 @@ const DynamicRouteComponent = () => {
     const [StatusBarType, setStatusBarType] = useState<"menu" | "appqa" | undefined>();
     const helpTipsContext = useHelpTipContext();
     const statusBarContext = useStatusBarContext();
-    const [isShowChart, setIsShowChart] = useState<boolean>(false)
     const [isShowHelptip, setIsShowHelptip] = useState<boolean>(false)
     const [statusBarData, setStatusBarData] = useState<Record<string, number | string>>({});
     const mainAppContext = useMainAppContext();
@@ -64,16 +61,6 @@ const DynamicRouteComponent = () => {
     useEffect(() => {
         if (mainAppContext && mainAppContext.apRecords) {
 
-            const NodeChart = mainAppContext.apRecords.find((item) => { return item.GroupName === SettingGroups.AdminConfiguration && item.SubGroupName === SettingSubgroups.Configure && item.Name === "NodeChart" })
-            const helptip = mainAppContext.apRecords.find((item) => { return item.GroupName === SettingGroups.AdminConfiguration && item.SubGroupName === SettingSubgroups.Configure && item.Name === "HelpTip" })
-            if (NodeChart) {
-                const data = NodeChart
-                setIsShowChart(data.Value === '1' ? true : false)
-            }
-            if (helptip && helptip) {
-                const data = helptip
-                setIsShowHelptip(data.Value === '1' ? true : false)
-            }
         }
     }, [mainAppContext])
 
@@ -178,11 +165,7 @@ const DynamicRouteComponent = () => {
             PropsComponent={{
                 component: FeatureContainer,
                 props: {
-                    uniqueName:
-                        FeaturesThatShareExplorer.includes(stableFeatureId ?? "")
-                            ? `feature-container`
-                            : `feature-container${stableFeatureId}`,
-
+                    uniqueName: 'feature-container',
                     featureId: stableFeatureId ?? "",
                     appqaId: featureId && Number(featureId) < AppQARange.MAX ? featureId : undefined,
                     allowShowHeader: true,
@@ -191,14 +174,7 @@ const DynamicRouteComponent = () => {
                     updateStatusBarData: updateStatusBarData
                 }
             }}
-            chartContainer={{
-                isVisible: isShowChart,
-                chartWidth: 0,
-                chartHeight: 0,
-                chartRows: 0,
-                chartColumns: 0,
-                chartProfiles: [],
-            }}
+
         />
     );
 };
