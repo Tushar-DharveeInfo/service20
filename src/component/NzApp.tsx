@@ -128,6 +128,7 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
                 && userProfileRecord["_User"].length
             ) {
                 mainAppContext.setUserProfileRecord(userProfileRecord["_User"][0]);
+            mainAppContext.setAuthSession(user);
             } else {
                 reportFatalError("User profile data not found.");
                 return;

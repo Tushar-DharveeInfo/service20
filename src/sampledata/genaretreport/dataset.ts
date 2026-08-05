@@ -1,5 +1,5 @@
 const dataset = {
-    table1: [
+    _datatable_msepyovc_7bzpkco: [
         {
             id: 1,
             name: "John Doe",
@@ -13,7 +13,7 @@ const dataset = {
             city: "London"
         }
     ],
-    table2: [
+    _datatable_msepyugu_1us72y8: [
         {
             id: 1,
             product: "Laptop",
@@ -27,7 +27,7 @@ const dataset = {
             quantity: 5
         }
     ],
-    table3: [
+    _datatable_msepz0kk_nxyfsxa: [
         {
             id: 1,
             department: "IT",

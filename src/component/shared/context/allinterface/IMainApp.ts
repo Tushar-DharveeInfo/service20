@@ -1,5 +1,6 @@
 import { ISession } from "./ISession";
 import { IStatusBar } from "./IStatusBar";
+import { AuthSession } from "@n20a/libauth";
 
 interface ISiteProperties {
     GroupName: string;
@@ -163,6 +164,9 @@ interface IMainApp {
 
     userProfileRecord?: IUserProfileRecord;
     setUserProfileRecord: React.Dispatch<React.SetStateAction<IUserProfileRecord | undefined>>;
+
+    authSession?: AuthSession;
+    setAuthSession: React.Dispatch<React.SetStateAction<AuthSession | undefined>>;
 
     impUserProfileRecord?: IUserProfileRecord;
     setImpUserProfileRecord: React.Dispatch<React.SetStateAction<IUserProfileRecord | undefined>>;

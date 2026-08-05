@@ -10,6 +10,7 @@ const subMenuAliases = {
     "more...24x24": "more24x24",
     rear24x24: "R24x24",
     front24x24: "F24x24",
+    download24x24: "Download24x24",
     "3D24x24": 'ThreeD24x24'
 };
 

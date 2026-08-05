@@ -33,6 +33,7 @@ function MainAppProvider({ children }: IAppContextWrapper) {
     const [autoExecuteWorkorder, setAutoExecuteWorkorder] = useState<boolean>(false);
     const [selectedFeatureForHelp, setSelectedFeatureForHelp] = useState<IFeatureForHelp>()
     const [userProfileRecord, setUserProfileRecord] = useState<IUserProfileRecord>()
+    const [authSession, setAuthSession] = useState<AuthSession>()
     const [impUserProfileRecord, setImpUserProfileRecord] = useState<IUserProfileRecord>()
 
     useEffect(() => {
@@ -257,6 +258,8 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             setIsInternetAvailable,
             userProfileRecord,
             setUserProfileRecord,
+            authSession,
+            setAuthSession,
             impUserProfileRecord,
             setImpUserProfileRecord,
             siteProperties,
@@ -294,6 +297,7 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             selectedFeatureForHelp,
             userProfileRecord,
             impUserProfileRecord,
+            authSession,
             fetchFeatures,
             fetchApRecords,
             fetchApProfileRecords,

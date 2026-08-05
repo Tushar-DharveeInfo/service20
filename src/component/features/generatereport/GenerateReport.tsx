@@ -8,7 +8,7 @@ import { IGenerateReport, TReportDataset } from "../allinterface/generatereport/
 
 /*
  * Walks report layout and fills each datatable's `tableData` when
- * `datatable.name` matches a key in the static dataset.
+ * `datatable.id` matches a key in the static dataset.
  */
 const injectStaticTableData = (
     node: Record<string, unknown>,
@@ -19,8 +19,8 @@ const injectStaticTableData = (
         if (Array.isArray(updated.datatableArray)) {
             updated.datatableArray = (updated.datatableArray as Record<string, unknown>[]).map(
                 (dt) => {
-                    const tableName = typeof dt?.name === "string" ? dt.name : "";
-                    const rows = tableName ? tables[tableName] : undefined;
+                    const tableId = typeof dt?.id === "string" ? dt.id : "";
+                    const rows = tableId ? tables[tableId] : undefined;
                     if (!rows) return dt;
                     return {
                         ...dt,
@@ -65,7 +65,7 @@ const GenerateReport = (props: IGenerateReport) => {
 
     /*
      * Builds updated report JSON from required template + static dataset.
-     * Matches datatable `name` to dataset keys and writes rows into `tableData`.
+     * Matches datatable `id` to dataset keys and writes rows into `tableData`.
      */
     const FnBuildReportLayoutConfig = useCallback(
         (

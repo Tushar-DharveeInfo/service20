@@ -5,11 +5,11 @@
 import type { IAddress } from "@n20a/libform";
 
 interface ISampleUserProfile {
+    CompanyName: string;
     LoginUserName: string;
-    LoginShortName: string;
+    DisplayName: string;
     LoginUserEmail: string;
     Phone: string;
-    CompanyName: string;
     RoleName: string;
     Address: IAddress;
 }
@@ -30,11 +30,11 @@ const sampleUserAddress: IAddress = {
 
 /* Same shape the axios interceptor returns for the user profile lookup. */
 const sampleUserProfile: ISampleUserProfile = {
-    LoginUserName: "demo.user",
-    LoginShortName: "Admin",
-    LoginUserEmail: "demo.user@example.com",
-    Phone: "+1 312 555 0142",
-    CompanyName: "NetZoom, Inc.",
+    LoginUserName: "mgsy@netzoom.com",
+    DisplayName: "Mgs Yadav (NetZoom Admin)",
+    LoginUserEmail: "mgsy@netzoom.com",
+    Phone: "",
+    CompanyName: "netzoom-uhjpe",
     RoleName: "Administrator",
     Address: sampleUserAddress
 };

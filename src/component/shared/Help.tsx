@@ -20,6 +20,7 @@ import { useStatusBarContext } from './context/hooks/StatusBarHooks';
 import { LogGroupName, LogName, LogSubGroupName } from '../appcontainer/alldefaultprops/DefaultPropsForensiclog';
 import { Label } from './basic/label/Label';
 import { OverlayTab } from './basic/overlaytab/OverlayTab';
+import { PdfDownloadOverlay } from '../features/pdfviewer/PdfDownloadOverlay.tsx';
 
 interface IHelp {
     uniqueName: string;
@@ -32,6 +33,7 @@ interface IHelp {
     selectedGroup?: string;     // for settings and entities page
     headerText?: string;        // for settings and entities page
     hideCloseBtn?: boolean;
+    hideDownloadIcon?: boolean;
     handleShowUserMessage?: (messageText: string, container?: HTMLDivElement) => void;
 }
 
@@ -197,6 +199,9 @@ const Help = (helpProps: IHelp) => {
         localPdfUrl,
     ]);
 
+    const helpDownloadUrl = useRemoteUserGuide && USER_GUIDE_URL ? USER_GUIDE_URL : localPdfUrl;
+    const helpDownloadFileName = helpDownloadUrl.split(/[\\/]/).pop() ?? 'help.pdf';
+
     const helpContent = useRemoteUserGuide && USER_GUIDE_URL ? (
         <iframe
             src={USER_GUIDE_URL}
@@ -236,12 +241,22 @@ const Help = (helpProps: IHelp) => {
             onKeyDown={handleContainerKeyDown}
         >
             {helpProps.headerText && (
-                <div className='nz-help-header nz-sub-header'>
-                    <Label
-                        uniqueName={`${helpProps.uniqueName}-header`}
-                        label={helpProps.headerText}
-                        fontWeight='bold'
-                    />
+                <div className='nz-help-header'>
+                    {!helpProps.hideDownloadIcon ? (
+                        <PdfDownloadOverlay
+                            uniqueName={`${helpProps.uniqueName}-help-download`}
+                            headerText={helpProps.headerText}
+                            pdfUrl={helpDownloadUrl}
+                            downloadFileName={helpDownloadFileName} />
+                    ) : (
+                        <div className='nz-sub-header'>
+                            <Label
+                                uniqueName={`${helpProps.uniqueName}-header`}
+                                label={helpProps.headerText}
+                                fontWeight='bold'
+                            />
+                        </div>
+                    )}
                     {helpDocumentSource && <div className='nz-help-overlay-pane' title={helpDocumentSource.tooltip}>
                         <OverlayTab
                             uniqueName={`${helpProps.uniqueName}-help-source-overlay`}

@@ -77,6 +77,8 @@ export const sampleMainAppFallback: IMainApp = {
     setEmRecords: noopSetState,
     userProfileRecord: undefined,
     setUserProfileRecord: noopSetState,
+    authSession: undefined,
+    setAuthSession: noopSetState,
     impUserProfileRecord: undefined,
     setImpUserProfileRecord: noopSetState,
     apProfileRecords: [],
