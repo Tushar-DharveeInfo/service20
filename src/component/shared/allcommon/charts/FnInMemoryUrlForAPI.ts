@@ -17,7 +17,7 @@ type TApiObject = {
     };
 };
 
-/** Creates a blob: memory URL from JSON array/object data. */
+/* Creates a blob: memory URL from JSON array/object data. */
 const createJsonMemoryUrl = (data: unknown): string => {
     const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: "application/json",
@@ -25,7 +25,7 @@ const createJsonMemoryUrl = (data: unknown): string => {
     return URL.createObjectURL(blob);
 };
 
-/**
+/*
  * SAMPLE DATA: resolve JsonApi payload to static datatable rows.
  * Prefers already-passed apiPayload arrays; otherwise uses ReportSampleData.
  */
@@ -38,7 +38,7 @@ const resolveJsonApiSampleData = (apiObject: TApiObject): unknown => {
     return sampleReportDatatableResponses[0] ?? [];
 };
 
-/**
+/*
  * Service20 sample implementation of FnInMemoryUrlForAPI.
  * JsonApi is fully supported (blob memory URLs from sample / passed data).
  * Other sources return a failed placeholder URL so layout flow can continue.

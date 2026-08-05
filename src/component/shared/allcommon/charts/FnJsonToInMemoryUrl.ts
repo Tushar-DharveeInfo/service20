@@ -1,4 +1,4 @@
-/** Convert an in-memory URL (blob:) back to JSON. */
+/* Convert an in-memory URL (blob:) back to JSON. */
 async function FnInMemoryUrlToJson(inMemoryUrl: string): Promise<unknown> {
     try {
         const response = await fetch(inMemoryUrl);
@@ -13,7 +13,7 @@ async function FnInMemoryUrlToJson(inMemoryUrl: string): Promise<unknown> {
     }
 }
 
-/** Convert JSON → Blob → In-Memory URL */
+/* Convert JSON → Blob → In-Memory URL */
 function FnJsonToInMemoryUrl(jsonData: unknown): string {
     try {
         const blob = new Blob([JSON.stringify(jsonData, null, 2)], {

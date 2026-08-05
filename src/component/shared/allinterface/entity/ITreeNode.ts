@@ -1,6 +1,6 @@
 import { JSX } from "react";
 
-/** Entity/node shape used by sidebar, menus, and selection context (not an rc-tree widget). */
+/* Entity/node shape used by sidebar, menus, and selection context (not an rc-tree widget). */
 interface ITreeNode {
     key: string;
     NodeEntityname: string | null;

@@ -1,4 +1,4 @@
-/** Builds a simple SVG error image as a blob URL. */
+/* Builds a simple SVG error image as a blob URL. */
 const FnCreateFailedMemoryUrl = (name: string): string => {
     try {
         const displayName = String(name ?? "").trim() || "unknown";

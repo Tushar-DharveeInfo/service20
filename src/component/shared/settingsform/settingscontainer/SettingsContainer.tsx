@@ -350,11 +350,11 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
 
     return (
         <div key={formContainerProps.uniqueName} className="nz-form-list-container" tabIndex={1} >
-            {formContainerProps.allowHelp && selectedItem && <Help
+            {/* {formContainerProps.allowHelp && selectedItem && <Help
                 uniqueName={selectedItem.label}
                 pdfUrl='/privatedocs/api.pdf'
                 featureName={selectedItem.label}
-                headerText={formContainerProps.headerText || selectedItem.label} />}
+                headerText={formContainerProps.headerText || selectedItem.label} />} */}
 
             {formContainerProps.allowActionList ?
                 <Splitter tabIndex={-1} className={`nz-w-100 nz-h-100 ${formContainerProps.allowHelp ? " nz-hidden" : ""}`}>

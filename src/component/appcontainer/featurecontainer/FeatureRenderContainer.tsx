@@ -5,42 +5,75 @@ import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx'
 import { Loader } from '../../shared/loader/Loader.tsx'
 import { IFeatureRenderContainer } from '../allinterface/IFeatureRenderContainer.ts'
 import { GenerateReport } from '../../features/generatereport/GenerateReport.tsx'
+import { FnGetPublicAssetUrl } from '../../features/allcommon/FnGetPublicAssetUrl.ts'
+import {
+    sampleOrderAddressFields,
+    sampleOrderDataset1,
+    sampleOrderDataset2,
+    sampleOrderDocType,
+} from '../../../sampledata/genaretreport/OrderFormSampleData.ts'
 
-/* Loads public/reportTemplate.json and passes it as required GenerateReport prop. */
+const ORDER_FORM_JSON = 'OrderForm.json'
+
+/* Loads OrderForm.json from public and passes sample order data into GenerateReport. */
 const GenerateReportHost = () => {
-    const [reportTemplate, setReportTemplate] = useState<Record<string, unknown> | null>(null);
+    const [reportTemplate, setReportTemplate] = useState<Record<string, unknown> | null>(null)
+    const [loadError, setLoadError] = useState('')
 
     useEffect(() => {
-        let cancelled = false;
-        void fetch(`${import.meta.env.BASE_URL}reportTemplate.json`)
-            .then((response) => {
+        let isActive = true
+
+        const loadOrderFormTemplate = async () => {
+            setLoadError('')
+            setReportTemplate(null)
+
+            try {
+                const response = await fetch(FnGetPublicAssetUrl(ORDER_FORM_JSON))
+
                 if (!response.ok) {
-                    throw new Error(`Failed to load reportTemplate.json (${response.status})`);
+                    throw new Error(`Failed to load ${ORDER_FORM_JSON} (${response.status})`)
                 }
-                return response.json() as Promise<Record<string, unknown>>;
-            })
-            .then((json) => {
-                if (!cancelled) setReportTemplate(json);
-            })
-            .catch((error) => {
-                console.error('GenerateReportHost: failed to load public/reportTemplate.json', error);
-            });
+
+                const template = await response.json() as Record<string, unknown>
+
+                if (isActive) {
+                    setReportTemplate(template)
+                }
+            } catch (error) {
+                if (isActive) {
+                    setLoadError(
+                        error instanceof Error ? error.message : `Failed to load ${ORDER_FORM_JSON}`
+                    )
+                }
+            }
+        }
+
+        loadOrderFormTemplate()
+
         return () => {
-            cancelled = true;
-        };
-    }, []);
+            isActive = false
+        }
+    }, [])
+
+    if (loadError) {
+        return <div style={{ color: 'var(--error-color, #b00020)', padding: 12 }}>{loadError}</div>
+    }
 
     if (!reportTemplate) {
-        return <Loader />;
+        return <Loader />
     }
 
     return (
         <GenerateReport
             uniqueName="feature-generate-report"
             reportTemplate={reportTemplate}
+            addressFields={sampleOrderAddressFields}
+            docType={sampleOrderDocType}
+            dataset1={sampleOrderDataset1}
+            dataset2={sampleOrderDataset2}
         />
-    );
-};
+    )
+}
 
 const Eula = lazy(() => import('../../features/profile/eula/Eula.tsx'))
 const MyProfile = lazy(() => import('../../features/profile/myprofile/MyProfile.tsx'))

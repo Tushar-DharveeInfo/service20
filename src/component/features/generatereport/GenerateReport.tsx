@@ -3,55 +3,23 @@ import { PdfMaker, updateLayoutWithSessionVars } from "@n20a/libreport";
 import "@n20a/libreport/style.css";
 import { JsonViewer } from "../../shared/jsonviewer/JsonViewer";
 import { useSessionContext } from "../../shared/context/hooks/SessionHooks";
-import dataset from "../../../sampledata/genaretreport/dataset";
-import { IGenerateReport, TReportDataset } from "../allinterface/generatereport/IGenerateReport";
-
+import { FnBuildReportLayoutConfig } from "../allcommon/FnBuildReportLayoutConfig";
+import { IGenerateReport } from "../allinterface/generatereport/IGenerateReport";
 /*
- * Walks report layout and fills each datatable's `tableData` when
- * `datatable.id` matches a key in the static dataset.
+ * Generate Report workflow:
+ * 1. Accept reportTemplate (e.g. OrderForm.json) and required p1–p4 inputs from the caller.
+ * 2. Build layout JSON via FnBuildReportLayoutConfig — inject address text, document type, and keyed datatable rows.
+ * 3. Merge session variables into the layout with updateLayoutWithSessionVars for dynamic placeholders.
+ * 4. Preview the resulting JSON in JsonViewer and pass the final config to PdfMaker for PDF generation.
  */
-const injectStaticTableData = (
-    node: Record<string, unknown>,
-    tables: TReportDataset
-): Record<string, unknown> => {
-    const updated = { ...node };
-    try {
-        if (Array.isArray(updated.datatableArray)) {
-            updated.datatableArray = (updated.datatableArray as Record<string, unknown>[]).map(
-                (dt) => {
-                    const tableId = typeof dt?.id === "string" ? dt.id : "";
-                    const rows = tableId ? tables[tableId] : undefined;
-                    if (!rows) return dt;
-                    return {
-                        ...dt,
-                        tableData: rows,
-                        inmemoryUrl: "",
-                    };
-                }
-            );
-        }
-
-        if (Array.isArray(updated.locationArray)) {
-            updated.locationArray = (updated.locationArray as Record<string, unknown>[]).map(
-                (loc) => injectStaticTableData(loc, tables)
-            );
-        }
-
-        return updated;
-    } catch (error) {
-        console.error("injectStaticTableData error:", error);
-        return updated;
-    }
-};
-
 const GenerateReport = (props: IGenerateReport) => {
-    const uniqueName = props.uniqueName ?? "generate-report";
-    const tables = props.dataset ?? (dataset as TReportDataset);
+    const { uniqueName = "generate-report", reportTemplate, addressFields, docType, dataset1, dataset2 } = props;
 
-    const sessionContext = useSessionContext();
     const [reportJson, setReportJson] = useState<Record<string, unknown> | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const sessionContext = useSessionContext();
 
     const getSessionVars = useCallback((): Record<string, unknown> => {
         const sessionVars: Record<string, unknown> = {};
@@ -63,36 +31,22 @@ const GenerateReport = (props: IGenerateReport) => {
         return sessionVars;
     }, [sessionContext?.SessionList]);
 
-    /*
-     * Builds updated report JSON from required template + static dataset.
-     * Matches datatable `id` to dataset keys and writes rows into `tableData`.
-     */
-    const FnBuildReportLayoutConfig = useCallback(
-        (
-            reportTemplate: Record<string, unknown>,
-            tableDataset: TReportDataset = tables
-        ): Record<string, unknown> => {
-            try {
-                if (!reportTemplate || typeof reportTemplate !== "object") {
-                    return {};
-                }
-                return injectStaticTableData(
-                    structuredClone(reportTemplate),
-                    tableDataset
-                );
-            } catch (error) {
-                console.error("FnBuildReportLayoutConfig error:", error);
-                return reportTemplate;
-            }
-        },
-        [tables]
+    const buildReportLayout = useCallback(
+        () => FnBuildReportLayoutConfig(
+            reportTemplate,
+            addressFields,
+            docType,
+            dataset1,
+            dataset2
+        ),
+        [addressFields, dataset1, dataset2, docType, reportTemplate]
     );
 
     useEffect(() => {
         setIsLoading(true);
         setErrorMessage("");
         try {
-            const updated = FnBuildReportLayoutConfig(props.reportTemplate, tables);
+            const updated = buildReportLayout();
             setReportJson(updated);
         } catch (error) {
             console.error("GenerateReport: failed to build report", error);
@@ -103,7 +57,7 @@ const GenerateReport = (props: IGenerateReport) => {
         } finally {
             setIsLoading(false);
         }
-    }, [FnBuildReportLayoutConfig, props.reportTemplate, tables]);
+    }, [buildReportLayout]);
 
     const pdfConfig = useMemo(() => {
         if (!reportJson) return null;
@@ -116,8 +70,8 @@ const GenerateReport = (props: IGenerateReport) => {
     }, [getSessionVars, reportJson]);
 
     return (
-        <div className="nz-wh-100 nz-d-flex-column" style={{ gap: 12, padding: 12 }}>
-            <h3 style={{ margin: 0 }}>Generate Report</h3>
+        <div className="nz-wh-100 nz-d-flex-column">
+            <div className="nz-sub-header">Generate Report</div>
 
             {isLoading && <div>Building report…</div>}
             {errorMessage && (
@@ -144,5 +98,5 @@ const GenerateReport = (props: IGenerateReport) => {
     );
 };
 
-export { GenerateReport };
-export type { IGenerateReport, TReportDataset };
+export { GenerateReport, FnBuildReportLayoutConfig };
+export type { IGenerateReport };

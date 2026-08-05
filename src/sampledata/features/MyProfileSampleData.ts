@@ -1,18 +1,7 @@
 /*
- * SAMPLE DATA: logged in user profile for Profile/MyProfile while the
- * AUTH user APIs are disabled.
+ * SAMPLE DATA: user address for Profile/MyProfile while address APIs are disabled.
  */
 import type { IAddress } from "@n20a/libform";
-
-interface ISampleUserProfile {
-    CompanyName: string;
-    LoginUserName: string;
-    DisplayName: string;
-    LoginUserEmail: string;
-    Phone: string;
-    RoleName: string;
-    Address: IAddress;
-}
 
 /* Address in the shape AddressForm expects for initialAddress. */
 const sampleUserAddress: IAddress = {
@@ -28,16 +17,4 @@ const sampleUserAddress: IAddress = {
     TimezoneOffset: "-06:00"
 };
 
-/* Same shape the axios interceptor returns for the user profile lookup. */
-const sampleUserProfile: ISampleUserProfile = {
-    LoginUserName: "mgsy@netzoom.com",
-    DisplayName: "Mgs Yadav (NetZoom Admin)",
-    LoginUserEmail: "mgsy@netzoom.com",
-    Phone: "",
-    CompanyName: "netzoom-uhjpe",
-    RoleName: "Administrator",
-    Address: sampleUserAddress
-};
-
-export { sampleUserProfile, sampleUserAddress };
-export type { ISampleUserProfile };
+export { sampleUserAddress };

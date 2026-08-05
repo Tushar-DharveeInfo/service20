@@ -5,7 +5,6 @@ import { IAppqaContainer } from '../allinterface/IAppqaContainer.ts';
 import { Loader } from '../../shared/loader/Loader.tsx';
 import Help from '../../shared/Help.tsx';
 import AppQaContactUs from '../../appqa/AppQaContactUs.tsx';
-import AppqaReport from '../../appqa/AppqaReport.tsx';
 
 const AppqaSignout = lazy(() => import('../../appqa/AppqaSignout.tsx'))
 
@@ -45,6 +44,7 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
                         headerText={featureContainerProps.headerText}
                         featureId={featureContainerProps.appqaId}
                         featureName={selectedFeatureNameForHelp ?? "Help"}
+                        hideDownloadIcon={true}
                         handleShowUserMessage={handleShowUserMessage}
                     />
                 </ErrorBoundary>

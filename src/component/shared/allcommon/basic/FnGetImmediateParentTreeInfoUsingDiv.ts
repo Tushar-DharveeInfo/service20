@@ -1,6 +1,6 @@
 import { ITreeNode } from "../../allinterface/entity/ITreeNode";
 
-/** Returns immediate parent entity node from DOM node-info attribute. */
+/* Returns immediate parent entity node from DOM node-info attribute. */
 const FnGetImmediateParentTreeInfoUsingDiv = (info: ITreeNode) => {
     if (info.parentEntID) {
         const nodeDiv: HTMLElement | null = document.getElementById(info.parentEntID);

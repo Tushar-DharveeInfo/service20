@@ -126,7 +126,7 @@ let updatedWebConfig = updateWebConfigAppSettings(webConfigContent, appSettings)
 writeFileSync(webConfigPath, updatedWebConfig);
 console.log('✓ Synced public/config.js and public/web.config from .env');
 
-/**
+/*
  * Updates the appSettings section in web.config, adding missing keys and updating existing ones
  * Preserves all other sections including rewrite rules
  */
