@@ -3,7 +3,6 @@ Since all menu and features and QA and kebab menu are unique names, why not we d
 */
 
 // Appqa range for filter
-//const AppQAMaxID = 99     //use AppQARange.MAX instead of AppQAMaxID for better readability and maintainability
 const AppQARange = { MIN: 10, MAX: 99 }
 
 // Feature Menu range for filter 
@@ -16,33 +15,39 @@ const FeatureQARange = { MIN: 1000, MAX: 9000 }
 const KebabMenuRange = { MIN: 10000, MAX: 100000 }
 
 
-
-// Appqa Constants
+// Appqa Constants — ids match sampledata/auth/smFeatures.json MenuID 10 items
 enum AppQA {
     Signout = "41",
     Help = "42",
     Theme = "43",
-    ContactUs = "44",
-    Launch = "45",
-    Message = "46",
+    Launch = "44",
+    Notify = "45",
+    Alerts = "46",
+    Log = "47",
+    Report = "48",
 }
 
-// Profile menu feature ids (see public/feature.json)
-enum ProfileEnums {
+// Profile menu feature ids (see sampledata/auth/ServiceFeature.json)
+enum FeatureEnums {
     Profile = "100",
-    MyProfile = "104",
-    MyActivities = "106",
-    MySubscriptions = "108",
+    NetZoom = "102",
+    VisioStencils = "104",
+    Other = "106",
+    ClientNetZoom = "154",
+    ClientVisioStencils = "156",
+    ClientOther = "158",
+    ClientIdentityManagement = "152",
+    ProductNetZoom = "122",
+    ProductVisioStencils = "124",
+    ProductOther = "126",
 }
 
-// Buy / Products menu feature ids
+// Products menu feature ids
 enum ProductsEnums {
-    Buy = "120",
-    Purchase = "122",
-    EULA = "124",
-    NetZoom = "126",
-    VisioStencils = "128",
-    Other = "130",
+    Products = "120",
+    NetZoom = "122",
+    VisioStencils = "124",
+    Other = "126",
 }
 
 // Services menu feature ids
@@ -60,23 +65,23 @@ enum DownloadEnums {
     DownloadNetZoom = "204",
 }
 
-// FAQ menu feature ids
-enum FaqEnums {
-    FAQ = "300",
-    VisioStencils = "302",
-    NetZoom = "304",
-}
 
-// Purchase QA feature ids (under Buy > Purchase)
-enum PurchaseEnums {
-    Cart = "1222",
-    Orders = "1224",
+enum SidebarEnum {
+    Property = "Property",
+    Log = "Log",
+    Notes = "Notes",
+    Alerts = "Alerts",
+    ActionLog = "ActionLog",
+    Assign = "Assign",
+    Profile = "Profile",
+    Device = "Device"
 }
 
 export {
     FeatureMenuRange, AppQA, AppQARange
-    , ProfileEnums, ProductsEnums, ServicesEnums, DownloadEnums
-    , FaqEnums, PurchaseEnums
+    , FeatureEnums, ProductsEnums, ServicesEnums, DownloadEnums
     , FeatureQARange
+    , SidebarEnum
     , KebabMenuRange
 }
+

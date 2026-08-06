@@ -1,0 +1,332 @@
+[
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "41",
+    "Label": "Signout",
+    "Tooltip": "Click to Close sessions and Logout. ",
+    "SortOrder": "1",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "42",
+    "Label": "Help",
+    "Tooltip": "Click to view Help page of the selected feature",
+    "SortOrder": "3",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "43",
+    "Label": "Theme",
+    "Tooltip": "Display Theme",
+    "SortOrder": "4",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "44",
+    "Label": "Launch",
+    "Tooltip": "Open a New Session",
+    "SortOrder": "5",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "45",
+    "Label": "Notify",
+    "Tooltip": "Send Message",
+    "SortOrder": "6",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "46",
+    "Label": "Alerts",
+    "Tooltip": "Review Alerts",
+    "SortOrder": "7",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "47",
+    "Label": "Log",
+    "Tooltip": "Review Forensic Log",
+    "SortOrder": "8",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "10",
+    "_Feature": "48",
+    "Label": "Report",
+    "Tooltip": "Available Reports",
+    "SortOrder": "9",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "100",
+    "_Feature": "100",
+    "Label": "Home",
+    "Tooltip": "Dashboards",
+    "SortOrder": "100",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "100",
+    "_Feature": "102",
+    "Label": "NetZoom",
+    "Tooltip": "Show Charts",
+    "SortOrder": "1",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "100",
+    "_Feature": "104",
+    "Label": "VisioStencils",
+    "Tooltip": "Show Charts",
+    "SortOrder": "2",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "100",
+    "_Feature": "106",
+    "Label": "Other",
+    "Tooltip": "Show Charts",
+    "SortOrder": "3",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "120",
+    "_Feature": "120",
+    "Label": "Product",
+    "Tooltip": "Explore Products",
+    "SortOrder": "120",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "120",
+    "_Feature": "122",
+    "Label": "NetZoom",
+    "Tooltip": "Explore NetZoom Device Library",
+    "SortOrder": "1",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "120",
+    "_Feature": "124",
+    "Label": "VisioStencils",
+    "Tooltip": "Explore VisioStencils Library",
+    "SortOrder": "2",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "120",
+    "_Feature": "126",
+    "Label": "Other",
+    "Tooltip": "Explore Other Downloads",
+    "SortOrder": "3",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "150",
+    "_Feature": "150",
+    "Label": "Client",
+    "Tooltip": "Explore Clients",
+    "SortOrder": "150",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "150",
+    "_Feature": "152",
+    "Label": "Client Identity Management",
+    "Tooltip": "Client Identity Management",
+    "SortOrder": "1",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "150",
+    "_Feature": "154",
+    "Label": "NetZoom",
+    "Tooltip": "Explore NetZoom Clients",
+    "SortOrder": "2",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "150",
+    "_Feature": "156",
+    "Label": "VisioStencils",
+    "Tooltip": "Explore VisioStencils Clients",
+    "SortOrder": "3",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "150",
+    "_Feature": "158",
+    "Label": "Other",
+    "Tooltip": "Explore Other Clients",
+    "SortOrder": "4",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1542",
+    "Label": "Profile",
+    "Tooltip": "Profile",
+    "SortOrder": "1",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1544",
+    "Label": "Order",
+    "Tooltip": "Order",
+    "SortOrder": "2",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1546",
+    "Label": "Alerts",
+    "Tooltip": "Alerts",
+    "SortOrder": "3",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1548",
+    "Label": "Notes",
+    "Tooltip": "Notes",
+    "SortOrder": "4",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1550",
+    "Label": "Log",
+    "Tooltip": "Log",
+    "SortOrder": "5",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "_Feature": "1552",
+    "Label": "Download",
+    "Tooltip": "Download",
+    "SortOrder": "6",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1562",
+    "Label": "Profile",
+    "Tooltip": "Profile",
+    "SortOrder": "1",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1564",
+    "Label": "Order",
+    "Tooltip": "Order",
+    "SortOrder": "2",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1566",
+    "Label": "Alerts",
+    "Tooltip": "Alerts",
+    "SortOrder": "3",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1568",
+    "Label": "Notes",
+    "Tooltip": "Notes",
+    "SortOrder": "4",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1570",
+    "Label": "Log",
+    "Tooltip": "Log",
+    "SortOrder": "5",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "156",
+    "_Feature": "1572",
+    "Label": "Download",
+    "Tooltip": "Download",
+    "SortOrder": "6",
+    "DefaultQA": ""
+  }
+]

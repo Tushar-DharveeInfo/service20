@@ -223,32 +223,25 @@ const OverlayTab = (overlayTabProps: TOverlayTabProps) => {
             strokeWidth={1} />
     }
 
-    const isInlineOverlay = overlayTabProps.inlineOverlay ?? false;
-    const overlayWrapperClass = isInlineOverlay
-        ? 'nz-overlay-inline'
-        : 'nz-sub-header nz-overlay-title';
-
     return (
         <div
-            className={overlayWrapperClass}
+            className="nz-sub-header nz-overlay-title"
             style={{ position: 'relative' }}
             ref={overlayRef}
         >
             {/* Header Text */}
-            {overlayTabProps.headerText
-                ? <div ref={headerTextRef}>
-                    {overlayTabProps.headerText}
-                </div>
-                : <div ref={headerTextRef} className='nz-overlay-inline-header-placeholder' />}
+            <div ref={headerTextRef}>
+                {overlayTabProps.headerText}
+            </div>
 
             {/* Draggable Tabs */}
             {!overlayTabProps.hideOvelayPanel && <div
                 ref={tabContainerRef}
                 className="nz-overlay-tab-draggable"
                 style={{
-                    position: isInlineOverlay ? 'relative' : 'absolute',
-                    top: isInlineOverlay ? undefined : 0,
-                    left: isInlineOverlay ? undefined : position.x,
+                    position: 'absolute',
+                    top: 0,
+                    left: position.x,
                     flexDirection:
                         overlayTabProps.tabAlignment === 'horizontal'
                             ? 'row'

@@ -1,12 +1,13 @@
+
 import { IMainApp } from "../../shared/context/allinterface/IMainApp";
 import { IStatusBar } from "../../shared/context/allinterface/IStatusBar";
 
-/* Statistics refresh APIs removed with interceptors. */
+/* SAMPLE DATA: stats update APIs are disabled — refresh local AP records only. */
 const FnUpdateStatisticsAndRefresh = async (
-    _statusBarContext: IStatusBar,
-    _mainAppContext: IMainApp
+    statusBarContext: IStatusBar,
+    mainAppContext: IMainApp
 ) => {
-    return;
+    await mainAppContext.fetchApRecords(statusBarContext);
 };
 
-export { FnUpdateStatisticsAndRefresh };
+export { FnUpdateStatisticsAndRefresh }

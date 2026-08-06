@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef, useState } from 'react'
-import { useStatusBarContext } from '../../context/hooks/StatusBarHooks';
 import { Kebab24x24 } from '@n20a/libicon';
 import '../../allcss/menu/NodeMenu.css';
 import { KebabMenuRange } from '../../../constants/Feature';
@@ -8,12 +7,13 @@ import { IMenuImage } from '../../allinterface/menu/IMenuImage';
 import { IFeatureItem, INodeMenu } from '../../allinterface/menu/INodeMenu';
 import { MenuImage } from '../menuimage/MenuImage';
 import { useCommonVariableContext } from '../../context/hooks/CommonVariableHooks';
+<<<<<<< HEAD
 import { useSessionContext } from '../../context/hooks/SessionHooks';
+=======
+>>>>>>> c020cb80b73372793560440e401f494cdd34284b
 import OverlayIconStrip from '../overlayiconstrip/OverlayIconStrip';
 import { FnCopyToClipboard } from '../../allcommon/basic/FnCopyToClipboard';
-import { useMainAppContext } from '../../context/hooks/MainAppHooks';
-import { ISelectedNodeInfo } from '../../allinterface/entity/ITreeNode';
-import { FnParseJsonSafely } from '../../../appcontainer/allcommon/FnParseJsonSafely';
+import { ISelectedNodeInfo } from '../../allinterface/tree/ITreeControl';
 
 const NodeMenu = (nodeMenuProps: INodeMenu) => {
     const [menuData, setMenuData] = useState<IFeatureItem[]>();
@@ -27,9 +27,7 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
     const [isRecordFoundInWaterMark, setIsRecordFoundInWaterMark] = useState<boolean>(false)
 
     const CommonVariableContext = useCommonVariableContext()
-    const statusBarContext = useStatusBarContext();
-    const sessionContext = useSessionContext()
-    const mainAppContext = useMainAppContext();
+
 
     useEffect(() => {
         if (nodeMenuProps.MenuImage) {
@@ -61,37 +59,17 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         }
     }
     const getNodeMenuForProperty = () => {
-        const handleApiGetKebabMenu = (data: any) => {
-            if (data.kebabJson) {
-                const nodeData = FnParseJsonSafely(data.kebabJson)
-                if (nodeData.KebabMenu) {
-                    const data = nodeData.KebabMenu.fitler((item: any) => (item.TotalCount !== 0))
-                    setMenuData(data)
-                    setShowKebabIcon(true)
-                } else {
-                    setShowKebabIcon(false)
-                }
-            } else {
-                setShowKebabIcon(false)
-            }
-        }
-        const payload = {
-            selectedNodeEntity: nodeMenuProps.selectedNode?.NodeEntityname,
-            selectedNodeType: nodeMenuProps.selectedNode?.NodeType
-        }
 
-        // axiosInterceptor({
-        //     url: PROPERTY.GetKebabMenu,
-        //     data: payload,
-        //     setFetchData: handleApiGetKebabMenu
-        // }, statusBarContext)
+
     }
     const handleClick = async (event: React.MouseEvent<HTMLDivElement> | null) => {
         if (event) {
             handleAnimationImage(true)
             setIsShowMenu(true);
         }
+        let kebabMenuList: IFeatureItem[] = [];
 
+        setMenuData(kebabMenuList);
         if (event) {
             const submenudiv = document.getElementById('nz-sub-menu-node')
             if (submenudiv) {
@@ -126,13 +104,27 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         nodeMenuProps.handleSelect(value)
 
     }
+<<<<<<< HEAD
 
+=======
+    const getCheckFunctionAndNodeTypeData = (featureItem: IFeatureItem, selectedNodeData: ISelectedNodeInfo, isRecordFoundInWaterMark: boolean) => {
+        const type = (featureItem.NodeType as string).split(';')
+        const NodeTypeString = (featureItem.NodeType as string)
+        let isFn = false
+        let FnChildrenDisplayOrderToggleStatus = selectedNodeData && selectedNodeData?.node && selectedNodeData.node.DisplayOrder
+        console.log('FnChildrenDisplayOrderToggleStatus', FnChildrenDisplayOrderToggleStatus, selectedNodeData?.node.HasChildren, selectedNodeData?.node)
+
+        return isFn
+    }
+
+>>>>>>> c020cb80b73372793560440e401f494cdd34284b
     const watermarkRequestIdRef = useRef(0);
     const lastWatermarkNodeIdRef = useRef<string | null>(null);
 
     useEffect(() => {
         const node = selectedNodeData?.node;
         const nodeEntId = String(node?.NodeEntID ?? '');
+
 
         // Same rack node already fetched — skip duplicate API call.
         if (lastWatermarkNodeIdRef.current === nodeEntId) {
@@ -171,7 +163,14 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
 
             nodeMenuProps.featureData.forEach((item) => {
                 if (item.MenuID.toString() === (featureId ? featureId : nodeMenuProps.featureId) && item._Feature && (item._Feature as number) > KebabMenuRange.MIN && item.Label !== "") {
+                    if (item.NodeType === "") {
+                        menu.push(item)
+                    } else {
+                        if (getCheckFunctionAndNodeTypeData(item, selectedNodeData, isRecordFoundInWaterMark)) {
+                            menu.push(item)
+                        }
 
+                    }
 
                 }
             });
@@ -245,6 +244,10 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
                         }
                     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c020cb80b73372793560440e401f494cdd34284b
                 }
 
             }

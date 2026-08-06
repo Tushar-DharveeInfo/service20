@@ -1,25 +1,25 @@
 
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
+import { AddressForm, type IAddress } from '@n20a/libform'
 import '../../allcss/profile/MyProfile.css'
 import { Label } from '../../../shared/basic/label/Label.tsx'
-import { SettingsLibForm } from '../../../shared/settingsform/settingslibform/SettingsLibForm.tsx'
-import { useMainAppContext } from '../../../shared/context/hooks/MainAppHooks.ts'
-import { sampleUserAddress } from '../../../../sampledata/features/MyProfileSampleData.ts'
-import { myProfileControls } from '../../../../sampledata/features/MyProfileControls.ts'
-import { FnBuildMyProfileProfileString } from './FnBuildMyProfileProfileString.ts'
+import { sampleUserProfile } from '../../../../sampledata/features/MyProfileSampleData.ts'
 import { IMyProfile } from '../../allinterface/profile/IMyProfile.ts'
 
 const MyProfile = (myProfileProps: IMyProfile) => {
-    const mainAppContext = useMainAppContext();
-    const headerTitle = myProfileProps.headerText ?? "My Profile";
-    const authUser = mainAppContext.authSession;
+    const [address, setAddress] = useState<IAddress>(sampleUserProfile.Address);
+    const defaultHeaderText = myProfileProps.headerText ?? "My Activities";
+    const [headerTitle, setHeaderTitle] = useState<string>(defaultHeaderText);
 
-    const profileString = useMemo(
-        () => (authUser ? FnBuildMyProfileProfileString(authUser, sampleUserAddress) : "[]"),
-        [authUser]
-    );
+    const handleAddressChange = (updatedAddress: IAddress) => {
+        setAddress(updatedAddress);
+    };
 
-    const handleSaveProfile = () => {
+    useEffect(() => {
+        setHeaderTitle(defaultHeaderText);
+    }, [defaultHeaderText]);
+    const handleAddressSave = (updatedAddress: IAddress) => {
+        setAddress(updatedAddress);
         // SAMPLE DATA: EM.AddUpdateTableRecord for the user address is not called.
         myProfileProps.handleShowUserMessage?.("Profile address saved.");
     };
@@ -28,23 +28,17 @@ const MyProfile = (myProfileProps: IMyProfile) => {
         <div key={myProfileProps.uniqueName} className='nz-my-profile-container nz-wh-100'>
             <div className='nz-sub-header'>
                 <Label
-                    uniqueName={`${myProfileProps.uniqueName}-header`}
+                    uniqueName={`${myProfileProps.uniqueName}-address-header`}
                     label={headerTitle}
                     fontWeight='600' />
             </div>
-            <div className='nz-my-profile-form'>
-                <SettingsLibForm
-                    id={`${myProfileProps.uniqueName}-profile`}
-                    uniqueName={`${myProfileProps.uniqueName}-profile-form`}
-                    controls={myProfileControls}
-                    profileString={profileString}
-                    featureId={myProfileProps.featureId}
-                    allowShowHeader={false}
-                    allowShowSectionHeader={true}
-                    isDisableForm={false}
-                    isAddressFormRequired={true}
-                    isAutoSave={false}
-                    handleSaveForm={handleSaveProfile} />
+            <div className='nz-my-profile-address'>
+                <AddressForm
+                    key={`${myProfileProps.uniqueName}-address-form`}
+                    initialAddress={address}
+                    saveButtonLabel={"Save"}
+                    onChange={handleAddressChange}
+                    onSave={handleAddressSave} />
             </div>
         </div>
     )

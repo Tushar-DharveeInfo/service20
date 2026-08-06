@@ -4,17 +4,18 @@ import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx';
 import { IAppqaContainer } from '../allinterface/IAppqaContainer.ts';
 import { Loader } from '../../shared/loader/Loader.tsx';
 import Help from '../../shared/Help.tsx';
-import AppQaContactUs from '../../appqa/AppQaContactUs.tsx';
 
-const AppqaSignout = lazy(() => import('../../appqa/AppqaSignout.tsx'))
+const AppqaSignout = lazy(() => import('../../appqa/AppqaSignout.tsx'));
+const AppqaLog = lazy(() => import('../../appqa/AppqaLog.tsx'));
+const AppqaAlerts = lazy(() => import('../../appqa/AppqaAlerts.tsx'));
+const AppqaNotify = lazy(() => import('../../appqa/AppqaNotify.tsx'));
+const AppqaReport = lazy(() => import('../../appqa/AppqaReport.tsx'));
 
 function AppQaContainer(appQaContainerProps: IAppqaContainer) {
     const {
         allowAppQaToRender,
         featureContainerProps,
-        featureRecords,
         selectedFeatureNameForHelp,
-        handleSelectedMenuItem,
         handleShowUserMessage
     } = appQaContainerProps;
 
@@ -23,8 +24,6 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
     }
 
     switch (featureContainerProps.appqaId) {
-
-
         case AppQA.Signout:
             return (
                 <ErrorBoundary>
@@ -34,7 +33,6 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
                 </ErrorBoundary>
             );
 
-
         case AppQA.Help:
             return (
                 <ErrorBoundary>
@@ -43,19 +41,58 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
                         headerText={featureContainerProps.headerText}
                         featureId={featureContainerProps.appqaId}
                         featureName={selectedFeatureNameForHelp ?? "Help"}
-                        hideDownloadIcon={true}
                         handleShowUserMessage={handleShowUserMessage}
                     />
                 </ErrorBoundary>
             );
 
-        case AppQA.ContactUs:
+        case AppQA.Log:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <AppQaContactUs
-                            uniqueName={'app-qa-contact-us'}
-                            headerText={featureContainerProps.headerText || 'ContactUs'}
+                        <AppqaLog
+                            uniqueName={'app-qa-log'}
+                            featureId={featureContainerProps.appqaId}
+                            headerText={featureContainerProps.headerText || 'Log'}
+                            handleShowUserMessage={handleShowUserMessage}
+                        />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
+        case AppQA.Alerts:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <AppqaAlerts
+                            uniqueName={'app-qa-alerts'}
+                            headerText={featureContainerProps.headerText || 'Alerts'}
+                            handleShowUserMessage={handleShowUserMessage}
+                        />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
+        case AppQA.Notify:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <AppqaNotify
+                            uniqueName={'app-qa-notify'}
+                            headerText={featureContainerProps.headerText || 'Notify'}
+                            handleShowUserMessage={handleShowUserMessage}
+                        />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
+        case AppQA.Report:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <AppqaReport
+                            uniqueName={'app-qa-report'}
+                            featureId={featureContainerProps.appqaId}
                             handleShowUserMessage={handleShowUserMessage}
                         />
                     </Suspense>
@@ -67,4 +104,4 @@ function AppQaContainer(appQaContainerProps: IAppqaContainer) {
     }
 }
 
-export { AppQaContainer }
+export { AppQaContainer };

@@ -1,108 +1,32 @@
-
-import { lazy, Suspense, useEffect, useState } from 'react'
-import { DownloadEnums, ProductsEnums, ProfileEnums, ServicesEnums } from '../../constants/Feature.ts'
+import { lazy, Suspense } from 'react'
+import { DownloadEnums, ProductsEnums, FeatureEnums, ServicesEnums } from '../../constants/Feature.ts'
 import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx'
 import { Loader } from '../../shared/loader/Loader.tsx'
 import { IFeatureRenderContainer } from '../allinterface/IFeatureRenderContainer.ts'
-import { GenerateReport } from '../../features/generatereport/GenerateReport.tsx'
-import { FnGetPublicAssetUrl } from '../../features/allcommon/FnGetPublicAssetUrl.ts'
-import {
-    sampleOrderAddressFields,
-    sampleOrderDataset1,
-    sampleOrderDataset2,
-    sampleOrderDocType,
-} from '../../../sampledata/genaretreport/OrderFormSampleData.ts'
-
-const ORDER_FORM_JSON = 'OrderForm.json'
-
-/* Loads OrderForm.json from public and passes sample order data into GenerateReport. */
-const GenerateReportHost = () => {
-    const [reportTemplate, setReportTemplate] = useState<Record<string, unknown> | null>(null)
-    const [loadError, setLoadError] = useState('')
-
-    useEffect(() => {
-        let isActive = true
-
-        const loadOrderFormTemplate = async () => {
-            setLoadError('')
-            setReportTemplate(null)
-
-            try {
-                const response = await fetch(FnGetPublicAssetUrl(ORDER_FORM_JSON))
-
-                if (!response.ok) {
-                    throw new Error(`Failed to load ${ORDER_FORM_JSON} (${response.status})`)
-                }
-
-                const template = await response.json() as Record<string, unknown>
-
-                if (isActive) {
-                    setReportTemplate(template)
-                }
-            } catch (error) {
-                if (isActive) {
-                    setLoadError(
-                        error instanceof Error ? error.message : `Failed to load ${ORDER_FORM_JSON}`
-                    )
-                }
-            }
-        }
-
-        loadOrderFormTemplate()
-
-        return () => {
-            isActive = false
-        }
-    }, [])
-
-    if (loadError) {
-        return <div style={{ color: 'var(--error-color, #b00020)', padding: 12 }}>{loadError}</div>
-    }
-
-    if (!reportTemplate) {
-        return <Loader />
-    }
-
-    return (
-        <GenerateReport
-            uniqueName="feature-generate-report"
-            reportTemplate={reportTemplate}
-            addressFields={sampleOrderAddressFields}
-            docType={sampleOrderDocType}
-            dataset1={sampleOrderDataset1}
-            dataset2={sampleOrderDataset2}
-        />
-    )
-}
 
 const Eula = lazy(() => import('../../features/profile/eula/Eula.tsx'))
 const MyProfile = lazy(() => import('../../features/profile/myprofile/MyProfile.tsx'))
 const MyActivities = lazy(() => import('../../features/profile/myactivities/MyActivities.tsx'))
 const MySubscriptions = lazy(() => import('../../features/profile/mysubscriptions/MySubscriptions.tsx'))
-const NetZoom = lazy(() => import('../../features/products/netzoom/NetZoom.tsx'))
 const VisioStencils = lazy(() => import('../../features/products/visiostencils/VisioStencils.tsx'))
 const OtherProducts = lazy(() => import('../../features/products/other/OtherProducts.tsx'))
 const RequestSupport = lazy(() => import('../../features/services/requestsupport/RequestSupport.tsx'))
 const RequestVisioStencils = lazy(() => import('../../features/services/requestvisiostencils/RequestVisioStencils.tsx'))
 const RequestDeviceModels = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
 const DownloadVisioStencils = lazy(() => import('../../features/download/downloadvisiostencils/DownloadVisioStencils.tsx'))
-const DownloadNetZoom = lazy(() => import('../../features/download/downloadnetzoom/DownloadNetZoom.tsx'))
 
 /* Features that own the whole content area instead of the explorer tree.
    FeatureContainer reads this list to decide which side to render. */
 const FeaturesWithOwnLayout: string[] = [
-    ProfileEnums.MyProfile,
-    ProfileEnums.MyActivities,
-    ProfileEnums.MySubscriptions,
-    ProductsEnums.EULA,
-    ProductsEnums.NetZoom,
-    ProductsEnums.VisioStencils,
-    ProductsEnums.Other,
-    ServicesEnums.RequestSupport,
-    ServicesEnums.RequestVisioStencils,
-    ServicesEnums.RequestDeviceModels,
-    DownloadEnums.DownloadVisioStencils,
-    DownloadEnums.DownloadNetZoom
+    FeatureEnums.Other,
+    FeatureEnums.Profile,
+    FeatureEnums.VisioStencils,
+    FeatureEnums.ProductVisioStencils,
+    FeatureEnums.ProductOther,
+    FeatureEnums.ClientIdentityManagement,
+    FeatureEnums.NetZoom,
+    FeatureEnums.ProductNetZoom,
+
 ];
 
 /* Renders feature modules dynamically based on featureId.
@@ -119,8 +43,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
     }
 
     switch (featureContainerProps.featureId) {
-
-        case ProfileEnums.MyProfile:
+        case FeatureEnums.Profile:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -133,7 +56,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProfileEnums.MyActivities:
+        case FeatureEnums.Other:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -146,38 +69,12 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProfileEnums.MySubscriptions:
+        case FeatureEnums.VisioStencils:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
                         <MySubscriptions
                             uniqueName={'feature-profile-my-subscriptions'}
-                            featureId={featureContainerProps.featureId}
-                            headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} />
-                    </Suspense>
-                </ErrorBoundary>
-            );
-
-        case ProductsEnums.EULA:
-            return (
-                <ErrorBoundary>
-                    <Suspense fallback={<Loader />}>
-                        <Eula
-                            uniqueName={'feature-products-eula'}
-                            featureId={featureContainerProps.featureId}
-                            headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} />
-                    </Suspense>
-                </ErrorBoundary>
-            );
-
-        case ProductsEnums.NetZoom:
-            return (
-                <ErrorBoundary>
-                    <Suspense fallback={<Loader />}>
-                        <NetZoom
-                            uniqueName={'feature-products-netzoom'}
                             featureId={featureContainerProps.featureId}
                             headerText={featureContainerProps.headerText}
                             handleShowUserMessage={handleShowUserMessage} />
@@ -202,12 +99,11 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <GenerateReportHost />
-                        {/* <OtherProducts
+                        <OtherProducts
                             uniqueName={'feature-products-other'}
                             featureId={featureContainerProps.featureId}
                             headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} /> */}
+                            handleShowUserMessage={handleShowUserMessage} />
                     </Suspense>
                 </ErrorBoundary>
             );
@@ -252,21 +148,16 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case DownloadEnums.DownloadNetZoom:
-            return (
-                <ErrorBoundary>
-                    <Suspense fallback={<Loader />}>
-                        <DownloadNetZoom
-                            uniqueName={'feature-download-netzoom'}
-                            featureId={featureContainerProps.featureId}
-                            headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} />
-                    </Suspense>
-                </ErrorBoundary>
-            );
-
         default:
-            return null;
+            return <ErrorBoundary>
+                <Suspense fallback={<Loader />}>
+                    <Eula
+                        uniqueName={'feature-profile-eula'}
+                        featureId={featureContainerProps.featureId}
+                        headerText={featureContainerProps.headerText}
+                        handleShowUserMessage={handleShowUserMessage} />
+                </Suspense>
+            </ErrorBoundary>;
     }
 }
 

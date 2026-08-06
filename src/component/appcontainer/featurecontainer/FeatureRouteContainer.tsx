@@ -32,6 +32,7 @@ const DynamicRouteComponent = () => {
     const [StatusBarType, setStatusBarType] = useState<"menu" | "appqa" | undefined>();
     const helpTipsContext = useHelpTipContext();
     const statusBarContext = useStatusBarContext();
+    const [isShowChart, setIsShowChart] = useState<boolean>(false)
     const [isShowHelptip, setIsShowHelptip] = useState<boolean>(false)
     const [statusBarData, setStatusBarData] = useState<Record<string, number | string>>({});
     const mainAppContext = useMainAppContext();
@@ -58,11 +59,7 @@ const DynamicRouteComponent = () => {
         setStableFeatureId(featureId);
     }, [featureId]);
 
-    useEffect(() => {
-        if (mainAppContext && mainAppContext.apRecords) {
 
-        }
-    }, [mainAppContext])
 
     useEffect(() => {
         const feature = location?.state?._Feature;
@@ -165,7 +162,7 @@ const DynamicRouteComponent = () => {
             PropsComponent={{
                 component: FeatureContainer,
                 props: {
-                    uniqueName: 'feature-container',
+                    uniqueName: "feature-container",
                     featureId: stableFeatureId ?? "",
                     appqaId: featureId && Number(featureId) < AppQARange.MAX ? featureId : undefined,
                     allowShowHeader: true,
@@ -174,7 +171,14 @@ const DynamicRouteComponent = () => {
                     updateStatusBarData: updateStatusBarData
                 }
             }}
-
+            chartContainer={{
+                isVisible: isShowChart,
+                chartWidth: 0,
+                chartHeight: 0,
+                chartRows: 0,
+                chartColumns: 0,
+                chartProfiles: [],
+            }}
         />
     );
 };
