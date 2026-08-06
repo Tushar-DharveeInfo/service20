@@ -8,8 +8,8 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 
 const SUBMENU_SHOW_DELAY_MS = 200;
 
-const MORE_FEATURE = "";
-const TAG_LINE_CONTENT = "SM"
+const MORE_FEATURE = "45";
+const TAG_LINE_CONTENT = "Service"
 
 type AppQaMenuContainerProps = {
     uniqueName: string;

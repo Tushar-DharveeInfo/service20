@@ -7,7 +7,7 @@ import { FeatureRouteContainer } from "./featurecontainer/FeatureRouteContainer"
 import { TitleContainer } from "./titlecontainer/TitleContainer"
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { FnGenerateUID } from '../shared/allcommon/settingsform/FnGenerateUID'
-import { AppQA, FeatureMenuRange, FeatureQARange } from '../constants/Feature'
+import { AppQA, FeatureMenuRange } from '../constants/Feature'
 import { useStatusBarContext } from '../shared/context/hooks/StatusBarHooks'
 import { useSessionContext } from '../shared/context/hooks/SessionHooks'
 import { ISession } from '../shared/context/allinterface/ISession'
@@ -31,7 +31,6 @@ const isMenuItem = (item: unknown): item is IMenuItem => {
         typeof (item as IMenuItem).Label === "string"
     );
 };
-;
 
 const AppContainer = (appContainerProps: IAppContainer) => {
     const [searchParams] = useSearchParams();
@@ -39,7 +38,7 @@ const AppContainer = (appContainerProps: IAppContainer) => {
 
     const [selectedFeatureData, setSelectedFeatureData] = useState<IMenuItem | null>(null);
     const [selectedAppQAData, setSelectedAppQAData] = useState<IMenuItem | null>(null);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     const navigate = useNavigate();
     const location = useLocation();
     const statusBarContext = useStatusBarContext();
@@ -64,6 +63,7 @@ const AppContainer = (appContainerProps: IAppContainer) => {
             featureData: [...mainAppContext.featureRecords]
         };
     }, [mainAppContext.featureRecords]);
+
 
 
     const callApiToUpdateSession = async (isForFeature: boolean, payload: IMenuItem) => {
@@ -169,14 +169,7 @@ const AppContainer = (appContainerProps: IAppContainer) => {
     useEffect(() => {
         if (location.state && isMenuItem(location.state)) {
             const featureId = location.state._Feature?.toString();
-            if (featureId === AppQA.Help
-                || featureId === AppQA.Log
-                || featureId === AppQA.Alerts
-                || featureId === AppQA.Notify
-                || featureId === AppQA.Signout
-                || featureId === AppQA.Launch
-                || featureId === AppQA.Theme
-                || featureId === AppQA.Report) {
+            if (featureId === AppQA.Help || featureId === AppQA.ContactUs) {
                 setSelectedAppQAData(location.state)
             }
             else {
@@ -307,27 +300,12 @@ const AppContainer = (appContainerProps: IAppContainer) => {
             if (!feature) {
                 // Default landing feature must sit inside the feature-menu range,
                 // otherwise AppQA (10-99) and QA sub-items (1000+) get picked.
-                // Prefer a DefaultQA feature that already has sidebar QA rows in smFeatures.
-                const isMenuFeature = (item: IFeatureItem) => {
+                feature = featureData.find(item => {
                     const featureId = Number(item._Feature);
                     return item.DefaultQA
                         && featureId >= FeatureMenuRange.MIN
                         && featureId <= FeatureMenuRange.MAX;
-                };
-                const hasSidebarQa = (item: IFeatureItem) =>
-                    featureData.some((qa) => {
-                        const qaId = Number(qa._Feature);
-                        return (
-                            String(qa.MenuID) === String(item._Feature)
-                            && Number.isFinite(qaId)
-                            && qaId > FeatureQARange.MIN
-                            && qaId < FeatureQARange.MAX
-                        );
-                    });
-
-                feature = featureData.find(
-                    (item) => isMenuFeature(item) && hasSidebarQa(item)
-                ) ?? featureData.find(isMenuFeature);
+                });
             };
             if (!feature) return
             const parentFeature = featureData.find(
@@ -454,7 +432,7 @@ const AppContainer = (appContainerProps: IAppContainer) => {
                                 {...menuFeatureData}
                                 selectedFeature={selectedFeatureData ?? undefined}
                                 handleSelect={handleSelectForSubMenu}
-                                handleMouseLeave={() => { setIsOpen(false); }}
+                                // handleMouseLeave={() => { setIsOpen(false); }}
                                 hideSearchControl={true}
                             />
                         )}

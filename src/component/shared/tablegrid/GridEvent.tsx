@@ -1,4 +1,5 @@
 
+import { AppQA } from "../../constants/Feature";
 import { FnCopyToClipboard } from "../allcommon/basic/FnCopyToClipboard";
 import { IBasicGrid } from "../allinterface/tablegrid/IBasicGrid";
 import { CellClickedEvent, CellMouseDownEvent, GridApi, GridReadyEvent, RowClickedEvent } from "ag-grid-community";
@@ -10,7 +11,7 @@ const deferGridTask = (task: () => void, delayMs: number): ReturnType<typeof set
 const onGridReady = (params: GridReadyEvent, props: IBasicGrid) => {
 
 
-    if (props.containerName === "nz_forcensic_log" && props.featureId) {
+    if (props.containerName === "nz_forcensic_log" && props.featureId && props.featureId !== AppQA.Settings) {
         deferGridTask(() => {
 
             const sidebarContainer: HTMLElement | null = document.querySelector('.nz-qa-sidebar-container');

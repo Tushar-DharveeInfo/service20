@@ -27,6 +27,11 @@ function App() {
 
   const callEnvToGetData = async () => {
     try {
+      // if (!window.APP_CONFIG?.DEPLOYMENT_N20_API_URL) {
+      //   setAuthError("Deployment API URL is missing.");
+      //   setIsEnvReady(false);
+      //   return;
+      // }
       setIsEnvReady(true);
     } catch (error) {
       console.error("Environment fetch failed:", error);

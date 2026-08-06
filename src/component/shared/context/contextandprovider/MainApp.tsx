@@ -1,12 +1,10 @@
 import { createContext, useEffect, useMemo, useState, useCallback } from "react";
-import { AuthSession } from "@n20a/libauth";
 import { IAlertProfileItem, IApItem, IApProfileItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, ISiteProperties, IUserProfileRecord } from "../allinterface/IMainApp";
 import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
 import { IStatusBar } from "../allinterface/IStatusBar";
 import { ISession } from "../allinterface/ISession";
 import { FnHandleAPIResponse } from "../../allcommon/basic/FnHandleAPIResponse";
 import { FnIsInternetAvailable } from "../../../appcontainer/allcommon/FnIsInternetAvailable";
-import { AuthSession } from "@n20a/libauth";
 
 
 let featuresData: IFeatureItem[] | null = null;
@@ -35,8 +33,8 @@ function MainAppProvider({ children }: IAppContextWrapper) {
     const [autoExecuteWorkorder, setAutoExecuteWorkorder] = useState<boolean>(false);
     const [selectedFeatureForHelp, setSelectedFeatureForHelp] = useState<IFeatureForHelp>()
     const [userProfileRecord, setUserProfileRecord] = useState<IUserProfileRecord>()
+    const [authSession, setAuthSession] = useState<AuthSession>()
     const [impUserProfileRecord, setImpUserProfileRecord] = useState<IUserProfileRecord>()
-    const [authSession, setAuthSession] = useState<AuthSession | undefined>()
 
     useEffect(() => {
         try {
@@ -131,6 +129,17 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             }
         };
 
+        // if (statusBarContext) {
+        //     try {
+        //         await axiosInterceptor({
+        //             url: FEATURE.GetFeatures,
+        //             data: {},
+        //             setFetchData: handleFeatureApiData
+        //         }, statusBarContext);
+        //     } catch (error) {
+        //         console.error("Error fetching features:", error);
+        //     }
+        // }
     }, []);
 
     const fetchApRecords = useCallback(async (statusBarContext?: IStatusBar) => {
@@ -149,6 +158,19 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             }
         };
 
+        // if (statusBarContext) {
+        //     try {
+        //         await axiosInterceptor({
+        //             url: AP.GetAllCol,
+        //             data: {
+        //                 applyUserValue: true
+        //             },
+        //             setFetchData: handleApProfileData
+        //         }, statusBarContext);
+        //     } catch (error) {
+        //         console.error("Error fetching AP records:", error);
+        //     }
+        // }
     }, []);
 
     const fetchApProfileRecords = useCallback(async (statusBarContext?: IStatusBar) => {
@@ -274,8 +296,8 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             floorLayoutRecord,
             selectedFeatureForHelp,
             userProfileRecord,
-            authSession,
             impUserProfileRecord,
+            authSession,
             fetchFeatures,
             fetchApRecords,
             fetchApProfileRecords,

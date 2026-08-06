@@ -68,14 +68,14 @@ const MenuImage = (menuImageProps: IMenuImage) => {
                         handleMouseEnter(event)
                     }
                 }}
-                onMouseLeave={(event: React.MouseEvent<HTMLDivElement>) => {
-                    clearMouseEnterTimeout();
-                    setHasEntered(false)
-                    if (menuImageProps.hoverBGColor) {
-                        const removeHoverColor = { ...dynamicStyle, backgroundColor: menuImageProps.BGColor }
-                        setDynamicStyle({ ...removeHoverColor })
-                    }
-                }}
+                // onMouseLeave={(event: React.MouseEvent<HTMLDivElement>) => {
+                //     clearMouseEnterTimeout();
+                //     setHasEntered(false)
+                //     if (menuImageProps.hoverBGColor) {
+                //         const removeHoverColor = { ...dynamicStyle, backgroundColor: menuImageProps.BGColor }
+                //         setDynamicStyle({ ...removeHoverColor })
+                //     }
+                // }}
                 onMouseMove={() => {
                     if (menuImageProps.hoverBGColor) {
                         const setHoverColor = { ...dynamicStyle, backgroundColor: menuImageProps.hoverBGColor }

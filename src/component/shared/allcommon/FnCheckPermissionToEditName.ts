@@ -5,7 +5,6 @@ interface IFeaturePermission {
     AppQAFeatureName: string;
 }
 
-const editableEntityPermissions: IFeaturePermission[] = []
 
 const editableFeaturePermissions: string[] = [
     "Configure Device",
@@ -23,13 +22,7 @@ const FnCheckPermissionToEditName = (
         return editableFeaturePermissions.includes(session)
     }
     else {
-        return editableEntityPermissions.some(permission =>
-            permission.AppQAName === (session as IFeaturePermission).AppQAName &&
-            (permission.AppQAMenuName === "" ||
-                permission.AppQAMenuName === (session as IFeaturePermission).AppQAMenuName) &&
-            (permission.AppQAFeatureName === "" ||
-                permission.AppQAFeatureName === (session as IFeaturePermission).AppQAFeatureName)
-        );
+        return false
     }
 };
 

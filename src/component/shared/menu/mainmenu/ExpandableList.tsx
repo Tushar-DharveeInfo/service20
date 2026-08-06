@@ -32,27 +32,6 @@ const searchProps: ExpandableListSearchState = {
     searchInputValue: "",
 };
 
-/** Prefer _Feature; fall back to EntID only when both sides have a real value. */
-const isSameMenuItem = (a: IMenuItem, b: IMenuItem): boolean => {
-    if (a._Feature != null && b._Feature != null && String(a._Feature) !== "" && String(b._Feature) !== "") {
-        return String(a._Feature) === String(b._Feature);
-    }
-    if (a.EntID && b.EntID) {
-        return a.EntID === b.EntID;
-    }
-    return false;
-};
-
-const getMenuItemKey = (item: IMenuItem): string | undefined => {
-    if (item._Feature != null && String(item._Feature) !== "") {
-        return String(item._Feature);
-    }
-    if (item.EntID) {
-        return item.EntID;
-    }
-    return undefined;
-};
-
 const ExpandableList = (props: IExpandableList) => {
     const isConfigureMenu = props.uniqueName === "configure";
     const [mainMenu, setMainMenu] = useState<IMenuItem[] | null>(null);
@@ -87,17 +66,17 @@ const ExpandableList = (props: IExpandableList) => {
 
         firstGroup.isSelected = true;
         defaultSub.isSelected = true;
-        setSelectedEntId(getMenuItemKey(defaultSub));
+        setSelectedEntId(defaultSub.EntID as string | undefined);
         setSelectedMenuIndex(-1);
         configureDefaultSelectedRef.current = true;
         props.handleMouseEvent(undefined, "expandleList", defaultSub);
 
         return menu.map((ele) => ({
             ...ele,
-            isSelected: isSameMenuItem(ele, firstGroup),
+            isSelected: ele.EntID === firstGroup.EntID,
             subMenu: ele.subMenu?.map((sub) => ({
                 ...sub,
-                isSelected: isSameMenuItem(sub, defaultSub),
+                isSelected: sub.EntID === defaultSub.EntID,
             })),
         }));
     };
@@ -106,11 +85,11 @@ const ExpandableList = (props: IExpandableList) => {
         if (props.menuData && props.menuData.length > 0) {
             if (!isEqual(props.menuData, originalMenuMenu)) {
                 const menu: IMenuItem[] = [...props.menuData];
-    // One group, one child: open group and select the child on load.
+                // One group, one child: open group and select the child on load.
                 if (!isConfigureMenu && menu.length === 1 && menu[0].subMenu?.length === 1) {
                     menu[0].isOpen = true
                     menu[0].subMenu[0].isSelected = true
-                    setSelectedEntId(getMenuItemKey(menu[0].subMenu[0]))
+                    setSelectedEntId(menu[0].subMenu[0].EntID as string | undefined)
                     props.handleMouseEvent(undefined, "expandleList", menu[0].subMenu[0])
                     setSelectedMenuIndex(-1)
                     menu[0].isSelected = false
@@ -146,11 +125,11 @@ const ExpandableList = (props: IExpandableList) => {
         }
         try {
 
-            setSelectedEntId(getMenuItemKey(item));
+            setSelectedEntId(item.EntID as string | undefined);
             mainMenu.map((ele: IMenuItem) => {
                 ele.isSelected = false;
                 ele.subMenu?.forEach((sub: IMenuItem) => {
-                    if (isSameMenuItem(sub, item)) {
+                    if (sub.EntID === item.EntID) {
                         sub.isSelected = true;
                         ele.isSelected = true;
                     }
@@ -166,7 +145,7 @@ const ExpandableList = (props: IExpandableList) => {
             setSelectedMenuIndex(-1)
 
             for (let mainIndex = 0; mainIndex < mainMenu.length; mainIndex++) {
-                const subIndex = mainMenu[mainIndex].subMenu?.findIndex((sub) => isSameMenuItem(sub, item)) ?? -1;
+                const subIndex = mainMenu[mainIndex].subMenu?.findIndex((sub) => sub.EntID === item.EntID) ?? -1;
                 if (subIndex >= 0) {
                     setActiveMainIndex(mainIndex);
                     setActiveSubIndex(subIndex);
@@ -205,7 +184,9 @@ const ExpandableList = (props: IExpandableList) => {
             const hasSubMenu = subMenuLength > 0;
 
             mainMenu.forEach((ele: IMenuItem) => {
-                const isClickedItem = isSameMenuItem(ele, item);
+                const isClickedItem =
+                    (ele.EntID && item.EntID && String(ele.EntID) === String(item.EntID)) ||
+                    (ele._Feature != null && item._Feature != null && String(ele._Feature) === String(item._Feature));
                 const elementHasSubMenu = !!ele.subMenu?.length;
 
                 if (isClickedItem) {
@@ -242,7 +223,7 @@ const ExpandableList = (props: IExpandableList) => {
                 return;
             }
 
-            setSelectedEntId(getMenuItemKey(item));
+            setSelectedEntId(item.EntID as string | undefined);
             setActiveMainIndex(index);
             setActiveSubIndex(null);
             setSelectedMenuIndex(index);
@@ -257,11 +238,11 @@ const ExpandableList = (props: IExpandableList) => {
             const restored = originalMenuMenu.map((ele: IMenuItem) => {
                 const subMenu = ele.subMenu?.map((sub: IMenuItem) => ({
                     ...sub,
-                    isSelected: getMenuItemKey(sub) === selectedEntId,
+                    isSelected: sub.EntID === selectedEntId,
                 })) || [];
 
                 const isAnySubSelected = subMenu.some((s: IMenuItem) => s.isSelected);
-                const isSelected = getMenuItemKey(ele) === selectedEntId || isAnySubSelected;
+                const isSelected = ele.EntID === selectedEntId || isAnySubSelected;
 
                 return {
                     ...ele,
@@ -412,7 +393,7 @@ const ExpandableList = (props: IExpandableList) => {
                         && sub._Feature
                         && props.selectedFeature._Feature.toString() === sub._Feature.toString()
                     )
-                    : !!(sub.isSelected || (selectedEntId && getMenuItemKey(sub) === selectedEntId));
+                    : !!(sub.isSelected || (selectedEntId && sub.EntID === selectedEntId));
                 if (isSubSelected) {
                     return { mainIndex, subIndex };
                 }
@@ -421,7 +402,7 @@ const ExpandableList = (props: IExpandableList) => {
 
         for (let mainIndex = 0; mainIndex < mainMenu.length; mainIndex++) {
             const element = mainMenu[mainIndex];
-            if (element.isSelected || (selectedEntId && getMenuItemKey(element) === selectedEntId)) {
+            if (element.isSelected || (selectedEntId && element.EntID === selectedEntId)) {
                 return { mainIndex, subIndex: null };
             }
         }

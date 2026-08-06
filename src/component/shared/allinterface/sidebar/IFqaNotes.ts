@@ -1,4 +1,4 @@
-import { ITreeNode } from "../tree/ITreeControl";
+import { ITreeNode } from "../entity/ITreeNode";
 
 interface IFqaNotes {
     uniqueName: string; // A unique identifier for notes

@@ -16,6 +16,7 @@ interface IOverlayTab {
     ShowOnlyIcon?: boolean;
     hideDrager?: boolean;
     hideOvelayPanel?: boolean;
+    inlineOverlay?: boolean;// inline panel beside header text (no drag positioning)
     handleSelectedTab?: (tab: string[]) => void;
 }
 

@@ -1,8 +1,8 @@
 /*
  * SAMPLE DATA: feature records from ServiceFeature.json for InitSession replacement.
- * JSON already uses app-shaped fields (_Feature, SortOrder, DefaultQA, �).
+ * JSON already uses app-shaped fields (_Feature, SortOrder, DefaultQA, …).
  */
-import serviceFeatureSample from "./smFeatures.json";
+import serviceFeatureSample from "./feature.json";
 import type { IFeatureItem } from "../../component/shared/context/allinterface/IMainApp";
 
 type ServiceFeatureRecord = {
@@ -26,7 +26,6 @@ type ServiceFeatureRecord = {
     [key: string]: string | number | boolean | null | undefined;
 };
 
-
 const toFeatureId = (value: string | number | undefined): string =>
     value === undefined || value === null ? "" : String(value);
 
@@ -45,13 +44,11 @@ const toBool = (value: string | boolean | undefined, defaultValue = false): bool
 /*
  * Maps ServiceFeature.json rows to IFeatureItem.
  * Prefer `_Feature` (current export shape). Fall back to legacy `Feature` only
- * when `_Feature` is absent  never fall back to MenuID or every row becomes a top menu.
+ * when `_Feature` is absent — never fall back to MenuID or every row becomes a top menu.
  */
 const mapServiceFeatureToFeatureItem = (record: ServiceFeatureRecord): IFeatureItem => {
     const featureId = toFeatureId(record._Feature ?? record.Feature);
     const menuId = toFeatureId(record.MenuID ?? featureId);
-    // Sample SM features omit EntID; use _Feature so menu identity comparisons stay unique.
-    const entId = toFeatureId(record.EntID) || featureId;
 
     return {
         ...record,
@@ -68,13 +65,14 @@ const mapServiceFeatureToFeatureItem = (record: ServiceFeatureRecord): IFeatureI
         FilterForm: record.FilterForm ?? "",
         SearchPrompt: record.SearchPrompt ?? null,
         IsNZ: toBool(record.IsNZ, true),
-        EntID: entId,
-        RecID: record.RecID ?? "",
+        // feature.json often omits EntID; empty EntID makes every menu group match as "selected" and open.
+        EntID: record.EntID ? String(record.EntID) : featureId,
+        RecID: record.RecID ? String(record.RecID) : featureId,
         LastUpdated: record.LastUpdated ?? "",
     };
 };
 
 const sampleFeatureRecords: IFeatureItem[] = (serviceFeatureSample as ServiceFeatureRecord[])
-    .map(mapServiceFeatureToFeatureItem)
+    .map(mapServiceFeatureToFeatureItem);
 
 export { sampleFeatureRecords, mapServiceFeatureToFeatureItem };
