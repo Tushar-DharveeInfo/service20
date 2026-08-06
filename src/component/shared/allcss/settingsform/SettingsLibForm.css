@@ -3,32 +3,36 @@
     flex-direction: column;
     overflow: hidden;
 }
+
 .nz-settings-lib-form-container .nz-form-action-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .nz-settings-lib-form-container .nz-settings-lib-form-content {
     flex-grow: 1;
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
+
 .nz-settings-lib-form-container .nz-form-action-header .nz-form-header-action {
     display: flex;
     flex-direction: row;
 }
+
 .nz-settings-lib-form-container .nz-settings-lib-form-content .nz-settings-lib-form-controls {
     height: 100%;
     overflow: hidden;
     display: flex;
 }
-.nz-settings-lib-form-container
-    .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll
-    .nz-settings-lib-form-controls {
+
+.nz-settings-lib-form-container .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll .nz-settings-lib-form-controls {
     height: auto;
     overflow: visible;
 }
+
 .nz-settings-lib-form-container .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll {
     overflow-y: auto;
     visibility: hidden;
@@ -38,9 +42,8 @@
 .nz-settings-lib-form-container .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll div {
     visibility: visible;
 }
-.nz-settings-lib-form-container
-    .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll
-    div.nz-fc-json-OneToManyProps-grid {
+
+.nz-settings-lib-form-container .nz-settings-lib-form-content.nz-setting-lib-form-external-scroll div.nz-fc-json-OneToManyProps-grid {
     overflow: visible;
 }
 
@@ -80,9 +83,10 @@
     text-align: center;
     min-width: 100px;
 }
+
 .nz-settings-lib-form-container .nz-external-controls-container {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2);
-    padding: var(--spacing-2) var(--spacing-1);
+    padding: var(--spacing-2) 0px;
 }

@@ -245,6 +245,8 @@ const ContactUsNotes = ({ uniqueName, selectedNode }: IContactUsNotes) => {
                                 {...noteDetails}
                                 key={refreshToken}
                                 sendNote={sendNotes}
+                                allowVideo={false}
+                                allowAudio={false}
                                 sendTooltip="Send Note"
                                 handleDelete={handleDeleteAttachment}
                             />

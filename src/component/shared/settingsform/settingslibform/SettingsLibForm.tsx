@@ -912,6 +912,7 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                                         <AddressForm
                                             key={control.Name}
                                             initialAddress={updatedAddress}
+                                            showDerivedFields={false}
                                             onChange={handleValueChangeAddress}
                                         />
                                     );
