@@ -2,8 +2,6 @@ import { createContext, useEffect, useMemo, useState, useCallback } from "react"
 import { AuthSession } from "@n20a/libauth";
 import { IAlertProfileItem, IApItem, IApProfileItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, ISiteProperties, IUserProfileRecord } from "../allinterface/IMainApp";
 import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
-import { axiosInterceptor } from "../../interceptors/Interceptor";
-import { AP, EM, FEATURE } from "../../interceptors/EndPoints";
 import { IStatusBar } from "../allinterface/IStatusBar";
 import { ISession } from "../allinterface/ISession";
 import { FnHandleAPIResponse } from "../../allcommon/basic/FnHandleAPIResponse";

@@ -3,8 +3,6 @@ import { DisplayControlEnums, Measurement } from "../../alldefaultprops/basic/De
 import { IDataset, ITableFormMeta } from "../../allinterface/sidebar/IPropertyFormContainer";
 import { IRefData } from "../../allinterface/basic/IRefData";
 import { FnGetRefList } from "../basic/FnGetRefList";
-import { axiosInterceptor } from "../../interceptors/Interceptor";
-import { MISC } from "../../interceptors/EndPoints";
 import { IStatusBar } from "../../context/allinterface/IStatusBar";
 import { IRefItem } from "../../context/allinterface/IMainApp";
 import { DELIMITER } from "../../alldefaultprops/basic/DefaultPropsChekedListBoxControl";

@@ -10,7 +10,6 @@ import { envVarEnums } from "../appcontainer/alldefaultprops/DefaultPropsAppCont
 import MarkdownIt from 'markdown-it';
 import parse from 'html-react-parser';
 import { useEffect, useMemo, useState } from 'react';
-import { axiosInterceptorForHead } from './interceptors/Interceptor';
 import { ActionImage } from './basic/actionimage/ActionImage';
 import { Close24x24 } from '@n20a/libicon';
 import { FnGetCssVariable } from '../appcontainer/allcommon/FnGetCssVariable';
@@ -122,39 +121,30 @@ const Help = (helpProps: IHelp) => {
             }
 
             try {
-                await axiosInterceptorForHead({
-                    url: USER_GUIDE_URL,
-                    onHeadersReceived: (
-                        _headers: Record<string, string> | null,
-                        isReachable: boolean,
-                        error: string | unknown
-                    ) => {
+                const response = await fetch(USER_GUIDE_URL, { method: "HEAD" });
+                const isReachable = response.ok;
 
-                        setIsUserGuideAvailable(isReachable);
-                        setIsUserGuideUrlValidated(true);
+                setIsUserGuideAvailable(isReachable);
+                setIsUserGuideUrlValidated(true);
 
-                        if (!isReachable) {
+                if (!isReachable) {
+                    console.error(
+                        "Remote Help Documentation is not available.",
+                        response.status
+                    );
 
-                            console.error(
-                                "Remote Help Documentation is not available.",
-                                error
-                            );
-
-                            const payloadLog: IFnCreateForensiclog = {
-                                GroupName: LogGroupName.ForensicLogTemplate,
-                                SubGroupName: LogSubGroupName.Help,
-                                LogName: LogName.RemoteHelp,
-                                logType: 'UserAction',
-                                _Forensiclog: LogSubGroupName.Help,
-                                sessionContext: sessionContext,
-                                statusBarContext: statusBarContext,
-                                RefTableItems: mainAppContext.refTableRecords
-                            }
-                            FnCreateForensiclog(payloadLog)
-                        }
+                    const payloadLog: IFnCreateForensiclog = {
+                        GroupName: LogGroupName.ForensicLogTemplate,
+                        SubGroupName: LogSubGroupName.Help,
+                        LogName: LogName.RemoteHelp,
+                        logType: 'UserAction',
+                        _Forensiclog: LogSubGroupName.Help,
+                        sessionContext: sessionContext,
+                        statusBarContext: statusBarContext,
+                        RefTableItems: mainAppContext.refTableRecords
                     }
-                });
-
+                    FnCreateForensiclog(payloadLog)
+                }
             } catch (error) {
 
                 console.error(

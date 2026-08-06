@@ -1,63 +1,17 @@
-import { DATAGRID } from "../../interceptors/EndPoints";
-import { axiosInterceptor } from "../../interceptors/Interceptor";
-import { FnParseJsonSafely } from "../../../appcontainer/allcommon/FnParseJsonSafely";
 import { FnGetSessionStorageItem } from "../basic/FnGetSessionStorageItem";
 import { IStatusBar } from "../../context/allinterface/IStatusBar";
 
+/* SAMPLE DATA: DATAGRID.GetDatagridJsonColwidtharray is disabled — read session storage only. */
 const FnGetColumnWidthFromSession = async (
     gridName: string,
     columnName: string = "",
-    statusBarContext: IStatusBar
+    _statusBarContext: IStatusBar
 ) => {
     try {
         if (!gridName || typeof gridName !== "string") return null;
 
-        let sessionStorage = FnGetSessionStorageItem("col_pane_width_json");
-        let gridSettings: any = null;
-
-        // helper to wrap axiosInterceptor in Promise
-        // const fetchGridSettings = async () => {
-        //     try {
-        //         return await new Promise((resolve) => {
-        //             axiosInterceptor(
-        //                 {
-        //                     url: DATAGRID.GetDatagridJsonColwidtharray,
-        //                     data: { dataGridNames: gridName },
-        //                     callSilently: true,
-        //                     setFetchData: (resp: unknown) => {
-        //                         resolve(resp);
-        //                     }
-        //                 },
-        //                 statusBarContext
-        //             );
-        //         });
-        //     } catch (err) {
-        //         console.error("fetchGridSettings error:", err);
-        //         return null;
-        //     }
-        // };
-
-        // if (!sessionStorage?.length) {
-        //     gridSettings = await fetchGridSettings();
-        // } else {
-        //     let settings: any = [];
-
-        //     try {
-        //         settings = FnParseJsonSafely(sessionStorage);
-        //     } catch (e) {
-        //         console.error("Invalid sessionStorage JSON");
-        //         settings = [];
-        //     }
-
-        //     gridSettings = Array.isArray(settings)
-        //         ? settings.filter((ele: any) => ele.dataGridName == gridName)
-        //         : [];
-
-        //     if (!gridSettings?.length) {
-        //         gridSettings = await fetchGridSettings();
-        //     }
-        // }
-
+        void FnGetSessionStorageItem("col_pane_width_json");
+        const gridSettings: any = null;
         let colWidth: any = null;
 
         if (
