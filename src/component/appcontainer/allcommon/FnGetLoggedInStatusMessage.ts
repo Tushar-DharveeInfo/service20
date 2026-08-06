@@ -16,7 +16,7 @@ const FnGetSubscriberProduct = (
 
 };
 
-/*
+/**
  * Builds the status-bar login identity line from the current user profile
  * and available subscription licenses.
  */

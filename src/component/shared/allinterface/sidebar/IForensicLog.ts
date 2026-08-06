@@ -1,5 +1,5 @@
 import { IForensicLogPaginationPayload, TGridRowData } from "../tablegrid/IBasicGrid"
-import { ITreeNode } from "../entity/ITreeNode"
+import { ITreeNode } from "../tree/ITreeControl"
 
 interface IForensicLog {
     uniqueName: string

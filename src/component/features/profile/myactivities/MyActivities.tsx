@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import '../../allcss/profile/MyActivities.css'
 import { Label } from '../../../shared/basic/label/Label.tsx'
-import { ForensicLog } from '../../../shared/forensiclog/ForensicLog.tsx'
+import { ForensicLog } from '../../../shared/sidebar/forensiclog/ForensicLog.tsx'
 import { IMyActivities } from '../../allinterface/profile/IMyActivities.ts'
 
 /* Profile/MyActivities is the forensic log scoped to the logged in user,

@@ -32,16 +32,13 @@ const MainMenu = (menuProps: IMainMenu) => {
       menu.forEach((element: IMenuItem) => {
         const submenu = FnGetSubMenus(updatedFeatures ?? menuProps.featureData, element.MenuID, element.Label);
         if (selectedMenu) {
-          const selectedId = selectedMenu.EntID ? String(selectedMenu.EntID) : "";
-          const selectedFeatureId = selectedMenu._Feature != null ? String(selectedMenu._Feature) : "";
-          const selectedMenuSub = submenu?.find((sub) => {
-            const subEntId = sub.EntID ? String(sub.EntID) : "";
-            const subFeatureId = sub._Feature != null ? String(sub._Feature) : "";
-            if (selectedId && subEntId && selectedId === subEntId) return true;
-            if (selectedFeatureId && subFeatureId && selectedFeatureId === subFeatureId) return true;
-            return false;
-          });
+          const selectedMenuSub = submenu?.find((sub) =>
+            (sub._Feature != null && selectedMenu._Feature != null
+              && String(sub._Feature) === String(selectedMenu._Feature))
+            || (!!sub.EntID && !!selectedMenu.EntID && sub.EntID === selectedMenu.EntID)
+          );
           if (selectedMenuSub) {
+
             element.isOpen = true;
           }
         }

@@ -1,6 +1,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AddressForm, ChangedValueMap, FormElementsRenderer, IAddress, IFormData, IFormElements } from '@n20a/libform'
+import { AddressForm, ChangedValueMap, CountryForm, FormElementsRenderer, IAddress, ICountryState, IFormData, IFormElements } from '@n20a/libform'
 import { Help24x24, Save24x24, TestAPI24x24 } from '@n20a/libicon'
 
 import '@n20a/libform/style.css'
@@ -25,7 +25,6 @@ import { IControl, ISettingsLibForm } from '../../allinterface/settingsform/ISet
 import { ActionImage } from '../../basic/actionimage/ActionImage'
 import { JsonViewerControl } from '../../basic/jsonviewercontrol/JsonViewerControl'
 import { Label } from '../../basic/label/Label'
-import { OneToManyPropertyFormWithGrid } from '../onetomanypropertyformwithgrid/OneToManyPropertyFormWithGrid'
 import { useSessionContext } from '../../context/hooks/SessionHooks'
 import { FnCheckPermissionToEditName, IFeaturePermission } from '../../allcommon/FnCheckPermissionToEditName'
 
@@ -68,6 +67,35 @@ function getExternalControlValue(
     }
     return undefined;
 }
+
+const FULL_ADDRESS_FIELD_NAMES = new Set([
+    "address1",
+    "address2",
+    "city",
+    "zip",
+    "countrycode",
+    "gps",
+    "timezoneoffset",
+]);
+
+const isCountryStateFieldName = (name: string): boolean => {
+    const n = name.toLowerCase();
+    if (!n || n === "countrycode" || n.includes("countrycode")) return false;
+    return n === "country" || n === "state" || n.endsWith("country") || n.endsWith("state");
+};
+
+const isAddressRelatedFieldName = (name: string): boolean =>
+    FULL_ADDRESS_FIELD_NAMES.has(name.toLowerCase()) || isCountryStateFieldName(name);
+
+const isCountryFieldName = (name: string): boolean => {
+    const n = name.toLowerCase();
+    return n === "country" || (n.endsWith("country") && !n.includes("countrycode"));
+};
+
+const isStateFieldName = (name: string): boolean => {
+    const n = name.toLowerCase();
+    return n === "state" || n.endsWith("state");
+};
 
 // Reads a file as base64 content for profile save payloads.
 function readFileAsBase64(file: File): Promise<string> {
@@ -120,6 +148,10 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
         Country: "",
         Zip: ""
     });
+    const [updatedCountryStates, setUpdatedCountryStates] = useState<Record<string, ICountryState>>({});
+    const updatedCountryStatesRef = useRef<Record<string, ICountryState>>({});
+    const countryFormFieldsRef = useRef<Record<string, { country: string; state: string }>>({});
+    const handleValueChangeRef = useRef(handleValueChange);
     const [controlsToRenderExternal, setControlsToRenderExternal] = useState<IControl[]>();
     const [jsonForView, setJsonForView] = useState<Record<string, unknown>>();
     const [loading, setLoading] = useState(true);
@@ -131,6 +163,10 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
     const mainAppContext = useMainAppContext();
     const sessionContext = useSessionContext();
     const prevId = useRef<string>(undefined);
+
+    useEffect(() => {
+        handleValueChangeRef.current = handleValueChange;
+    }, [handleValueChange]);
 
     // Auto-saves control changes and shows a brief saved overlay when successful.
     const handleChangedControlValue = useCallback((changedValue: ChangedValueMap) => {
@@ -233,25 +269,19 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
         if (!controls) return;
 
         try {
-            const addressFieldNames = new Set([
-                "address1",
-                "address2",
-                "city",
-                "state",
-                "country",
-                "zip",
-                "countrycode",
-                "gps",
-                "timezoneoffset"
-            ]);
-
-            const addressControls = controls.filter(control =>
-                addressFieldNames.has(control.Name?.toLowerCase() ?? "")
+            const addressRelatedControls = controls.filter(control =>
+                isAddressRelatedFieldName(control.Name ?? "")
+            );
+            const hasFullAddressFields = addressRelatedControls.some(control =>
+                FULL_ADDRESS_FIELD_NAMES.has(control.Name?.toLowerCase() ?? "")
+            );
+            const countryStateControls = addressRelatedControls.filter(control =>
+                isCountryStateFieldName(control.Name ?? "")
             );
 
-            // Remove address controls from normal controls
+            // Remove address / country-state controls from normal form controls
             const controlsForForm = controls.filter(control =>
-                !addressFieldNames.has(control.Name?.toLowerCase() ?? "")
+                !isAddressRelatedFieldName(control.Name ?? "")
             );
 
             const parsedProfile =
@@ -276,6 +306,14 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                     return String(parsedProfile[fieldName]);
                 }
 
+                // Case-insensitive exact key
+                const exactIgnoreCase = Object.keys(parsedProfile).find(
+                    key => key.toLowerCase() === fieldName.toLowerCase()
+                );
+                if (exactIgnoreCase != null) {
+                    return String(parsedProfile[exactIgnoreCase] ?? "");
+                }
+
                 // Find dynamic prefixed key
                 const matchedKey = Object.keys(parsedProfile).find(
                     key =>
@@ -289,63 +327,74 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                     : "";
             };
 
-            /*
-             * Get DefaultValue from address control.
-             */
-            const getDefaultValue = (fieldName: string): string => {
-                const control = addressControls.find(
+            const getDefaultValue = (fieldName: string, sourceControls: IControl[]): string => {
+                const control = sourceControls.find(
                     item =>
                         item.Name?.toLowerCase() ===
                         fieldName.toLowerCase()
                 );
-
-                return String(control?.DefaultValue ?? "");
+                return String(control?.DefaultValue ?? control?.DefaultAPValue ?? "");
             };
 
-            let addressValue: IAddress;
+            const getControlValue = (
+                control: IControl | undefined,
+                fieldAliases: string[]
+            ): string => {
+                if (!control) return "";
+                for (const alias of fieldAliases) {
+                    const fromProfile = getProfileValue(alias);
+                    if (fromProfile) return fromProfile;
+                }
+                return String(control.DefaultValue ?? control.DefaultAPValue ?? "");
+            };
 
-            if (id || isAutoSave) {
-                // EDIT / AUTO SAVE MODE
+            let addressValue: IAddress = {
+                Address1: "",
+                Address2: "",
+                City: "",
+                State: "",
+                Country: "",
+                Zip: "",
+            };
 
-                const gps = getProfileValue("GPS");
+            if (hasFullAddressFields) {
+                if (id || isAutoSave) {
+                    const gps = getProfileValue("GPS");
+                    const [latitude = "", longitude = ""] = gps
+                        .split(",")
+                        .map(value => value.trim());
 
-                const [latitude = "", longitude = ""] = gps
-                    .split(",")
-                    .map(value => value.trim());
+                    addressValue = {
+                        Address1: getProfileValue("Address1"),
+                        Address2: getProfileValue("Address2"),
+                        City: getProfileValue("City"),
+                        State: getProfileValue("State"),
+                        Country: getProfileValue("Country"),
+                        Zip: getProfileValue("Zip"),
+                        CountryCode: getProfileValue("CountryCode"),
+                        Latitude: latitude,
+                        Longitude: longitude,
+                        TimezoneOffset: getProfileValue("TimezoneOffset")
+                    };
+                } else {
+                    const gps = getDefaultValue("GPS", addressRelatedControls);
+                    const [latitude = "", longitude = ""] = gps
+                        .split(",")
+                        .map(value => value.trim());
 
-                addressValue = {
-                    Address1: getProfileValue("Address1"),
-                    Address2: getProfileValue("Address2"),
-                    City: getProfileValue("City"),
-                    State: getProfileValue("State"),
-                    Country: getProfileValue("Country"),
-                    Zip: getProfileValue("Zip"),
-                    CountryCode: getProfileValue("CountryCode"),
-                    Latitude: latitude,
-                    Longitude: longitude,
-                    TimezoneOffset: getProfileValue("TimezoneOffset")
-                };
-            } else {
-                // ADD MODE - use control DefaultValue
-
-                const gps = getDefaultValue("GPS");
-
-                const [latitude = "", longitude = ""] = gps
-                    .split(",")
-                    .map(value => value.trim());
-
-                addressValue = {
-                    Address1: getDefaultValue("Address1"),
-                    Address2: getDefaultValue("Address2"),
-                    City: getDefaultValue("City"),
-                    State: getDefaultValue("State"),
-                    Country: getDefaultValue("Country"),
-                    Zip: getDefaultValue("Zip"),
-                    CountryCode: getDefaultValue("CountryCode"),
-                    Latitude: latitude,
-                    Longitude: longitude,
-                    TimezoneOffset: getDefaultValue("TimezoneOffset")
-                };
+                    addressValue = {
+                        Address1: getDefaultValue("Address1", addressRelatedControls),
+                        Address2: getDefaultValue("Address2", addressRelatedControls),
+                        City: getDefaultValue("City", addressRelatedControls),
+                        State: getDefaultValue("State", addressRelatedControls),
+                        Country: getDefaultValue("Country", addressRelatedControls),
+                        Zip: getDefaultValue("Zip", addressRelatedControls),
+                        CountryCode: getDefaultValue("CountryCode", addressRelatedControls),
+                        Latitude: latitude,
+                        Longitude: longitude,
+                        TimezoneOffset: getDefaultValue("TimezoneOffset", addressRelatedControls)
+                    };
+                }
             }
 
             setUpdatedAddress(addressValue);
@@ -403,15 +452,71 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                     DisplayControlEnums.jsonPropertyGridRW
             );
 
-            // Add AddressForm
-            if (addressControls.length > 0) {
-                const firstAddressControl = addressControls[0];
-
+            // Full address → AddressForm; country/state only → CountryForm (per group).
+            if (hasFullAddressFields && addressRelatedControls.length > 0) {
+                const firstAddressControl = addressRelatedControls[0];
                 controlExternal.push({
                     ...firstAddressControl,
                     Name: "Address",
                     DisplayControl: DisplayControlEnums.AddressForm
                 });
+                setUpdatedCountryStates({});
+                updatedCountryStatesRef.current = {};
+                countryFormFieldsRef.current = {};
+            } else if (countryStateControls.length > 0) {
+                const groupedCountryState = new Map<string, IControl[]>();
+                for (const control of countryStateControls) {
+                    const groupName = control.DisplayGroupControl ?? "Default";
+                    const existing = groupedCountryState.get(groupName) ?? [];
+                    existing.push(control);
+                    groupedCountryState.set(groupName, existing);
+                }
+
+                const nextCountryStates: Record<string, ICountryState> = {};
+                const nextCountryFields: Record<string, { country: string; state: string }> = {};
+                for (const [groupName, groupControls] of groupedCountryState) {
+                    const countryControl = groupControls.find(item =>
+                        isCountryFieldName(item.Name ?? "")
+                    );
+                    const stateControl = groupControls.find(item =>
+                        isStateFieldName(item.Name ?? "")
+                    );
+                    if (!countryControl && !stateControl) continue;
+
+                    const countryFieldName =
+                        countryControl?.Name ||
+                        (groupName.toLowerCase().includes("contact") ? "contactCountry" : "country");
+                    const stateFieldName =
+                        stateControl?.Name ||
+                        (groupName.toLowerCase().includes("contact") ? "contactState" : "state");
+
+                    const countryValue = id || isAutoSave
+                        ? getControlValue(countryControl, [countryFieldName, "Country", "country"])
+                        : String(countryControl?.DefaultValue ?? countryControl?.DefaultAPValue ?? "");
+                    const stateValue = id || isAutoSave
+                        ? getControlValue(stateControl, [stateFieldName, "State", "state"])
+                        : String(stateControl?.DefaultValue ?? stateControl?.DefaultAPValue ?? "");
+
+                    const formKey = `CountryState_${groupName}`;
+                    nextCountryStates[formKey] = { Country: countryValue, State: stateValue };
+                    nextCountryFields[formKey] = { country: countryFieldName, state: stateFieldName };
+
+                    controlExternal.push({
+                        ...(countryControl ?? stateControl)!,
+                        Name: formKey,
+                        DisplayControl: DisplayControlEnums.CountryForm,
+                        PropertyLabel: groupName,
+                        countryFieldName,
+                        stateFieldName,
+                    });
+                }
+                setUpdatedCountryStates(nextCountryStates);
+                updatedCountryStatesRef.current = nextCountryStates;
+                countryFormFieldsRef.current = nextCountryFields;
+            } else {
+                setUpdatedCountryStates({});
+                updatedCountryStatesRef.current = {};
+                countryFormFieldsRef.current = {};
             }
 
             if (controlExternal.length) {
@@ -768,6 +873,62 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
 
         setUpdatedAddress(address);
 
+        if (isAutoSave) {
+            void handleValueChangeRef.current?.(address.Country ?? "", "country", false);
+            void handleValueChangeRef.current?.(address.State ?? "", "state", false);
+        }
+
+        if (
+            isAddressFormRequired &&
+            allowShowHeader &&
+            !isAutoSave
+        ) {
+            const valuesToValidate =
+                updatedValuesRef.current ?? selectedProfile;
+
+            if (valuesToValidate) {
+                FnHideShowSaveIconForForm(
+                    isValidForm(valuesToValidate)
+                        ? "show"
+                        : "hide"
+                );
+            }
+        }
+    };
+
+    const handleValueChangeCountry = (
+        formKey: string,
+        countryState: ICountryState,
+        countryFieldName?: string,
+        stateFieldName?: string
+    ) => {
+        const previous = updatedCountryStatesRef.current[formKey];
+        if (JSON.stringify(previous ?? null) === JSON.stringify(countryState)) {
+            return;
+        }
+
+        updatedCountryStatesRef.current = {
+            ...updatedCountryStatesRef.current,
+            [formKey]: countryState,
+        };
+        setUpdatedCountryStates({ ...updatedCountryStatesRef.current });
+
+        const fields = countryFormFieldsRef.current[formKey] ?? {
+            country: countryFieldName || "country",
+            state: stateFieldName || "state",
+        };
+
+        // Notify parent so filter dirty flag / apply payload update.
+        void handleValueChangeRef.current?.(countryState.Country ?? "", fields.country, false);
+        void handleValueChangeRef.current?.(countryState.State ?? "", fields.state, false);
+        // Canonical lowercase keys used by IDCFilterControlValues / normalizeFilterFieldName
+        if (fields.country !== "country") {
+            void handleValueChangeRef.current?.(countryState.Country ?? "", "country", false);
+        }
+        if (fields.state !== "state") {
+            void handleValueChangeRef.current?.(countryState.State ?? "", "state", false);
+        }
+
         if (
             isAddressFormRequired &&
             allowShowHeader &&
@@ -889,31 +1050,34 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                                             containerName={uniqueName}
                                         />
                                     );
-                                case DisplayControlEnums.jsonPropertyGridRW:
-                                    return <OneToManyPropertyFormWithGrid
-                                        uniqueName={control.Name}
-                                        headerText={control.PropertyLabel}
-                                        propertyData={value as string | Record<string, unknown>[]}
-                                        allowAdd={true}
-                                        allowEdit={true}
-                                        allowDelete={true}
-                                        handleValueChange={handleOnGridValueChange} />
-                                case DisplayControlEnums.jsonPropertyGridAdd:
-                                    return <OneToManyPropertyFormWithGrid
-                                        uniqueName={control.Name}
-                                        headerText={control.PropertyLabel}
-                                        propertyData={value as string | Record<string, unknown>[]}
-                                        allowAdd={true}
-                                        allowEdit={false}
-                                        allowDelete={false}
-                                        handleValueChange={handleOnGridValueChange} />
+
                                 case DisplayControlEnums.AddressForm: {
                                     return (
                                         <AddressForm
                                             key={control.Name}
                                             initialAddress={updatedAddress}
-                                            showDerivedFields={false}
                                             onChange={handleValueChangeAddress}
+                                        />
+                                    );
+                                }
+                                case DisplayControlEnums.CountryForm: {
+                                    const initialCountryState =
+                                        updatedCountryStates[control.Name] ?? {
+                                            Country: "",
+                                            State: "",
+                                        };
+                                    return (
+                                        <CountryForm
+                                            key={control.Name}
+                                            initialCountryState={initialCountryState}
+                                            onChange={(countryState) =>
+                                                handleValueChangeCountry(
+                                                    control.Name,
+                                                    countryState,
+                                                    control.countryFieldName as string | undefined,
+                                                    control.stateFieldName as string | undefined
+                                                )
+                                            }
                                         />
                                     );
                                 }

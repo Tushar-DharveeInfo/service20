@@ -36,7 +36,8 @@ enum DisplayControlEnums {
     JsonViewerControl = "JsonViewerControl",
     TimeControl = "TimeControl",
     EmailControl = "EmailControl",
-    AddressForm = "AddressForm"
+    AddressForm = "AddressForm",
+    CountryForm = "CountryForm"
 }
 
 const Measurement = ["width", "length", "depth", "height", 'power', 'weight', 'tilex', 'tiley']

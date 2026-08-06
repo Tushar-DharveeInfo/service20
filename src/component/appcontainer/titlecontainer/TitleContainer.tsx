@@ -9,6 +9,7 @@ import { IMenuImage } from "../../shared/allinterface/menu/IMenuImage"
 import { IMenuItem } from "../../shared/allinterface/menu/IMainMenu"
 import { ITitleContainer } from "../allinterface/ITitleContainer"
 import { AppQA } from "../../constants/Feature"
+// import { FnGetApplicationParameter } from "../../appqa/allcommon/FnGetApplicationParameter"
 import { MenuImage } from "../../shared/menu/menuimage/MenuImage"
 import { AppQaMenuContainer } from "./appqamenucontainer/AppQaMenuContainer"
 
@@ -64,7 +65,6 @@ const TitleContainer = (titleContainerProps: ITitleContainer) => {
             setMenuImageClick(false)
         }
     }, [titleContainerProps.isMenuOpen])
-
 
 
 

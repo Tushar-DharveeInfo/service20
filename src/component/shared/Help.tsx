@@ -10,12 +10,17 @@ import { envVarEnums } from "../appcontainer/alldefaultprops/DefaultPropsAppCont
 import MarkdownIt from 'markdown-it';
 import parse from 'html-react-parser';
 import { useEffect, useMemo, useState } from 'react';
+import { axiosInterceptorForHead } from './interceptors/Interceptor';
 import { ActionImage } from './basic/actionimage/ActionImage';
 import { Close24x24 } from '@n20a/libicon';
 import { FnGetCssVariable } from '../appcontainer/allcommon/FnGetCssVariable';
+import { IFnCreateForensiclog } from '../appcontainer/allinterface/IFnCreateForensiclog';
+import { FnCreateForensiclog } from '../appcontainer/allcommon/FnCreateForensiclog';
+import { useSessionContext } from './context/hooks/SessionHooks';
+import { useStatusBarContext } from './context/hooks/StatusBarHooks';
+import { LogGroupName, LogName, LogSubGroupName } from '../appcontainer/alldefaultprops/DefaultPropsForensiclog';
 import { Label } from './basic/label/Label';
 import { OverlayTab } from './basic/overlaytab/OverlayTab';
-import { PdfDownloadOverlay } from '../features/pdfviewer/PdfDownloadOverlay.tsx';
 
 interface IHelp {
     uniqueName: string;
@@ -28,7 +33,6 @@ interface IHelp {
     selectedGroup?: string;     // for settings and entities page
     headerText?: string;        // for settings and entities page
     hideCloseBtn?: boolean;
-    hideDownloadIcon?: boolean;
     handleShowUserMessage?: (messageText: string, container?: HTMLDivElement) => void;
 }
 
@@ -83,6 +87,8 @@ const Help = (helpProps: IHelp) => {
     const [isUserGuideUrlValidated, setIsUserGuideUrlValidated] = useState<boolean>(false);
     const localPdfUrl = helpProps.pdfUrl ?? "/privatedocs/docs.pdf";
     const mainAppContext = useMainAppContext();
+    const sessionContext = useSessionContext();
+    const statusBarContext = useStatusBarContext();
     const USER_GUIDE_URL = FnGetEnvVariableByKey(envVarEnums.USER_GUIDE_URL);
 
     useEffect(() => {
@@ -116,18 +122,38 @@ const Help = (helpProps: IHelp) => {
             }
 
             try {
-                const response = await fetch(USER_GUIDE_URL, { method: "HEAD" });
-                const isReachable = response.ok;
+                await axiosInterceptorForHead({
+                    url: USER_GUIDE_URL,
+                    onHeadersReceived: (
+                        _headers: Record<string, string> | null,
+                        isReachable: boolean,
+                        error: string | unknown
+                    ) => {
 
-                setIsUserGuideAvailable(isReachable);
-                setIsUserGuideUrlValidated(true);
+                        setIsUserGuideAvailable(isReachable);
+                        setIsUserGuideUrlValidated(true);
 
-                if (!isReachable) {
-                    console.error(
-                        "Remote Help Documentation is not available.",
-                        response.statusText
-                    );
-                }
+                        if (!isReachable) {
+
+                            console.error(
+                                "Remote Help Documentation is not available.",
+                                error
+                            );
+
+                            const payloadLog: IFnCreateForensiclog = {
+                                GroupName: LogGroupName.ForensicLogTemplate,
+                                SubGroupName: LogSubGroupName.Help,
+                                LogName: LogName.RemoteHelp,
+                                logType: 'UserAction',
+                                _Forensiclog: LogSubGroupName.Help,
+                                sessionContext: sessionContext,
+                                statusBarContext: statusBarContext,
+                                RefTableItems: mainAppContext.refTableRecords
+                            }
+                            FnCreateForensiclog(payloadLog)
+                        }
+                    }
+                });
 
             } catch (error) {
 
@@ -180,9 +206,6 @@ const Help = (helpProps: IHelp) => {
         localPdfUrl,
     ]);
 
-    const helpDownloadUrl = useRemoteUserGuide && USER_GUIDE_URL ? USER_GUIDE_URL : localPdfUrl;
-    const helpDownloadFileName = helpDownloadUrl.split(/[\\/]/).pop() ?? 'help.pdf';
-
     const helpContent = useRemoteUserGuide && USER_GUIDE_URL ? (
         <iframe
             src={USER_GUIDE_URL}
@@ -222,22 +245,12 @@ const Help = (helpProps: IHelp) => {
             onKeyDown={handleContainerKeyDown}
         >
             {helpProps.headerText && (
-                <div className='nz-help-header'>
-                    {!helpProps.hideDownloadIcon ? (
-                        <PdfDownloadOverlay
-                            uniqueName={`${helpProps.uniqueName}-help-download`}
-                            headerText={helpProps.headerText}
-                            pdfUrl={helpDownloadUrl}
-                            downloadFileName={helpDownloadFileName} />
-                    ) : (
-                        <div className='nz-sub-header'>
-                            <Label
-                                uniqueName={`${helpProps.uniqueName}-header`}
-                                label={helpProps.headerText}
-                                fontWeight='bold'
-                            />
-                        </div>
-                    )}
+                <div className='nz-help-header nz-sub-header'>
+                    <Label
+                        uniqueName={`${helpProps.uniqueName}-header`}
+                        label={helpProps.headerText}
+                        fontWeight='bold'
+                    />
                     {helpDocumentSource && <div className='nz-help-overlay-pane' title={helpDocumentSource.tooltip}>
                         <OverlayTab
                             uniqueName={`${helpProps.uniqueName}-help-source-overlay`}

@@ -16,6 +16,8 @@ import { FnUpdateProfileStringForEnabled } from '../../allcommon/settingsform/Fn
 import { unstable_batchedUpdates } from 'react-dom';
 import { getMuForSite } from '../../context/contextandprovider/ExplorerTree.tsx';
 import { SettingsLibForm } from '../settingslibform/SettingsLibForm.tsx';
+import { FnCheckAndUpdateBaseUrl } from '../../allcommon/settingsform/FnCheckAndUpdateBaseUrl.ts';
+import Help from '../../Help.tsx';
 import { FnParseJsonSafely } from '../../../appcontainer/allcommon/FnParseJsonSafely.ts';
 import { handleFormControlsKeyDown, handleFormControlsBubbleKeyDown } from '../../allcommon/basic/FnHandleContainerKeyDown';
 
@@ -236,8 +238,6 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
         // setSelectedItem(null);
         setIsAddMode(false);
 
-        sessionStorage.setItem("focusedControl", "");
-
 
         if (actionCode) {
             const filteredRecord = actionListItems.find((item) => { return item.actionCode === actionCode });
@@ -330,11 +330,11 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
 
     return (
         <div key={formContainerProps.uniqueName} className="nz-form-list-container" tabIndex={1} >
-            {/* {formContainerProps.allowHelp && selectedItem && <Help
+            {formContainerProps.allowHelp && selectedItem && <Help
                 uniqueName={selectedItem.label}
                 pdfUrl='/privatedocs/api.pdf'
                 featureName={selectedItem.label}
-                headerText={formContainerProps.headerText || selectedItem.label} />} */}
+                headerText={formContainerProps.headerText || selectedItem.label} />}
 
             {formContainerProps.allowActionList ?
                 <Splitter tabIndex={-1} className={`nz-w-100 nz-h-100 ${formContainerProps.allowHelp ? " nz-hidden" : ""}`}>

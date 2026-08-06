@@ -1,4 +1,6 @@
 
+import { PrivatePdfFolder } from "../alldefaultprops/DefaultPropsPrivatePdf.ts";
+
 /* Builds the browser url for a document in public/privatepdf.
    The shipped file names contain spaces, so the name must be encoded
    before pdf.js can fetch it. Absolute urls are passed through as is. */
@@ -9,12 +11,7 @@ const FnGetPrivatePdfUrl = (fileName: string): string => {
         return documentName;
     }
 
-    const baseUrl = import.meta.env.BASE_URL.endsWith('/')
-        ? import.meta.env.BASE_URL
-        : `${import.meta.env.BASE_URL}/`;
-    const folder = "privatepdf";
-
-    return `${baseUrl}${folder}/${encodeURIComponent(documentName)}`;
+    return `${PrivatePdfFolder}/${encodeURIComponent(documentName)}`;
 };
 
 export { FnGetPrivatePdfUrl }

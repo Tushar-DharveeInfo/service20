@@ -13,11 +13,12 @@ import { Label } from '../../shared/basic/label/Label';
 import { StatusBarCard } from './statusbarcard/StatusBarCard';
 import { StatusBarTitleContainer } from './statusbartitlecontainer/StatusBarTitleContainer';
 import { YesNoFormContainer } from '../../shared/basic/yesnoformcontainer/YesNoFormContainer';
+import { IAlertProfileItem } from '../../shared/context/allinterface/IAlertProfile';
 import { FnConvertDateToUtcOrUtcToDate } from '../allcommon/FnConvertDateToUtcOrUtcToDate';
 import { FnGetAppDateFormat } from '../../shared/allcommon/basic/FnGetAppDateFormat';
 import { FnSortStatusBarCards } from '../allcommon/FnSortStatusBarCards';
 import { FnSetSessionStorageItem } from '../allcommon/FnSetSessionStorageItem';
-import { IAlertProfileItem, IApItem } from '../../shared/context/allinterface/IMainApp';
+import { IApItem } from '../../shared/context/allinterface/IMainApp';
 import { FnUpdateStatisticsAndRefresh } from '../allcommon/FnUpdateStatisticsAndRefresh';
 import { FnParseJsonSafely } from '../allcommon/FnParseJsonSafely';
 
@@ -114,7 +115,6 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
             tagName: get("tagname"),
         };
     }, [sessionContext.SessionList]);
-
 
 
     // Ensures alert profile records are available for notification rendering.
@@ -247,7 +247,7 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
                 await FnUpdateStatisticsAndRefresh(statusBarContext, mainAppContext)
             }
         };
-        // if (statusBarContainerProps.featureId && [AppQA.Message].includes(statusBarContainerProps.featureId)) {
+        // if (statusBarContainerProps.featureId && [AppQA.Alerts].includes(statusBarContainerProps.featureId)) {
         //     updateGlobalStats();
         // }
         setIsShowFullTitle(false);
