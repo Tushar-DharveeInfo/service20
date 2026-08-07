@@ -12,7 +12,8 @@ const subMenuAliases = {
     front24x24: "F24x24",
     download24x24: "Download24x24",
     addtodownloadcart24x24: "Download24x24",
-    "3D24x24": 'ThreeD24x24'
+    "3D24x24": 'ThreeD24x24',
+
 };
 
 const FnGetIconForSubMenu = FnResolveIcons({

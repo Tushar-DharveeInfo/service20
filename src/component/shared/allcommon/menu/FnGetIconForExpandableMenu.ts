@@ -9,7 +9,8 @@ const expandableAliases = {
     changemanagement24x24: "change24x24",
     selectdatacentersite24x24: "alldatacenters24x24",
     rowofracks24x24: "rowofracks24x24",
-    applicationsettings24x24: "setting24x24"
+    applicationsettings24x24: "setting24x24",
+    myactivities24x24: 'MyActvities24x24'
 };
 
 const FnGetIconForExpandableMenu = FnResolveIcons({
