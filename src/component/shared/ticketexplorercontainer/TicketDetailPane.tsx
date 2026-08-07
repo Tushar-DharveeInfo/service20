@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { Label } from '../basic/label/Label'
 import { IControl } from '../allinterface/settingsform/ISettingsLibForm'
 import { SettingsLibForm } from '../settingsform/settingslibform/SettingsLibForm'
-import type { ITicket } from './ITicket'
-import { FnFormatTicketDate } from './FnFormatTicketDate'
+import type { ITicket } from '../allinterface/tree/ITicket'
+import { FnFormatTicketDate } from '../allcommon/tree/FnFormatTicketDate'
 
 interface ITicketDetailPane {
     uniqueName: string

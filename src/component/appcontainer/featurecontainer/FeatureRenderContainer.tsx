@@ -81,8 +81,6 @@ const MyActivities = lazy(() => import('../../features/profile/myactivities/MyAc
 const MySubscriptions = lazy(() => import('../../features/profile/mysubscriptions/MySubscriptions.tsx'))
 const NetZoom = lazy(() => import('../../features/products/netzoom/NetZoom.tsx'))
 const VisioStencils = lazy(() => import('../../features/products/visiostencils/VisioStencils.tsx'))
-const OtherProducts = lazy(() => import('../../features/products/other/OtherProducts.tsx'))
-const RequestSupport = lazy(() => import('../../features/services/requestsupport/RequestSupport.tsx'))
 const RequestVisioStencils = lazy(() => import('../../features/services/requestvisiostencils/RequestVisioStencils.tsx'))
 const RequestDeviceModels = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
 const DownloadVisioStencils = lazy(() => import('../../features/download/downloadvisiostencils/DownloadVisioStencils.tsx'))

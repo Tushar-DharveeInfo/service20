@@ -1,4 +1,4 @@
-import { ITreeNode } from "../allinterface/tree/ITreeControl";
+import { ITreeNode } from "../../allinterface/tree/ITreeControl";
 
 
 // this function locally search keyword in the tree node by traversing it

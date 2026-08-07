@@ -2,19 +2,19 @@ import { useEffect, useMemo, useState } from 'react'
 import { Key } from 'rc-tree/lib/interface'
 import { Splitter, SplitterPanel } from 'primereact/splitter'
 import '../allcss/TicketExplorerContainer.css';
-import { sampleTickets } from './TicketSampleData'
+import { sampleTickets } from '../../../sampledata/ticket/TicketSampleData'
 import {
     buildTicketTree,
     findFirstTicketLeaf,
     getAncestorKeys,
-} from './FnBuildTicketTree'
-import { FnSearchKeywordInLocalTree } from './FnSearchKeywordInLocalTree'
+} from '../allcommon/tree/FnBuildTicketTree'
+import { FnSearchKeywordInLocalTree } from '../allcommon/tree/FnSearchKeywordInLocalTree'
 import { ISelectedNodeInfo, ITreeNode } from '../allinterface/tree/ITreeControl'
 import { SearchControl } from '../searchfilter/searchcontrol/SearchControl'
 import { TreeControl } from '../tree/treecontrol/TreeControl'
 import { TicketDetailPane } from './TicketDetailPane'
 import { TicketFilterForm, type ITicketFilterValues } from './TicketFilterForm'
-import type { ITicket } from './ITicket'
+import type { ITicket } from '../allinterface/tree/ITicket'
 import { Label } from '../basic/label/Label';
 
 interface IFeatureTree {

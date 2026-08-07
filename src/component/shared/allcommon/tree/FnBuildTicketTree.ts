@@ -1,10 +1,10 @@
-import { ITreeNode } from "../allinterface/entity/ITreeNode"
-import { IFeatureTree } from "../allinterface/tree/ITreeForHierarchicalDataContainer"
-import { TreeNodeIcon } from "../tree/treenodeicon/TreeNodeIcon"
-import { TreeNodeTitle } from "../tree/treenodetitle/TreeNodeTitle"
+import { ITreeNode } from "../../allinterface/entity/ITreeNode"
+import { IFeatureTree } from "../../allinterface/tree/ITreeForHierarchicalDataContainer"
+import { TreeNodeIcon } from "../../tree/treenodeicon/TreeNodeIcon"
+import { TreeNodeTitle } from "../../tree/treenodetitle/TreeNodeTitle"
 import { FnFormatTicketDateOnly } from "./FnFormatTicketDate"
-import { ITicket } from "./ITicket"
-import { ITicketFilterValues } from "./TicketFilterForm"
+import { ITicket } from "../../allinterface/tree/ITicket"
+import { ITicketFilterValues } from "../../ticketexplorercontainer/TicketFilterForm"
 
 function formatDateRequested(value: Date | string): string {
     return FnFormatTicketDateOnly(value)
