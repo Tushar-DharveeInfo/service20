@@ -3,7 +3,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { isEqual } from 'lodash'
 import '../../allcss/menu/ExpandableList.css'
-import { Setting24x24, SettingFeature24x24, Up24x24 } from '@n20a/libicon'
+import { Up24x24 } from '@n20a/libicon'
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable'
 import { FnGetIconForExpandableMenu } from '../../allcommon/menu/FnGetIconForExpandableMenu'
 import { handleExpandableMenuKeyDown } from '../../allcommon/basic/FnHandleContainerKeyDown'
@@ -270,7 +270,7 @@ const ExpandableList = (props: IExpandableList) => {
 
         let filterData: IMenuItem[] = [];
         if (originalMenuMenu && originalMenuMenu.length > 0 && searchValue) {
-            if (props.uniqueName === "Menu" || props.uniqueName === "setting-menu" || props.uniqueName === "appqa-entities" || props.uniqueName === "configure") {
+            if (props.uniqueName === "Menu") {
                 const filteredData = originalMenuMenu.map((element: IMenuItem) => {
                     return {
                         ...element,
@@ -512,27 +512,13 @@ const ExpandableList = (props: IExpandableList) => {
             },
         });
     }, [activeMainIndex, activeSubIndex, mainMenu, resolveSelectionIndices, isConfigureMenu]);
-    const handleIconForMenu = (label: string, isShowSettingIcon?: boolean, isSubMenu?: boolean) => {
+    const handleIconForMenu = (label: string) => {
         const name = label.replace(/\s*\(.*?\)/, "")
-        if (isShowSettingIcon) {
-            if (isSubMenu) {
-                return <SettingFeature24x24 size={FnGetCssVariable('--image-size-2')}
-                    fill='none'
-                    strokeWidth={1} />
-            }
-            else {
 
-                return <Setting24x24 size={FnGetCssVariable('--image-size-2')}
-                    fill='none'
-                    strokeWidth={1} />
-            }
-        }
-        else {
-            const Icon = FnGetIconForExpandableMenu(name.replace(/[^0-9A-Za-z_-]/g, '') + "24x24");
-            return <Icon size={FnGetCssVariable('--image-size-2')}
-                fill='none'
-                strokeWidth={1} />
-        }
+        const Icon = FnGetIconForExpandableMenu(name.replace(/[^0-9A-Za-z_-]/g, '') + "24x24");
+        return <Icon size={FnGetCssVariable('--image-size-2')}
+            fill='none'
+            strokeWidth={1} />
     }
 
     useEffect(() => {
@@ -625,7 +611,7 @@ const ExpandableList = (props: IExpandableList) => {
                                             {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
                                                 <div className="nz-feature-icon">
                                                     <Image uniqueName='menu-image' source={
-                                                        handleIconForMenu(element.Label, (props.uniqueName === "setting-menu" || props.uniqueName === "appqa-entities" || props.uniqueName === "configure") ? true : false)}
+                                                        handleIconForMenu(element.Label)}
                                                         type='svg' w='var(--image-size-2)' />
 
                                                 </div>
@@ -673,7 +659,7 @@ const ExpandableList = (props: IExpandableList) => {
                                                                 className='nz-nav-li-button nz-nav-sub-menu'
                                                                 onClick={(event) => handleSubListItemClick(event, subIndex, subEle)}>
                                                                 {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
-                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Label, (props.uniqueName === "setting-menu" || props.uniqueName === "appqa-entities" || props.uniqueName === "configure") ? true : false, true)}
+                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Label)}
                                                                         type='svg' w='var(--image-size-2)' />
                                                                 </ListItemIcon>}
                                                                 <ListItemText primary={subEle.Label} className='nz-nav-sub-menu-text' />

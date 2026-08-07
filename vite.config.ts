@@ -20,59 +20,20 @@ export default defineConfig({
           if (id.includes('node_modules')) {
             // Let Vite handle React, ReactDOM, and scheduler automatically
             // Manually chunking React causes circular dependencies with MUI
-
-            // 1. React Router
-            if (id.includes('react-router')) {
-              return 'vendor-router';
-            }
-
-            // 2. MUI + Emotion (tightly coupled, must be together)
-            if (id.includes('@mui') || id.includes('@emotion')) {
-              return 'vendor-mui';
-            }
-
-            // 3. PrimeReact (UI components)
-            if (id.includes('primereact')) {
-              return 'vendor-primereact';
-            }
-
-            // Let Vite handle libraries automatically; note: Manually chunking them causes circular dependencies with react-router
-            // 4. Charts and visualization
-            if (id.includes('ag-charts')) {
-              return 'vendor-charts';
+            if ((id.includes('react-router') || id.includes('@mui') || id.includes('@emotion') || id.includes('primereact') || id.includes('ag-charts') || id.includes('ag-grid') || id.includes('lodash'))) {
+              return 'vendor-others';
             }
 
             // 5. Heavy utilities (lazy load these)
-            if (id.includes('xlsx')) {
-              return 'vendor-xlsx';
-            }
-            if (id.includes('markdown-it')) {
-              return 'vendor-markdown';
-            }
-
-            // 6. Utilities
-            if (id.includes('lodash')) {
-              return 'vendor-utils';
+            if (id.includes('xlsx') || id.includes('markdown-it') || id.includes('appqa')) {
+              return 'vendor-xlsx-markdown';
             }
 
             // 7. Let Vite handle other node_modules automatically to avoid circular dependencies
             // Don't use a catch-all return here
           }
 
-          // App code chunking strategy for appqa components
-          //slash-bounded matching (/appqaentities/, /appqamessage/, /appqaalerts/, /appqareminder/, /appqareport/, /appqadelegate/, /appqatask/), ensuring shared interface files in allinterface/ stay in app-appqa
-          // Check specific components first before general appqa pattern
-          if (id.includes('/appqa')) {
-            // Individual chunks for components without circular dependencies
-            if (id.includes('/appqamessage/')) {
-              return 'app-appqamessage';
-            }
-            // All other appqa components must stay together to avoid circular dependencies
-            // appqahelp is used by appqaentities, appcontainer, settings, appqasettings — cannot isolate
-            // appqasettings imports appqahelp which is too widely shared
-            // appqatheme and alldefaultprops are imported by NzApp — keep with app-appqa
-            return 'app-appqa';
-          }
+          return 'app-service';
 
           // Let Vite handle other app code chunking automatically; note: Manually chunking app code causes circular dependencies with appqa
         },
