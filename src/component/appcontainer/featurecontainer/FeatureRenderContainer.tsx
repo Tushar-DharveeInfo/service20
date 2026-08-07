@@ -87,6 +87,7 @@ const RequestVisioStencils = lazy(() => import('../../features/services/requestv
 const RequestDeviceModels = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
 const DownloadVisioStencils = lazy(() => import('../../features/download/downloadvisiostencils/DownloadVisioStencils.tsx'))
 const DownloadNetZoom = lazy(() => import('../../features/download/downloadnetzoom/DownloadNetZoom.tsx'))
+const TicketExplorerContainer = lazy(() => import('../../shared/ticketexplorercontainer/TicketExplorerContainer.tsx'))
 
 /* Features that own the whole content area instead of the explorer tree.
    FeatureContainer reads this list to decide which side to render. */
@@ -216,7 +217,8 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <RequestSupport />
+                        {/*<RequestSupport />*/}
+                        <TicketExplorerContainer uniqueName={'request-support'} headerText={featureContainerProps.headerText ?? "Service Request"} />
                     </Suspense>
                 </ErrorBoundary>
             );
