@@ -7,6 +7,7 @@ import { ICardLayoutField } from '../../../shared/allinterface/cardlayout/ICardL
 import { FnConvertDateToUtcOrUtcToDate } from '../../../appcontainer/allcommon/FnConvertDateToUtcOrUtcToDate.ts'
 import { sampleUserLicenses, type ISampleUserLicense } from '../../../../sampledata/features/MySubscriptionsSampleData.ts'
 import { IMySubscriptions } from '../../allinterface/profile/IMySubscriptions.ts'
+import { useMainAppContext } from '../../../shared/context/hooks/MainAppHooks.ts'
 
 /* Card rows matching the NZLicenseKey license-card layout. */
 const getLicenseFields = (license: ISampleUserLicense): ICardLayoutField[] => {
@@ -53,6 +54,10 @@ const getLicenseFields = (license: ISampleUserLicense): ICardLayoutField[] => {
 
 const MySubscriptions = (mySubscriptionsProps: IMySubscriptions) => {
     const [selectedLicenseId, setSelectedLicenseId] = useState<string>();
+    const mainAppContext = useMainAppContext();
+    const licenses =
+        (mainAppContext.userInfoAndSubscription?.subscription as ISampleUserLicense[] | undefined)
+        ?? sampleUserLicenses;
 
     return (
         <div key={mySubscriptionsProps.uniqueName} className='nz-my-subscriptions-container nz-wh-100'>
@@ -63,7 +68,7 @@ const MySubscriptions = (mySubscriptionsProps: IMySubscriptions) => {
                     fontWeight='600' />
             </div>
             <div className='nz-my-subscriptions-list'>
-                {sampleUserLicenses.map((license) => (
+                {licenses.map((license) => (
                     <CardLayout
                         key={license.EntID}
                         uniqueName={`${mySubscriptionsProps.uniqueName}-${license.EntID}`}

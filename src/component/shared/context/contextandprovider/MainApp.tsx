@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useState, useCallback } from "react";
-import { IAlertProfileItem, IApItem, IApProfileItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, ISiteProperties, IUserProfileRecord } from "../allinterface/IMainApp";
+import { IAlertProfileItem, IApItem, IApProfileItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, ISiteProperties, IUserInfoAndSubscription, IUserProfileRecord } from "../allinterface/IMainApp";
 import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
 import { IStatusBar } from "../allinterface/IStatusBar";
 import { ISession } from "../allinterface/ISession";
@@ -35,6 +35,7 @@ function MainAppProvider({ children }: IAppContextWrapper) {
     const [selectedFeatureForHelp, setSelectedFeatureForHelp] = useState<IFeatureForHelp>()
     const [userProfileRecord, setUserProfileRecord] = useState<IUserProfileRecord>()
     const [authSession, setAuthSession] = useState<AuthSession>()
+    const [userInfoAndSubscription, setUserInfoAndSubscription] = useState<IUserInfoAndSubscription>()
     const [impUserProfileRecord, setImpUserProfileRecord] = useState<IUserProfileRecord>()
 
     useEffect(() => {
@@ -261,6 +262,8 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             setUserProfileRecord,
             authSession,
             setAuthSession,
+            userInfoAndSubscription,
+            setUserInfoAndSubscription,
             impUserProfileRecord,
             setImpUserProfileRecord,
             siteProperties,
@@ -299,6 +302,7 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             userProfileRecord,
             impUserProfileRecord,
             authSession,
+            userInfoAndSubscription,
             fetchFeatures,
             fetchApRecords,
             fetchApProfileRecords,

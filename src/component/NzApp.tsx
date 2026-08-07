@@ -19,6 +19,9 @@ import { sampleFeatureRecords } from '../sampledata/auth/ServiceFeatureSampleDat
 import { sampleLoginUserJson } from '../sampledata/auth/LoginUserSampleData';
 import { sampleDeploymentEnvResponse } from '../sampledata/auth/DeploymentEnvSampleData';
 import { sampleSessionId, sampleSessionVariables } from '../sampledata/auth/AuthorizationSampleData';
+import { sampleUserLicenses } from '../sampledata/features/MySubscriptionsSampleData';
+import type { IUserInfoAndSubscription } from './shared/context/allinterface/IMainApp';
+import { FnGetAuthDisplayName } from './appcontainer/allcommon/FnGetLoggedInStatusMessage';
 
 GridModuleRegistry.registerModules([GridAllCommunityModule]);
 
@@ -126,7 +129,19 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
                 && userProfileRecord["_User"].length
             ) {
                 mainAppContext.setUserProfileRecord(userProfileRecord["_User"][0]);
-            mainAppContext.setAuthSession(user);
+                mainAppContext.setAuthSession(user);
+
+                const displayName = FnGetAuthDisplayName(user);
+                const userInfoAndSubscription: IUserInfoAndSubscription = {
+                    userInfo: {
+                        displayName: displayName || userProfileRecord["_User"][0]?.Shortname || "User",
+                        username: user?.username ?? "",
+                        email: user?.email,
+                        tenantNickname: user?.tenantNickname,
+                    },
+                    subscription: sampleUserLicenses,
+                };
+                mainAppContext.setUserInfoAndSubscription(userInfoAndSubscription);
             } else {
                 reportFatalError("User profile data not found.");
                 return;

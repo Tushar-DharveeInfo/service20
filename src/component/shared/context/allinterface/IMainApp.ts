@@ -149,6 +149,38 @@ interface IUserProfileRecord {
     EntityName?: string;
     NodeType?: string;
 }
+
+/** Auth-facing user fields available app-wide (from Authentication AuthSession). */
+interface IUserInfo {
+    displayName: string;
+    username: string;
+    email?: string;
+    tenantNickname?: string;
+    phoneNumber?: string;
+}
+
+/** Subscription / license row shared via MainApp context. */
+interface IUserSubscription {
+    ProductName: string;
+    _NZLicenseKey: string;
+    StartDate: string;
+    EndDate: string;
+    UserCount: number;
+    RackCount: number;
+    Secured: boolean;
+    IsNZ: boolean;
+    EntID: string;
+    RecID: string;
+    LastUpdated: string;
+    EntityName: string;
+}
+
+/** Combined auth user + subscription licenses for reuse across features. */
+interface IUserInfoAndSubscription {
+    userInfo: IUserInfo;
+    subscription: IUserSubscription[];
+}
+
 interface IMainApp {
     featureRecords: IFeatureItem[];
     setFeatureRecords: React.Dispatch<React.SetStateAction<IFeatureItem[]>>;
@@ -167,6 +199,12 @@ interface IMainApp {
 
     authSession?: AuthSession;
     setAuthSession: React.Dispatch<React.SetStateAction<AuthSession | undefined>>;
+
+    /** Auth user display info + subscription licenses for status bar and features. */
+    userInfoAndSubscription?: IUserInfoAndSubscription;
+    setUserInfoAndSubscription: React.Dispatch<
+        React.SetStateAction<IUserInfoAndSubscription | undefined>
+    >;
 
     impUserProfileRecord?: IUserProfileRecord;
     setImpUserProfileRecord: React.Dispatch<React.SetStateAction<IUserProfileRecord | undefined>>;
@@ -245,4 +283,18 @@ interface IMainApp {
 }
 
 
-export type { IMainApp, ISiteProperties, IApItem, IFeatureItem, IFeatureForHelp, IApProfileItem, IAlertProfileItem, IRefItem, IEmItem, IUserProfileRecord };
+export type {
+    IMainApp,
+    ISiteProperties,
+    IApItem,
+    IFeatureItem,
+    IFeatureForHelp,
+    IApProfileItem,
+    IAlertProfileItem,
+    IRefItem,
+    IEmItem,
+    IUserProfileRecord,
+    IUserInfo,
+    IUserSubscription,
+    IUserInfoAndSubscription,
+};
