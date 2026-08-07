@@ -5,6 +5,7 @@ import { IStatusBar } from "../allinterface/IStatusBar";
 import { ISession } from "../allinterface/ISession";
 import { FnHandleAPIResponse } from "../../allcommon/basic/FnHandleAPIResponse";
 import { FnIsInternetAvailable } from "../../../appcontainer/allcommon/FnIsInternetAvailable";
+import { AuthSession } from "@n20a/libauth";
 
 
 let featuresData: IFeatureItem[] | null = null;

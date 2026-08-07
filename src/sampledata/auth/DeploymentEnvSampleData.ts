@@ -12,6 +12,7 @@ const sampleDeploymentEnv: IDeploymentEnv[] = [
     { key: "DEPLOYMENT_DCMLISTENER_API_URL", value: "/dcmlistener" },
     { key: "DEPLOYMENT_EXPSERVER_API_URL", value: "/expapi" },
     { key: "DEPLOYMENT_NZINTHUB_API_URL", value: "/nzinthubapi" },
+    { key: "CLOUDRUN_API_URL", value: "https://n20-storage-cloudrun-mkvwooi2sa-uc.a.run.app" },
     { key: "DEPLOYMENT_DATE_INSTALLED", value: "2026-06-01" },
     { key: "DEPLOYMENT_DATE_LASTUPDATED", value: "2026-06-01" }
 ];

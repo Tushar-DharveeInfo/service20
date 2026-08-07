@@ -77,7 +77,7 @@
     "DefaultQA": ""
   },
   {
-    "Secured": "",
+    "Secured": "1",
     "EntityName": "Feature",
     "MenuID": "100",
     "Feature": "108",
@@ -99,7 +99,7 @@
     "DefaultQA": ""
   },
   {
-    "Secured": "1",
+    "Secured": "",
     "EntityName": "Feature",
     "MenuID": "120",
     "Feature": "122",
@@ -200,6 +200,17 @@
   {
     "Secured": "1",
     "EntityName": "Feature",
+    "MenuID": "150",
+    "Feature": "158",
+    "NodeType": "",
+    "Label": "My Requests",
+    "Tooltip": "My Requests",
+    "SortOrder": "4",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "1",
+    "EntityName": "Feature",
     "MenuID": "200",
     "Feature": "200",
     "NodeType": "",
@@ -282,6 +293,28 @@
     "NodeType": "",
     "Label": "Orders",
     "Tooltip": "Orders",
+    "SortOrder": "2",
+    "DefaultQA": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "158",
+    "Feature": "1582",
+    "NodeType": "",
+    "Label": "Details",
+    "Tooltip": "Ticket Details",
+    "SortOrder": "1",
+    "DefaultQA": "1"
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "158",
+    "Feature": "1584",
+    "NodeType": "",
+    "Label": "Notes",
+    "Tooltip": "Notes",
     "SortOrder": "2",
     "DefaultQA": ""
   }

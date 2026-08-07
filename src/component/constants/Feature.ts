@@ -72,11 +72,30 @@ enum PurchaseEnums {
     Cart = "1222",
     Orders = "1224",
 }
+enum deviceModelTabs {
+    Search = "Search",
+    Property = "Property",
+    Result = "Result"
+}
+
+/** Cabling feature ids used by ViewContainer (subset of nz20 FEnums). */
+enum FEnums {
+    ReviewPowerCabling = "153",
+    EditPowerCabling = "156",
+    PowerTrace = "159",
+    PowerNavigate = "162",
+    ReviewNetworkCabling = "165",
+    EditNetworkCabling = "168",
+    NetworkTrace = "171",
+    NetworkNavigate = "174",
+}
 
 export {
     FeatureMenuRange, AppQA, AppQARange
     , ProfileEnums, ProductsEnums, ServicesEnums, DownloadEnums
     , FaqEnums, PurchaseEnums
     , FeatureQARange
-    , KebabMenuRange
+    , KebabMenuRange,
+    deviceModelTabs,
+    FEnums
 }

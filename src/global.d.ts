@@ -14,6 +14,7 @@ declare global {
             NODE_ENV: string;
             VITE_API_AT: string;
             DEPLOYMENT_N20_API_URL: string;
+            CLOUDRUN_API_URL: string;
         };
     }
 }

@@ -658,5 +658,9 @@
     {
         "featureid": "9879_settings_desc_admin_migrate",
         "tip": "**Migrate** a version NetZoom 18.x database so that it can be used in this version"
+    },
+    {
+        "featureid": "154_request_visio_stencils",
+        "tip": "Use the **Device Model** pane to browse and search the NetZoom device library for Visio stencil shapes. Request and Download panes will support stencil request workflows."
     }
 ]
