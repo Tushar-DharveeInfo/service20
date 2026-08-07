@@ -9,7 +9,6 @@ enum DeviceModelFEnums {
 
 enum Lib {
     search = "search",
-    related = "related",
     details = "details",
     shapes = "shapes",
     mfgacronym = 'mfgacronym',

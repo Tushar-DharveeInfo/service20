@@ -32,18 +32,15 @@ import {
 	IFlatTreeFormattedRow,
 	IFileObject,
 	IJsonDataMap,
-	ILibRelatedData,
 	IMatchScoreTreeGroup,
 	IMfgAcronymItem,
 	IPropertyTabData,
-	IRelatedManufacturerRecord,
 	IShapeRecord,
 	JsonRecord,
 } from '../allinterface/devicemodel/IDeviceModel';
 import { DeviceModelFEnums, Lib } from '../alldefaultprops/devicemodel/DeviceModelEnums'
 import { FnGetLibJson } from '../allcommon/devicemodel/FnGetLibJson';
-import { FnFindReletedManufacturer, FnGetSearchResults, transformDeviceData } from '../allcommon/devicemodel/FnExtractKeyObjects';
-import { FnAddSubNode } from '../allcommon/tree/FnAddSubNode';
+import { FnGetSearchResults, transformDeviceData } from '../allcommon/devicemodel/FnExtractKeyObjects';
 import { FnGetKeyFromEntId } from '../allcommon/tree/FnGetKeyFromEntId';
 import { FnProcessMfgAcronym } from '../allcommon/devicemodel/FnProcessMfgAcronym';
 import { FnGetEnvVariableByKey } from '../../appcontainer/allcommon/FnGetEnvVariableByKey';
@@ -151,24 +148,6 @@ const getProfileManufacturerValue = (
 	return optionValue === 'All' ? '' : (optionValue ?? '');
 };
 
-/* Validates and parses the lib related-manufacturers JSON response. */
-const parseLibRelatedData = (value: unknown): ILibRelatedData | null => {
-	if (!isRecord(value) || !Array.isArray(value.Related)) {
-		return null;
-	}
-	return { Related: value.Related as IRelatedManufacturerRecord[] };
-};
-
-/* Returns Related records only from a freshly fetched lib response (not cached array). */
-const getRelatedRecordsFromCache = (
-	data: ILibRelatedData | IRelatedManufacturerRecord[] | null
-): IRelatedManufacturerRecord[] | undefined => {
-	if (!data || Array.isArray(data)) {
-		return undefined;
-	}
-	return data.Related;
-};
-
 /* Extracts manufacturer name from a form field value or selected option. */
 const getMfgNameFromFormValue = (
 	formValue: IDeviceFormFieldValue,
@@ -184,7 +163,6 @@ const DeviceModel = (props: IDeviceModel) => {
 	const [rightSideSelectedTab, setRightSideSelectedTab] = useState<string>('Search')
 	const [leftSideTabsObj, setLeftSideTabsObj] = useState<IActionLabelTabs>(leftSideTabs)
 	const [wildsearchData, setWildsearchData] = useState<IDeviceWildSearchItem[] | null>(null)
-	const [reletedMfg, setReletedMfg] = useState<IRelatedManufacturerRecord[] | null>(null)
 
 	const [disableFromWhileSearching, SetDisableFromWhileSearching] = useState<boolean>(false)
 	// search tabs state start
@@ -192,7 +170,7 @@ const DeviceModel = (props: IDeviceModel) => {
 		DeviceModelFEnums.NetZoomDeviceLibrary
 	)
 	const [searchText, setSearchText] = useState<string>('')
-	const [optionData, setOptionData] = useState<IDeviceSearchOption[]>([])
+	const optionDataRef = useRef<IDeviceSearchOption[]>([])
 	const [profileString, setProfileString] = useState<IDeviceModelProfileString>({})
 	const [views, setView] = useState<IView[]>([])
 	const [selectedTabViewName, setSelectedTabViewName] = useState<string>("")
@@ -506,44 +484,6 @@ const DeviceModel = (props: IDeviceModel) => {
 		}
 	}, [leftSideSelectedTab, rightSideSelectedTab])
 
-	// useEffect(() => {
-	// 	if (reloadTreeFor?.nodeToRemove) {
-	// 		const safe = (val?: string) => val?.trim().toLowerCase() || "";
-	// 		// let keyToRemove =
-	// 		// 	safe(reloadTreeFor?.nodeToRemove.treetype) === "product"
-	// 		// 		? reloadTreeFor?.nodeToRemove.key
-	// 		// 		: reloadTreeFor?.nodeToRemove.parentEntID ?? reloadTreeFor?.nodeToRemove.key;
-	// 		const updateTree = (
-	// 			tree: ITreeNode[],
-	// 			setTree: React.Dispatch<React.SetStateAction<ITreeNode[]>>,
-	// 			setKeys: React.Dispatch<React.SetStateAction<Key[]>>
-	// 		) => {
-	// 			const { tree: updatedTree, selectedParent } =
-	// 				FnRemoveNodeFromTree(tree, keyToRemove);
-
-	// 			if (selectedParent?.key) {
-	// 				setKeys([selectedParent.key]);
-
-	// 				setDefaultSelectedNodeInfo({
-	// 					event: "select",
-	// 					node: selectedParent,
-	// 					selected: true,
-	// 					selectedNodes: [],
-	// 				});
-	// 			}
-
-	// 			setTree(updatedTree);
-	// 		};
-
-	// 		if (leftSideSelectedTab === deviceModelTabs.Result) {
-	// 			updateTree(
-	// 				treeDataResult,
-	// 				setTreeDataResult,
-	// 				setDefaultSelectedKeysResult
-	// 			);
-	// 		}
-	// 	}
-	// }, [reloadTreeFor?.nodeToRemove.key])
 
 
 	useEffect(() => {
@@ -588,7 +528,8 @@ const DeviceModel = (props: IDeviceModel) => {
 			}
 		}
 	}
-	/* Converts device search records into flat rows for hierarchy tree building. */
+	/* Converts device search records into flat rows for hierarchy tree building.
+	 * Product nodes only — Front/Rear view nodes are not added to the Result tree. */
 	const formatDataForFlatTree = async (data: IDeviceEqTypeRecord[]): Promise<IFlatTreeFormattedRow[]> => {
 		let formattedData: IFlatTreeFormattedRow[] = [];
 		const isForInventory = selectedRadio === DeviceModelFEnums.Inventory;
@@ -618,64 +559,29 @@ const DeviceModel = (props: IDeviceModel) => {
 					}
 				}
 				if (nodeObj) {
-					if (nodeObj.Views && (data.length === 1 && unicMfgEQType.length === 1)) {
-						const parsedData = typeof nodeObj.Views === "string" ? parseJsonString(nodeObj.Views) : nodeObj.Views;
-						if (Array.isArray(parsedData) && parsedData.length) {
-							for (let index = 0; index < parsedData.length; index++) {
-								const obj = {
-									ManufacturerName: nodeObj.mfg,
-									ManufacturerNodeType: "Manufacturer",
-									ManufacturerEntID: `${nodeObj.mfg}`,
-									ManufacturerHasChildren: nodeObj.mty ? true : false,
-									EqtypeName: nodeObj.mty,
-									EqtypeNodeType: nodeObj.ty,
-									EqtypeEntID: `${nodeObj.mfg}##${nodeObj.mty}`,
-									EqtypeParentID: `${nodeObj.mfg}`,
-									EqtypeHasChildren: nodeObj.pno ? true : false,
-									EqtypeEQType: nodeObj.ty,
-									EqtypeDeviceEntId: nodeObj.entid,
-									ProductEntID: isForInventory ? nodeObj.entid : nodeObj.id,
-									ProductEQID: nodeObj.id,
-									ProductEQType: nodeObj.ty,
-									ProductName: nodeObj.pno,
-									ProductDescription: nodeObj.md,
-									ProductAttrib: nodeObj.Attrib,
-									ProductParentID: `${nodeObj.mfg}##${nodeObj.mty}`,
-									ProductDetailsJson: nodeObj.details,
-									ProductHasChildren: false,
-									ProductDeviceEntId: nodeObj.entid,
-
-								}
-								formattedData.push(obj)
-							}
-						}
-					} else {
-						let obj = {
-							ManufacturerName: nodeObj.mfg,
-							ManufacturerNodeType: "Manufacturer",
-							ManufacturerEntID: `${nodeObj.mfg}`,
-							ManufacturerHasChildren: nodeObj.mty ? true : false,
-							EqtypeName: nodeObj.mty,
-							EqtypeNodeType: nodeObj.ty,
-							EqtypeEntID: `${nodeObj.mfg}##${nodeObj.mty}`,
-							EqtypeParentID: `${nodeObj.mfg}`,
-							EqtypeHasChildren: nodeObj.pno ? true : false,
-							EqtypeDeviceEntId: nodeObj.entid,
-							ProductEntID: isForInventory ? nodeObj.entid : nodeObj.id,
-							ProductEQID: nodeObj.id,
-							ProductEQType: nodeObj.ty,
-							ProductName: nodeObj.pno,
-							ProductDescription: nodeObj.md,
-							ProductAttrib: nodeObj.Attrib,
-							ProductDetailsJson: nodeObj.details,
-							ProductParentID: `${nodeObj.mfg}##${nodeObj.mty}`,
-							ProductNodeType: "Product",
-							ProductHasChildren: false,
-							ProductDeviceEntId: nodeObj.entid,
-
-						}
-						formattedData.push(obj)
-					}
+					formattedData.push({
+						ManufacturerName: nodeObj.mfg,
+						ManufacturerNodeType: "Manufacturer",
+						ManufacturerEntID: `${nodeObj.mfg}`,
+						ManufacturerHasChildren: nodeObj.mty ? true : false,
+						EqtypeName: nodeObj.mty,
+						EqtypeNodeType: nodeObj.ty,
+						EqtypeEntID: `${nodeObj.mfg}##${nodeObj.mty}`,
+						EqtypeParentID: `${nodeObj.mfg}`,
+						EqtypeHasChildren: nodeObj.pno ? true : false,
+						EqtypeDeviceEntId: nodeObj.entid,
+						ProductEntID: isForInventory ? nodeObj.entid : nodeObj.id,
+						ProductEQID: nodeObj.id,
+						ProductEQType: nodeObj.ty,
+						ProductName: nodeObj.pno,
+						ProductDescription: nodeObj.md,
+						ProductAttrib: nodeObj.Attrib,
+						ProductDetailsJson: nodeObj.details,
+						ProductParentID: `${nodeObj.mfg}##${nodeObj.mty}`,
+						ProductNodeType: "Product",
+						ProductHasChildren: false,
+						ProductDeviceEntId: nodeObj.entid,
+					})
 				}
 			}
 
@@ -1017,7 +923,7 @@ const DeviceModel = (props: IDeviceModel) => {
 				} else if (name === "Manufacturer" && (!value || value === "All" || (typeof value !== 'string' && value.value === "All"))) {
 
 					setProfileString({})
-					setOptionData([...optionData, { label: "All", mty: "All", value: "All" }, { label: "All", pno: "All", value: "All" }])
+					optionDataRef.current = [...optionDataRef.current, { label: "All", mty: "All", value: "All" }, { label: "All", pno: "All", value: "All" }]
 				}
 				if (name) {
 					propfileData[name] = value
@@ -1028,46 +934,17 @@ const DeviceModel = (props: IDeviceModel) => {
 
 					// Keep manufacturer + attribute rows only; drop prior eqtype/product options
 					// (product rows have pno but no mty, so filtering !mty alone left stale pnos)
-					let removeEqType = optionData.filter(
+					let removeEqType = optionDataRef.current.filter(
 						(item) => !!item.isAttribute || (item.mfg != null && item.mfg !== '')
 					);
 					let selectedMfgOption = typeof value === 'string'
-						? optionData.find((item) => item.mfg === value)
-						: optionData.find((item) => item.mfg === value.mfg);
-					let mfgArray: IFilterMfgEntry[] = []
+						? optionDataRef.current.find((item) => item.mfg === value)
+						: optionDataRef.current.find((item) => item.mfg === value.mfg);
 
 					if (isLocalLibRadio(selectedRadio)) {
-						let relatedJson: ILibRelatedData | IRelatedManufacturerRecord[] | null = reletedMfg
-						if (!reletedMfg) {
-							try {
-								const fetchedRelated = await FnGetLibJson(Lib.related, isDeviceURLAvailable ? `${BASE_URL_DEVICE_MODEL}/api/files/download/single` : undefined)
-								relatedJson = parseLibRelatedData(fetchedRelated)
-								if (relatedJson?.Related) {
-									setReletedMfg(relatedJson.Related)
-								}
-							} catch (error) {
-
-								console.error('DeviceModel: failed to fetch related manufacturers', error);
-							}
-						}
-						const relatedRecords = getRelatedRecordsFromCache(relatedJson)
 						const mfgName = getMfgNameFromFormValue(value, selectedMfgOption)
-						if (relatedRecords) {
-							setReletedMfg(relatedRecords)
-							const relatedManufacturer = FnFindReletedManufacturer(relatedRecords, mfgName) as IFilterMfgEntry[]
-							if (relatedManufacturer.length) {
-								mfgArray = [...relatedManufacturer, { Manufacturer: mfgName }]
-							} else {
-								mfgArray = [{ Manufacturer: mfgName }]
-							}
-
-						} else {
-							mfgArray = [{ Manufacturer: mfgName }]
-						}
-						setFilterMfg(mfgArray)
+						setFilterMfg(mfgName ? [{ Manufacturer: mfgName }] : null)
 					}
-					// find eqid with releted menufacturer and seleted menufacturer
-					// let equipmentType = await FnGetEQIDByManufacturer(searchJson, mfgArray)
 					let equipmentType: { Search: IDeviceEqTypeRecord[] } = { Search: [] }
 					let eqids: IDeviceEqTypeRecord[] = []
 					const mfgAcronym = (typeof value !== 'string' ? value.ma : undefined) ?? selectedMfgOption?.ma ?? '';
@@ -1122,7 +999,7 @@ const DeviceModel = (props: IDeviceModel) => {
 						propfileData["Equipment Type"] = eqids[0].mty
 
 						const optionsDataObj = [...removeEqType, ...eqtypeFilter, ...productNumberFiltered, ...mtyAll]
-						setOptionData(optionsDataObj)
+						optionDataRef.current = optionsDataObj
 					} else {
 
 						const eqTypeAll = [{ mty: "All", pno: "All" }]
@@ -1134,12 +1011,12 @@ const DeviceModel = (props: IDeviceModel) => {
 							equipmentTypeFiltered.push({ label: element.mty, mty: element.mty, value: element.mty })
 						}
 						const optionsDataObj = [...eqTypeAll, ...removeEqType, ...equipmentTypeFiltered]
-						setOptionData(optionsDataObj)
+						optionDataRef.current = optionsDataObj
 					}
 				}
 				else if (name === "Equipment Type" && value) {
 
-					let removeProduct = optionData.filter((item) => !item.pno)
+					let removeProduct = optionDataRef.current.filter((item) => !item.pno)
 					const eqTypeValue = typeof value === 'string' ? value : (value.mty ?? value.value ?? '');
 					let productNumber = eqTypeApiDataRef.current && eqTypeApiDataRef.current.filter((item) => item.mty === eqTypeValue)
 					productNumber = productNumber && productNumber.sort((a, b) => (a.pno ?? '').localeCompare(b.pno ?? '')).filter(
@@ -1159,7 +1036,7 @@ const DeviceModel = (props: IDeviceModel) => {
 							productNumberFiltered.push({ label: element.pno, pno: element.pno, value: element.pno })
 						}
 						const optionsDataObj = [...productAll, ...removeProduct, ...productNumberFiltered]
-						setOptionData(optionsDataObj)
+						optionDataRef.current = optionsDataObj
 						setIsLensDirty(true)
 					}
 				} else if (name === "Product Number" && value) {
@@ -1186,7 +1063,7 @@ const DeviceModel = (props: IDeviceModel) => {
 
 	/* Loads manufacturer dropdown options for the selected search source. */
 	const GetManufacturers = async (keyword: string) => {
-		setOptionData([])
+		optionDataRef.current = []
 		let searchText: { MfgAcronym: IMfgAcronymItem[] } = { MfgAcronym: [] };
 		try {
 
@@ -1212,7 +1089,7 @@ const DeviceModel = (props: IDeviceModel) => {
 				const String = { label: Manufacturer[0].mfg, ...Manufacturer[0], value: Manufacturer[0].mfg }
 				profileString["Manufacturer"] = String
 				setProfileString(profileString)
-				setOptionData([...Manufacturer, ...attributeOptions])
+				optionDataRef.current = [...Manufacturer, ...attributeOptions]
 				handleValueChangeForForm(String, "Manufacturer", false)
 			} else {
 				const AllObject = [{
@@ -1226,18 +1103,20 @@ const DeviceModel = (props: IDeviceModel) => {
 						const String = { label: filteredManufacturer[0].mfg, ...filteredManufacturer[0], value: filteredManufacturer[0].mfg }
 						profileString["Manufacturer"] = String
 						setProfileString(profileString)
-						setOptionData([...filteredManufacturer, ...attributeOptions])
+						optionDataRef.current = [...filteredManufacturer, ...attributeOptions]
 						handleValueChangeForForm(String, "Manufacturer", false)
 					} else {
 						const orderMfg = filteredManufacturer.sort((a, b) => (a.mfg ?? '').localeCompare(b.mfg ?? ''));
 						if (filteredManufacturer.length === 0) {
 							setErrorMessage("No Manufacturer found for the given keyword. Please try again with a different keyword.")
 						}
-						setOptionData([...AllObject, ...orderMfg, ...attributeOptions])
+						optionDataRef.current = [...AllObject, ...orderMfg, ...attributeOptions]
+						setProfileString({ ...profileString })
 					}
 				} else {
 					const orderMfg = Manufacturer.sort((a, b) => (a.mfg ?? '').localeCompare(b.mfg ?? ''));
-					setOptionData([...AllObject, ...orderMfg, ...attributeOptions])
+					optionDataRef.current = [...AllObject, ...orderMfg, ...attributeOptions]
+					setProfileString({ ...profileString })
 				}
 
 			}
@@ -1253,86 +1132,22 @@ const DeviceModel = (props: IDeviceModel) => {
 
 
 
-	/* Expands a product node and lazy-loads Front/Rear view children. */
+	/* Expands manufacturer/eqtype nodes; product nodes have no Front/Rear view children. */
 	const handleNodeExpand = async (expandedNodeKeys: Key[], info: IExpandedNodeInfo, selectedTabName: string) => {
 		try {
-			if (info && ((info.node.treetype === "Product" && info.node.EQID) || (info.node.children.length === 1 && info.node.treetype === "Eqtype"))) {
-				const EqId = info.node.EQID !== "" ? info.node.EQID : info.node.children && info.node.children[0].EQID
-				const NodeInfo = info.node.treetype === "Eqtype" ? info.node.children[0] : info.node
-				const eqidsSortName = FnProcessMfgAcronym(EqId as string)
-				let detailsObj;
-				if (isLocalLibRadio(selectedRadio)) {
-					try {
-						detailsObj = await FnGetLibJson('details/' + eqidsSortName + '/' + EqId, isDeviceURLAvailable ? `${BASE_URL_DEVICE_MODEL}/api/files/download/single` : undefined)
-						setPropertyTabData(detailsObj as any)
-					} catch (error) {
-
-						console.error('DeviceModel: failed to fetch lib details on expand', error);
-						detailsObj = null;
-					}
-
-				}
-
-				if (detailsObj) {
-
-					let nodeObj: { Views?: string | IDeviceViewRecord[]; details?: string; EntID?: string } = {}
-					if (isRecord(detailsObj) && detailsObj.Details) {
-						detailsObj = detailsObj.Details;
-					}
-					if (Array.isArray(detailsObj) && detailsObj.length) {
-						nodeObj = { Views: detailsObj[0].Views as string | IDeviceViewRecord[] | undefined, details: JSON.stringify(detailsObj) }
-					}
-					let formattedData: IFlatTreeFormattedRow[] = []
-					if (nodeObj && nodeObj.Views) {
-						const parsedData = typeof nodeObj.Views === "string" ? parseJsonString(nodeObj.Views) : nodeObj.Views
-						if (Array.isArray(parsedData) && parsedData.length) {
-							for (let index = 0; index < parsedData.length; index++) {
-								const viewElement = parsedData[index];
-								const obj: IFlatTreeFormattedRow = {
-									ViewName: viewElement.ViewShortName === "F" ? "Front" : "Rear",
-									ViewEQID: EqId as string ?? "",
-									ViewParentEQID: EqId as string ?? "",
-									ViewEntID: viewElement.ShapeID,
-									ViewNodeType: viewElement.ViewShortName,
-									ViewDeviceViewEntId: nodeObj.EntID ? nodeObj.EntID : viewElement.EntID,
-									ViewDetailsJson: nodeObj.details,
-									ViewParentID: info.node.NodeEntID ?? undefined,
-								}
-								formattedData.push(obj)
-							}
-						}
-						let hierarchyData = await FnConvertFlatDataToHierarchyData({ "deviceModel": formattedData }, info.node.NodeEntID, props.featureId)
-						if (hierarchyData && EqId) {
-							if (hierarchyData && hierarchyData.length) {
-								const seletedNodeInfo: ISelectedNodeInfo = {
-									event: "auto-select",
-									selected: true,
-									node: hierarchyData[0],
-									selectedNodes: [hierarchyData[0]],
-								}
-								let treedata = treeDataResult
-								handleShowPropertyTab(seletedNodeInfo, selectedTabName, treedata)
-								handleNodeSelectTree([hierarchyData[0].key], seletedNodeInfo, expandedNodeKeys, selectedTabName)
-							}
-
-							const updatedTreeData = await FnAddSubNode(treeDataResult, NodeInfo.key, hierarchyData, treeProps.featureTreeProps, props.featureId, false, NodeInfo.stepNo)
-							setTreeDataResult(updatedTreeData)
-							setDefaultExpandedKeysResult([...expandedNodeKeys, NodeInfo.key]);
-							setDefaultSelectedKeysResult([hierarchyData[0].key])
-						}
-					}
-
-				}
-			} else {
-				const nodeInfo = info.node.children.length ? info.node.children[0] : info.node
-				const seletedNodeInfo: ISelectedNodeInfo = {
-					event: "auto-select",
-					selected: true,
-					node: nodeInfo,
-					selectedNodes: [nodeInfo],
-				}
-				handleNodeSelectTree([nodeInfo.key], seletedNodeInfo, expandedNodeKeys, selectedTabName)
+			if (info?.node.treetype === "Product") {
+				setDefaultExpandedKeysResult(expandedNodeKeys);
+				return;
 			}
+
+			const nodeInfo = info.node.children.length ? info.node.children[0] : info.node
+			const seletedNodeInfo: ISelectedNodeInfo = {
+				event: "auto-select",
+				selected: true,
+				node: nodeInfo,
+				selectedNodes: [nodeInfo],
+			}
+			handleNodeSelectTree([nodeInfo.key], seletedNodeInfo, expandedNodeKeys, selectedTabName)
 		} catch (error) {
 			console.error('DeviceModel: handleNodeExpand failed', error)
 		}
@@ -1398,9 +1213,9 @@ const DeviceModel = (props: IDeviceModel) => {
 						</div>}
 						<div className={`nz-tabs-output-container`}>
 							<div className={`nz-search-tab ${rightSideSelectedTab === deviceModelTabs.Search ? "nz-display-block" : "nz-display-none"}`}>
-								{profileString && optionData && props.selectedNode && <SearchTab
+								{profileString && optionDataRef.current && props.selectedNode && <SearchTab
 									uniqueName="searchTab"
-									optionData={optionData}
+									optionData={optionDataRef.current}
 									formControls={formControls}
 									profileString={profileString}
 									searchTypeValue={selectedRadio}
