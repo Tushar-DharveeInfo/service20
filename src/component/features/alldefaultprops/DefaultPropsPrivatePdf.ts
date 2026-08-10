@@ -1,6 +1,12 @@
 
-/* Pdf documents shipped with the app under public/privatepdf.
-   Values are the exact file names on disk, spaces included. */
+/* Buy brochure PDFs stored under sm/brochures in cloud storage. */
+enum BuyBrochureDocs {
+    Eula = "eula-service.pdf",
+    NetZoom = "brochure-netzoom.pdf",
+    VisioStencils = "brochure-visiostencils.pdf",
+}
+
+/* Pdf documents shipped with the app under public/privatepdf (legacy / other). */
 enum PrivatePdfDocs {
     Eula = "NetZoom End User License Agreement.pdf",
     EnterpriseBrochure = "NetZoom Enterprise Brochure.pdf",
@@ -13,4 +19,4 @@ const PrivatePdfFolder = "/privatepdf";
 /* Render scale used when a feature does not ask for its own. */
 const DefaultPdfScale = 1.6;
 
-export { PrivatePdfDocs, PrivatePdfFolder, DefaultPdfScale }
+export { BuyBrochureDocs, PrivatePdfDocs, PrivatePdfFolder, DefaultPdfScale }

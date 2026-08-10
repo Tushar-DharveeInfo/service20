@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PdfMaker, updateLayoutWithSessionVars } from "@n20a/libreport";
 import "@n20a/libreport/style.css";
-import { JsonViewer } from "../../shared/jsonviewer/JsonViewer";
-import { useSessionContext } from "../../shared/context/hooks/SessionHooks";
-import { FnBuildReportLayoutConfig } from "../allcommon/FnBuildReportLayoutConfig";
-import { IGenerateReport } from "../allinterface/generatereport/IGenerateReport";
+import { JsonViewer } from "../../../shared/jsonviewer/JsonViewer";
+import { useSessionContext } from "../../../shared/context/hooks/SessionHooks";
+import { FnBuildReportLayoutConfig } from "../../allcommon/FnBuildReportLayoutConfig";
+import { IGenerateReport } from "../../allinterface/generatereport/IGenerateReport";
 /*
  * Generate Report workflow:
  * 1. Accept reportTemplate (e.g. OrderForm.json) and required p1–p4 inputs from the caller.

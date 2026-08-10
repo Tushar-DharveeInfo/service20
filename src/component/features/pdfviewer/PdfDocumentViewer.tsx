@@ -12,13 +12,23 @@ import { PdfDownloadOverlay } from './PdfDownloadOverlay.tsx'
    SimplePdfViewer is the standard renderer; use FlipPdf (see shared/Help.tsx)
    only when a table of contents is needed. */
 const PdfDocumentViewer = (pdfDocumentViewerProps: IPdfDocumentViewer) => {
-    const pdfUrl = FnGetPrivatePdfUrl(pdfDocumentViewerProps.fileName);
+    const fileName = pdfDocumentViewerProps.fileName?.trim() ?? '';
+    const pdfUrl = pdfDocumentViewerProps.pdfUrl?.trim()
+        || (fileName ? FnGetPrivatePdfUrl(fileName) : '');
     const documentTitle = pdfDocumentViewerProps.documentTitle
         ?? pdfDocumentViewerProps.headerText
-        ?? pdfDocumentViewerProps.fileName.replace(/\.pdf$/i, "");
+        ?? (fileName ? fileName.replace(/\.pdf$/i, "") : 'Document');
     const downloadFileName = pdfDocumentViewerProps.downloadFileName
-        ?? pdfDocumentViewerProps.fileName.split(/[\\/]/).pop()
+        ?? (fileName ? fileName.split(/[\\/]/).pop() : undefined)
         ?? 'document.pdf';
+
+    if (!pdfUrl) {
+        return (
+            <div key={pdfDocumentViewerProps.uniqueName} className='nz-pdf-document-viewer'>
+                <div className='nz-pdf-document-viewer-content'>No PDF url available.</div>
+            </div>
+        );
+    }
 
     return (
         <div key={pdfDocumentViewerProps.uniqueName} className='nz-pdf-document-viewer'>

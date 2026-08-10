@@ -1,10 +1,10 @@
 
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { DownloadEnums, ProductsEnums, ProfileEnums, ServicesEnums } from '../../constants/Feature.ts'
+import { DownloadEnums, BuyEnums, ProfileEnums, ServicesEnums, FaqEnums, PurchaseEnums } from '../../constants/Feature.ts'
 import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx'
 import { Loader } from '../../shared/loader/Loader.tsx'
 import { IFeatureRenderContainer } from '../allinterface/IFeatureRenderContainer.ts'
-import { GenerateReport } from '../../features/generatereport/GenerateReport.tsx'
+import { GenerateReport } from '../../features/buy/generatereport/GenerateReport.tsx'
 import { FnGetPublicAssetUrl } from '../../features/allcommon/FnGetPublicAssetUrl.ts'
 import {
     sampleOrderAddressFields,
@@ -12,6 +12,9 @@ import {
     sampleOrderDataset2,
     sampleOrderDocType,
 } from '../../../sampledata/genaretreport/OrderFormSampleData.ts'
+
+/** Shown when a feature route has no component yet. */
+const FeaturePendingInfo = () => <p>Y will provide information.</p>
 
 const ORDER_FORM_JSON = 'OrderForm.json'
 
@@ -75,13 +78,13 @@ const GenerateReportHost = () => {
     )
 }
 
-const Eula = lazy(() => import('../../features/profile/eula/Eula.tsx'))
+const Eula = lazy(() => import('../../features/buy/eula/Eula.tsx'))
 const MyProfile = lazy(() => import('../../features/profile/myprofile/MyProfile.tsx'))
 const MyActivities = lazy(() => import('../../features/profile/myactivities/MyActivities.tsx'))
 const MySubscriptions = lazy(() => import('../../features/profile/mysubscriptions/MySubscriptions.tsx'))
 
-const NetZoom = lazy(() => import('../../features/products/netzoom/NetZoom.tsx'))
-const VisioStencils = lazy(() => import('../../features/products/visiostencils/VisioStencils.tsx'))
+const NetZoom = lazy(() => import('../../features/buy/netzoom/NetZoom.tsx'))
+const VisioStencils = lazy(() => import('../../features/buy/visiostencils/VisioStencils.tsx'))
 
 const RequestVisioStencils = lazy(() => import('../../features/services/requestvisiostencils/RequestVisioStencils.tsx'))
 const RequestDeviceModelsContainer = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
@@ -97,18 +100,21 @@ const FeaturesWithOwnLayout: string[] = [
     ProfileEnums.MyProfile,
     ProfileEnums.MyActivities,
     ProfileEnums.MySubscriptions,
-    ProductsEnums.EULA,
-
-    ProductsEnums.Purchase,
-    ProductsEnums.NetZoom,
-    ProductsEnums.VisioStencils,
-    ProductsEnums.Other,
+    BuyEnums.EULA,
+    BuyEnums.Purchase,
+    BuyEnums.NetZoom,
+    BuyEnums.VisioStencils,
+    BuyEnums.Other,
+    PurchaseEnums.Cart,
+    PurchaseEnums.Orders,
     ServicesEnums.RequestSupport,
     ServicesEnums.RequestVisioStencils,
     ServicesEnums.RequestDeviceModels,
     ServicesEnums.MyRequests,
     DownloadEnums.DownloadVisioStencils,
-    DownloadEnums.DownloadNetZoom
+    DownloadEnums.DownloadNetZoom,
+    FaqEnums.VisioStencils,
+    FaqEnums.NetZoom,
 ];
 
 /* Renders feature modules dynamically based on featureId.
@@ -165,7 +171,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProductsEnums.EULA:
+        case BuyEnums.EULA:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -178,16 +184,26 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProductsEnums.Purchase:
+        case BuyEnums.Purchase:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        {/* Purchase  */}
+                        <FeaturePendingInfo />
                     </Suspense>
                 </ErrorBoundary>
             );
 
-        case ProductsEnums.NetZoom:
+        case PurchaseEnums.Cart:
+        case PurchaseEnums.Orders:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <FeaturePendingInfo />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
+        case BuyEnums.NetZoom:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -200,7 +216,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProductsEnums.VisioStencils:
+        case BuyEnums.VisioStencils:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -213,7 +229,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ProductsEnums.Other:
+        case BuyEnums.Other:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
@@ -291,8 +307,18 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
+        case FaqEnums.VisioStencils:
+        case FaqEnums.NetZoom:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <FeaturePendingInfo />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
         default:
-            return null;
+            return <FeaturePendingInfo />;
     }
 }
 

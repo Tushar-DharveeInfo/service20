@@ -281,7 +281,13 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
                     updateArray(key, value);
                 }
             }
-            // -------- ORDER NORMALIZER (DO NOT TOUCH OTHER LOGIC) --------
+
+            // Always append login status lines (statusBarData is often `{}`).
+            for (const loginLine of loginStatusLines) {
+                if (loginLine && !arr.includes(loginLine)) {
+                    arr.push(loginLine);
+                }
+            }
 
             setStatusBarTitle((prev) => {
                 // if previous was array and same as new, do nothing

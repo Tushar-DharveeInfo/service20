@@ -8,7 +8,8 @@
     "Label": "Signout",
     "Tooltip": "Click to Close sessions and Logout. ",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -19,7 +20,8 @@
     "Label": "Help",
     "Tooltip": "Click to view Help page of the selected feature",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -30,7 +32,8 @@
     "Label": "Theme",
     "Tooltip": "Display Theme",
     "SortOrder": "3",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -41,7 +44,8 @@
     "Label": "ContactUs",
     "Tooltip": "ContactUs",
     "SortOrder": "4",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -52,7 +56,8 @@
     "Label": "Profile",
     "Tooltip": "Dashboards",
     "SortOrder": "100",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -63,7 +68,8 @@
     "Label": "MyProfile",
     "Tooltip": "MyProfile",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -74,7 +80,8 @@
     "Label": "MyActivities",
     "Tooltip": "MyActivities",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -85,7 +92,8 @@
     "Label": "MySubscriptions",
     "Tooltip": "MySubscriptions",
     "SortOrder": "3",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -96,7 +104,8 @@
     "Label": "Buy",
     "Tooltip": "Purchase Products and Services",
     "SortOrder": "120",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -107,7 +116,8 @@
     "Label": "Purchase",
     "Tooltip": "End User License Agreement",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -118,7 +128,8 @@
     "Label": "EULA",
     "Tooltip": "End User License Agreement",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -129,7 +140,8 @@
     "Label": "NetZoom",
     "Tooltip": "NetZoom Subscriptions",
     "SortOrder": "3",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -140,7 +152,8 @@
     "Label": "Visio Stencils",
     "Tooltip": "Visio Stencils Subscriptions",
     "SortOrder": "4",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -151,7 +164,8 @@
     "Label": "Other",
     "Tooltip": "Other Products and Services",
     "SortOrder": "5",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -162,7 +176,8 @@
     "Label": "Services",
     "Tooltip": "Services",
     "SortOrder": "150",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -173,7 +188,8 @@
     "Label": "Request Support",
     "Tooltip": "Request Support",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -184,7 +200,8 @@
     "Label": "Request Visio Stencils",
     "Tooltip": "Request Visio Stencils",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -195,7 +212,8 @@
     "Label": "Request Device Models",
     "Tooltip": "Request Device Models",
     "SortOrder": "3",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -206,7 +224,8 @@
     "Label": "My Requests",
     "Tooltip": "My Requests",
     "SortOrder": "4",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -217,7 +236,8 @@
     "Label": "Download",
     "Tooltip": "Download",
     "SortOrder": "200",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -228,7 +248,8 @@
     "Label": "Download Visio Stencils",
     "Tooltip": "Download Visio Stencils",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -239,7 +260,8 @@
     "Label": "Download NetZoom",
     "Tooltip": "Download NetZoom files",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -250,7 +272,8 @@
     "Label": "FAQ",
     "Tooltip": "Frequently Asked Questions",
     "SortOrder": "300",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -261,7 +284,8 @@
     "Label": "Visio Stencils",
     "Tooltip": "Visio Stencils",
     "SortOrder": "1",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -272,7 +296,8 @@
     "Label": "NetZoom",
     "Tooltip": "NetZoom",
     "SortOrder": "2",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -283,7 +308,8 @@
     "Label": "Cart",
     "Tooltip": "My Cart",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -294,7 +320,8 @@
     "Label": "Orders",
     "Tooltip": "Orders",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -305,7 +332,8 @@
     "Label": "Details",
     "Tooltip": "Ticket Details",
     "SortOrder": "1",
-    "DefaultQA": "1"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "",
@@ -316,6 +344,7 @@
     "Label": "Notes",
     "Tooltip": "Notes",
     "SortOrder": "2",
-    "DefaultQA": ""
+    "DefaultQA": "",
+    "Alias": ""
   }
 ]

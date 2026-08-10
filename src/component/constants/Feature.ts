@@ -35,8 +35,8 @@ enum ProfileEnums {
     MySubscriptions = "108",
 }
 
-// Buy / Products menu feature ids
-enum ProductsEnums {
+// Buy  menu feature ids
+enum BuyEnums {
     Buy = "120",
     Purchase = "122",
     EULA = "124",
@@ -82,7 +82,7 @@ enum deviceModelTabs {
 
 export {
     FeatureMenuRange, AppQA, AppQARange
-    , ProfileEnums, ProductsEnums, ServicesEnums, DownloadEnums
+    , ProfileEnums, BuyEnums, ServicesEnums, DownloadEnums
     , FaqEnums, PurchaseEnums
     , FeatureQARange
     , KebabMenuRange,

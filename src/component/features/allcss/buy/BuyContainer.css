@@ -1,4 +1,4 @@
-.nz-product-container {
+.nz-buy-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -6,7 +6,7 @@
     overflow: hidden;
 }
 
-.nz-product-container-content {
+.nz-buy-container-content {
     flex: 1 1 auto;
     min-height: 0;
     display: flex;

@@ -3,7 +3,7 @@ import { IDownloadFeature } from '../../allinterface/download/IDownloadFeature.t
 
 const DownloadVisioStencils = (_downloadVisioStencilsProps: IDownloadFeature) => {
     return (
-        <p>Y to provide component (DownloadVisioStencils)</p>
+        <p>Y will provide information.</p>
     )
 }
 

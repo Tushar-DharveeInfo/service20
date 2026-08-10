@@ -44,10 +44,9 @@ const StatusBarTitleContainer = (statusBarTitleContainerProps: IStatusBarTitleCo
                 }
 
 
-                const filteredTitleData: string[] = [];
-
-
-                const showEllipsis = filteredTitleData.length < titleData.length;
+                // Collapsed mode: show all title lines (Site/Tenant truncation removed).
+                const filteredTitleData = [...titleData];
+                const showEllipsis = false;
 
                 return (
                     <>
