@@ -11,5 +11,5 @@ export interface ISessionContextProps {
   UpdateRowName: (row: ISession) => void;
   setSessionList: (SessionList: ISession[]) => void;
   FnAvailableSessionVariables: () => void
-  FnGetLocationData: (isInventory: boolean) => Record<string, any>;
+
 }

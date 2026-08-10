@@ -1,6 +1,6 @@
 import { FnFormatDateWithAppFormat } from '../../../appcontainer/allcommon/FnFormatDateWithAppFormat'
 
-/** Force MM/dd/yyyy regardless of app/site locale. */
+/** Force MM/dd/yyyy regardless of app locale. */
 const TICKET_DATE_LOCALE = 'USA'
 
 /** Ticket date + time (MM/dd/yyyy h:mm AM/PM). Used in detail form. */

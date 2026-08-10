@@ -30,34 +30,14 @@ function SessionProvider({ children }: IAppContextWrapper) {
     return sessionList;
   }, [sessionList]);
 
-  const FnGetLocationData = useCallback((isInventory: boolean) => {
-    try {
-      const context = isInventory ? "inventory" : "location";
-      return sessionList
-        .filter(
-          (item) =>
-            item.VariableContext?.toLowerCase() === context &&
-            item.VariableName?.toLowerCase().endsWith("name")
-        )
-        .reduce((acc, item) => {
-          if (item.VariableName) {
-            acc[item.VariableName] = item.SessionValue;
-          }
-          return acc;
-        }, {} as Record<string, any>);
-    } catch (error) {
-      console.error("Error getting location data:", error);
-      return {} as Record<string, any>;
-    }
-  }, [sessionList]);
+
 
   const contextValue = useMemo(() => ({
     SessionList: sessionList,
     UpdateRowName,
     setSessionList,
     FnAvailableSessionVariables,
-    FnGetLocationData
-  }), [sessionList, UpdateRowName, FnAvailableSessionVariables, FnGetLocationData]);
+  }), [sessionList, UpdateRowName, FnAvailableSessionVariables]);
 
   return (
     <SessionContext.Provider value={contextValue}>

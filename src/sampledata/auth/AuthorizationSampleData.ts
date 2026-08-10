@@ -23,11 +23,11 @@ const sampleSessionVariables: ISession[] = [
     { VariableContext: "Location", VariableName: "SiteID", SessionValue: "SAMPLE-SITE-0001" },
     { VariableContext: "Location", VariableName: "SiteName", SessionValue: "" },
     { VariableContext: "Location", VariableName: "RoomID", SessionValue: "SAMPLE-ROOM-0001" },
-    { VariableContext: "Location", VariableName: "RoomName", SessionValue: "Bay Room 1" },
+    { VariableContext: "Location", VariableName: "RoomName", SessionValue: "sample R 1" },
     { VariableContext: "Location", VariableName: "FloorID", SessionValue: "SAMPLE-FLOOR-0001" },
-    { VariableContext: "Location", VariableName: "FloorName", SessionValue: "Floor 1" },
+    { VariableContext: "Location", VariableName: "FloorName", SessionValue: "test data 1" },
     { VariableContext: "Location", VariableName: "LocationID", SessionValue: "SAMPLE-LOC-0001" },
-    { VariableContext: "Location", VariableName: "LocationName", SessionValue: "Chicago / Floor 1" },
+    { VariableContext: "Location", VariableName: "LocationName", SessionValue: "" },
 
     { VariableContext: "Filter", VariableName: "TenantName", SessionValue: null },
 

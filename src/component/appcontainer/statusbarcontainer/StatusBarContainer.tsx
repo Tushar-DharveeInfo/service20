@@ -71,9 +71,6 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
     const [confirmMessage, setConfirmMessage] = useState<string>("");
     const [isShowFullTitle, setIsShowFullTitle] = useState<boolean>(false);
     const [isInternetAvailable, setIsInternetAvailable] = useState<boolean>(true);
-    const [isSiteLocked, setIsSiteLocked] = useState<boolean>(false);
-    const [isSiteManaged, setIsSiteManaged] = useState<boolean>(false);
-
     const statusBarContext = useStatusBarContext();
     const { FetchDataError, FetchError, TestApiData, IsLoading, LoadingLabel, UserActionData, setFetchDataError, setFetchError, setUserActionData, setTestApiData } = statusBarContext;
     const [hasError, setHasError] = useState<number | undefined>(FetchDataError?.length || FetchError?.length);
@@ -223,11 +220,8 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
         setIsInternetAvailable(mainAppContext.isInternetAvailable)
     }, [mainAppContext.isInternetAvailable])
 
-    // Mirrors lock/managed flags from current site properties.
-    useEffect(() => {
-        setIsSiteLocked(mainAppContext.siteProperties?.Locked ? true : false)
-        setIsSiteManaged(mainAppContext.siteProperties?.Managed ? true : false)
-    }, [mainAppContext.siteProperties?.Managed, mainAppContext.siteProperties?.Locked])
+    // Mirrors lock/managed flags from current  properties.
+
 
     // Clears cached refs when status bar container unmounts.
     useEffect(() => {
@@ -280,74 +274,15 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
                 }
             };
 
-            /* -------------------------
-             * Append ONLY ONE after Sites|Site (ORDER FIX)
-             * ------------------------- */
-            // Inserts tenant/team/tag directly after site entry when available.
-            const insertAfterSite = (label: string, value?: string) => {
-                if (!value) return;
-                const entry = `${label}: ${value}`;
-                // If already exists → replace
-                const existingIdx = arr.findIndex((i) =>
-                    i.toLowerCase().startsWith(label.toLowerCase() + ":")
-                );
-                if (existingIdx >= 0) {
-                    arr[existingIdx] = entry;
-                    return;
-                }
-                // Find Site index
-                const siteIdx = arr.findIndex((i) =>
-                    i.toLowerCase().startsWith("site:")
-                );
-                if (siteIdx >= 0) {
-                    arr.splice(siteIdx + 1, 0, entry); //  insert after Site
-                } else {
-                    arr.push(entry); // fallback safety
-                }
-            };
-            if (tenantName) {
-                insertAfterSite("Tenant", tenantName);
-            } else if (teamName) {
-                insertAfterSite("Team", teamName);
-            } else if (tagName) {
-                insertAfterSite("Tag", tagName);
-            }
-            // dynamic keys (now also replaces Site / Sites if present)
             for (const key in data) {
-                // Site selection removed from status bar display.
-                if (key.toLowerCase() === "site" || key.toLowerCase() === "sites") {
-                    continue;
-                }
+
                 const value = data[key]
                 if (value) {
                     updateArray(key, value);
                 }
             }
             // -------- ORDER NORMALIZER (DO NOT TOUCH OTHER LOGIC) --------
-            const orderPriority = ["Sites:", "Site:", "Tenant:", "Team:", "Tag:"];
-            // Extracts existing ordered entries by prefix from status array.
-            const extract = (prefix: string) =>
-                arr.find((i) => i.toLowerCase().startsWith(prefix.toLowerCase()));
-            const orderedPart: string[] = [];
-            for (const key of orderPriority) {
-                const found = extract(key);
-                if (found) orderedPart.push(found);
-            }
-            // remove them from arr
-            const rest = arr.filter(
-                (i) =>
-                    !orderPriority.some((k) =>
-                        i.toLowerCase().startsWith(k.toLowerCase())
-                    )
-            );
-            // rebuild in correct sequence
-            arr.length = 0;
-            arr.push(...orderedPart, ...rest);
-            for (const loginLine of loginStatusLines) {
-                if (loginLine && !arr.includes(loginLine)) {
-                    arr.push(loginLine);
-                }
-            }
+
             setStatusBarTitle((prev) => {
                 // if previous was array and same as new, do nothing
                 if (
@@ -934,8 +869,6 @@ const StatusBarContainer = (statusBarContainerProps: IStatusBarContainer) => {
                             cardsCount={statusBarCards.length}
                             isShowFullTitle={isShowFullTitle}
                             isInternetAvailable={isInternetAvailable}
-                            isSiteLocked={isSiteLocked}
-                            isSiteManaged={isSiteManaged}
                             criticalAlertCount={statusBarCards.filter(card => card.severity === "Critical").length}
                             handleOpenCloseStatusBar={() => {
                                 setIsStatusBarOpen(!isStatusBarOpen);

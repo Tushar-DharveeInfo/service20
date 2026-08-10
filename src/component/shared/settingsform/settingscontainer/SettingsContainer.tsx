@@ -14,7 +14,6 @@ import { SettingsInstanceList } from '../settingsinstancelist/SettingsInstanceLi
 import { YesNoFormContainer } from '../../basic/yesnoformcontainer/YesNoFormContainer.tsx'
 import { FnUpdateProfileStringForEnabled } from '../../allcommon/settingsform/FnUpdateProfileStringForEnabled.ts';
 import { unstable_batchedUpdates } from 'react-dom';
-import { getMuForSite } from '../../context/contextandprovider/ExplorerTree.tsx';
 import { SettingsLibForm } from '../settingslibform/SettingsLibForm.tsx';
 import { FnParseJsonSafely } from '../../../appcontainer/allcommon/FnParseJsonSafely.ts';
 import { handleFormControlsKeyDown, handleFormControlsBubbleKeyDown } from '../../allcommon/basic/FnHandleContainerKeyDown';
@@ -344,7 +343,7 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
                                 refDataObject={refDataObject}
                                 testApiJson={formContainerProps.testApiJson}
                                 allowHelp={formContainerProps.allowHelp}
-                                measurementUnit={formContainerProps.measurementUnit ?? getMuForSite()}
+                                measurementUnit={formContainerProps.measurementUnit}
                                 minDate={formContainerProps.minDate}
                                 container={formContainerProps.subGroup}
                                 allowTestIcon={formContainerProps.allowTestApi ? (selectedItem?.RecID || selectedItem?.actionCode || formContainerProps.id) ? true : false : false}
@@ -375,7 +374,7 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
                         refDataObject={refDataObject}
                         minDate={formContainerProps.minDate}
                         container={formContainerProps.subGroup}
-                        measurementUnit={formContainerProps.measurementUnit ?? getMuForSite()}
+                        measurementUnit={formContainerProps.measurementUnit}
                         allowTestIcon={formContainerProps.allowTestApi ? (selectedItem?.RecID || selectedItem?.actionCode || formContainerProps.id) ? true : false : false}
                         handleActionImageClick={handleActionImageClick}
                         id={selectedItem?.RecID || selectedItem?.actionCode || formContainerProps.id}

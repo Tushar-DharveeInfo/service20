@@ -43,30 +43,9 @@ const StatusBarTitleContainer = (statusBarTitleContainerProps: IStatusBarTitleCo
                     );
                 }
 
-                // Collapsed mode — include items until first "Site:" then add "..." if more items exist
-                const hasContext = titleData.some(
-                    (e) =>
-                        e.startsWith('Tenant:') ||
-                        e.startsWith('Team:') ||
-                        e.startsWith('Tag:')
-                );
+
                 const filteredTitleData: string[] = [];
-                for (const element of titleData) {
-                    filteredTitleData.push(element);
-                    if (hasContext) {
-                        if (
-                            element.startsWith('Tenant:') ||
-                            element.startsWith('Team:') ||
-                            element.startsWith('Tag:')
-                        ) {
-                            break;
-                        }
-                    } else {
-                        if (element.startsWith('Site:')) {
-                            break;
-                        }
-                    }
-                }
+
 
                 const showEllipsis = filteredTitleData.length < titleData.length;
 
@@ -155,29 +134,6 @@ const StatusBarTitleContainer = (statusBarTitleContainerProps: IStatusBarTitleCo
                             />
                         )}
 
-                        {statusBarTitleContainerProps.isSiteLocked ? (
-                            <Image
-                                uniqueName="lock-i"
-                                source={<Secured24x24
-                                    size={FnGetCssVariable('--image-size-1')}
-                                    fill='none'
-                                    strokeWidth={1}
-                                />}
-                                type="svg"
-                                w="var(--image-size-1)"
-                                h="var(--image-size-1)"
-                                tooltip="This Site is Locked, you may contact NetZoom Administrator"
-                            />
-                        ) : !statusBarTitleContainerProps.isSiteManaged ? (
-                            // <Label
-                            //     uniqueName="site-managed-label"
-                            //     label="Free | "
-                            //     fontWeight='bold'
-                            //     color='green'
-                            //     tooltip="Changes to this Site are not tracked, you may contact NetZoom Administrator"
-                            // />
-                            <></>
-                        ) : null}
                     </>
                 )}
 

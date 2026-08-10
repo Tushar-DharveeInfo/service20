@@ -9,8 +9,6 @@ import '../../allcss/settingsform/SettingsLibForm.css'
 import { useMainAppContext } from '../../context/hooks/MainAppHooks'
 import { useStatusBarContext } from '../../context/hooks/StatusBarHooks'
 import { getDiagnosticLevelData } from '../../context/contextandprovider/CommonVariable'
-import { getMuForSite } from '../../context/contextandprovider/ExplorerTree'
-
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable'
 import { FnHideShowSaveIconForForm } from '../../allcommon/basic/FnHideShowSaveIconForForm'
 import { FnGetExtensionFromFileName } from '../../allcommon/basic/FnGetExtensionFromFileName'
@@ -436,7 +434,7 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
                 statusBarContext,
                 derivedGroupNames,
                 mainAppContext.refTableRecords,
-                getMuForSite(),
+                "usa",
                 getDiagnosticLevelData(),
                 isDisableForm,
                 undefined,

@@ -24,10 +24,6 @@ interface IExplorerTree {
     isSiteChanged: boolean;
     setIsSiteChanged: React.Dispatch<
         React.SetStateAction<boolean>>;
-
-    muForSite: string;
-    setMuForSite: React.Dispatch<
-        React.SetStateAction<string>>;
 }
 
 

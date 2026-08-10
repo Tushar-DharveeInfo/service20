@@ -6,9 +6,6 @@ function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, fea
         const nodeMap: { [key: string]: ITreeNode } = {};
 
         const nodeTypePropertyMap: { [key: string]: string[] } = {
-            'Site': ['SiteAddress', 'SiteGPS', 'SiteContact', 'SiteStats'],
-            'Tenant': ['TenantAddress', 'TenantGPS', 'TenantContact', 'TenantStats']
-            // Add more node types as needed
         };
 
         // Function to extract properties based on the node type
@@ -36,12 +33,7 @@ function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, fea
                 if (id) {
                     if (!nodeMap[id]) {
                         const nodeData = extractProperties(item, nodeType);
-                        const showCheckbox = (item[`${nodeType}NodeType`] || '') === "Site" || (item[`${nodeType}NodeType`] || '') === "Room"
-                            || (item[`${nodeType}NodeType`] || '') === "Floor" || (item[`${nodeType}NodeType`] || '') === "Location"
-                            || ((item[`${nodeType}NodeType`] || '') === "Device")
-                            || (item[`${nodeType}NodeType`] || '') === "FrontView"
-                            || (item[`${nodeType}NodeType`] || '') === "Rack"
-                            || (item[`${nodeType}NodeType`] || '') === "RearView" ? false : true;
+
 
                         nodeMap[id] = {
                             title: item[`${nodeType}Name`] || '',
@@ -61,7 +53,7 @@ function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, fea
                             stepNo: item[`${nodeType}StepNo`] || nodeTypes.indexOf(nodeType) + 1,
                             parentEntID: parentId || null,
                             treetype: nodeType,
-                            checkable: showCheckbox,
+                            checkable: false,
                             isLeaf: (item[`${nodeType}HasChildren`] || 0) >= 1 ? false : true,
                             MountedDeviceEntID: item[`${nodeType}MountedDeviceEntID`] || "",
                             MountedDeviceViewEntID: item[`${nodeType}MountedDeviceViewEntID`] || "",

@@ -909,5 +909,5 @@
       ]
     }
   ],
-  "JSScript": "let _Title='NetZoom Order '+#OrderID#;\nlet currentDateTime=new Date();\nif( Dateformat=selectednode.DateFormat == 'mm/dd/yyyy')\n{\n  let _Date=currentDateTime.toLocaleDateString('en-US')+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}\nelse if( Dateformat=selectednode.DateFormat == 'dd/mm/yyyy')\n{\n  let _Date=currentDateTime.toLocaleDateString('en-GB')+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}\nelse\n{\n let _Date=currentDateTime.toISOString().split('T')[0]+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}"
+  "JSScript": "let _Title='NetZoom Order '+(typeof OrderID !== 'undefined' && OrderID != null ? OrderID : '');\nlet currentDateTime=new Date();\nlet Dateformat=(typeof selectednode !== 'undefined' && selectednode && selectednode.DateFormat) ? selectednode.DateFormat : 'mm/dd/yyyy';\nif(Dateformat == 'mm/dd/yyyy')\n{\n  let _Date=currentDateTime.toLocaleDateString('en-US')+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}\nelse if(Dateformat == 'dd/mm/yyyy')\n{\n  let _Date=currentDateTime.toLocaleDateString('en-GB')+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}\nelse\n{\n let _Date=currentDateTime.toISOString().split('T')[0]+ ' '+currentDateTime.toTimeString().split('GMT')[0];\n}"
 }

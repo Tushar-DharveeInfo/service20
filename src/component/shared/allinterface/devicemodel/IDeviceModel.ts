@@ -32,7 +32,7 @@ interface IDeviceModel
 /* Generic JSON object from device-model APIs. */
 type JsonRecord = Record<string, unknown>;
 
-/* Dropdown option for manufacturer, equipment type, product, or lib attribute. */
+/* Dropdown option for manufacturer, equipment type, or product. */
 interface IDeviceSearchOption {
     label?: string;
     value?: string;
@@ -40,7 +40,6 @@ interface IDeviceSearchOption {
     ma?: string;
     mty?: string;
     pno?: string;
-    isAttribute?: string;
     [key: string]: unknown;
 }
 

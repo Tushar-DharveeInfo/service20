@@ -1,10 +1,6 @@
 
 enum DeviceModelFEnums {
     NetZoomDeviceLibrary = 'NetZoom Device Library',
-    NetZoomCableLibrary = 'NetZoom Cable Library',
-    Inventory = 'Inventory',
-    CurrentSite = 'Current Site',
-    AllSites = 'All Sites'
 }
 
 enum Lib {

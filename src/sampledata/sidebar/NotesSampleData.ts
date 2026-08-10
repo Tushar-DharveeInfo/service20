@@ -2,26 +2,26 @@ import type { INoteItems } from "../../component/shared/allinterface/sidebar/IFq
 
 const sampleNotesItems: INoteItems[] = [
     {
-        EntityName: "Site",
+        EntityName: "test",
         LastUpdated: "2026-07-28T09:30:00.000Z",
-        NodeType: "Site",
-        NotesMAX: "Site inspection completed for Bay Room 1.",
+        NodeType: "test",
+        NotesMAX: "test inspection completed for Test 1.",
         NotesType: "Message",
         UserName: "demo.user",
     },
     {
-        EntityName: "Site",
+        EntityName: "test",
         LastUpdated: "2026-07-27T15:10:00.000Z",
-        NodeType: "Site",
+        NodeType: "test",
         NotesMAX: "Need to verify cooling near Rack1.",
         NotesType: "Message",
         UserName: "ops.oncall",
     },
     {
-        EntityName: "Site",
+        EntityName: "test",
         LastUpdated: "2026-07-26T11:05:00.000Z",
-        NodeType: "Site",
-        NotesMAX: "Photo attachment placeholder for floor layout.",
+        NodeType: "test",
+        NotesMAX: "Photo attachment placeholder for layout.",
         NotesType: "Message",
         UserName: "demo.user",
     },
@@ -42,7 +42,7 @@ const sampleNotesFileProfileResponse = {
         "PG.FileProfile": [
             {
                 FileUID: "sample-file-uid-001",
-                FileName: "floor-note",
+                FileName: "test-note",
                 Extension: "png",
                 FileType: "image",
             },

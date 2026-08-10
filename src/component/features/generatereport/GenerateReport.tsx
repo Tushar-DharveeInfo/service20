@@ -28,8 +28,20 @@ const GenerateReport = (props: IGenerateReport) => {
                 sessionVars[item.VariableName] = item.SessionValue;
             }
         });
+
+        // OrderForm.jscript expects OrderID / selectednode — supply from report inputs.
+        const orderId =
+            ("Invoice" in docType.doctype && docType.doctype.Invoice)
+            || ("PO" in docType.doctype && docType.doctype.PO)
+            || ("Quote" in docType.doctype && docType.doctype.Quote)
+            || "";
+        sessionVars.OrderID = orderId;
+        if (!sessionVars.selectednode) {
+            sessionVars.selectednode = { DateFormat: "mm/dd/yyyy" };
+        }
+
         return sessionVars;
-    }, [sessionContext?.SessionList]);
+    }, [docType, sessionContext?.SessionList]);
 
     const buildReportLayout = useCallback(
         () => FnBuildReportLayoutConfig(

@@ -32,6 +32,28 @@ const searchProps: ExpandableListSearchState = {
     searchInputValue: "",
 };
 
+/* DefaultQA from feature.json is "1" / true — prefer that submenu on load / open. */
+const isDefaultQaMenuItem = (item: IMenuItem): boolean =>
+    item.DefaultQA === true || item.DefaultQA === 1 || item.DefaultQA === "1";
+
+const findDefaultQaSubMenu = (
+    menu: IMenuItem[]
+): { parent: IMenuItem; child: IMenuItem; parentIndex: number; childIndex: number } | null => {
+    for (let parentIndex = 0; parentIndex < menu.length; parentIndex++) {
+        const parent = menu[parentIndex];
+        const childIndex = parent.subMenu?.findIndex(isDefaultQaMenuItem) ?? -1;
+        if (childIndex >= 0 && parent.subMenu) {
+            return {
+                parent,
+                child: parent.subMenu[childIndex],
+                parentIndex,
+                childIndex,
+            };
+        }
+    }
+    return null;
+};
+
 const ExpandableList = (props: IExpandableList) => {
     const [mainMenu, setMainMenu] = useState<IMenuItem[] | null>(null);
     const [searchControlProps, setSearchControlProps] = useState<ExpandableListSearchState>(searchProps);
@@ -44,19 +66,38 @@ const ExpandableList = (props: IExpandableList) => {
     const mainRefs = useRef<(HTMLDivElement | null)[]>([]);
     const subRefs = useRef<{ [key: number]: (HTMLDivElement | null)[] }>({});
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const hasAutoSelectedDefaultQaRef = useRef(false);
 
     useEffect(() => {
         if (props.menuData && props.menuData.length > 0) {
             if (!isEqual(props.menuData, originalMenuMenu)) {
                 const menu: IMenuItem[] = [...props.menuData];
-                // One group, one child: open group and select the child on load.
-                if (menu.length === 1 && menu[0].subMenu?.length === 1) {
-                    menu[0].isOpen = true
-                    menu[0].subMenu[0].isSelected = true
-                    setSelectedEntId(menu[0].subMenu[0].EntID as string | undefined)
-                    props.handleMouseEvent(undefined, "expandleList", menu[0].subMenu[0])
-                    setSelectedMenuIndex(-1)
-                    menu[0].isSelected = false
+                const canAutoSelect =
+                    props.uniqueName === "Menu" &&
+                    !props.selectedFeature &&
+                    !hasAutoSelectedDefaultQaRef.current;
+
+                if (canAutoSelect) {
+                    const defaultQa = findDefaultQaSubMenu(menu);
+                    // Prefer DefaultQA === 1 / true submenu; else one group with one child.
+                    if (defaultQa) {
+                        defaultQa.parent.isOpen = true;
+                        defaultQa.child.isSelected = true;
+                        setSelectedEntId(defaultQa.child.EntID as string | undefined);
+                        setActiveMainIndex(defaultQa.parentIndex);
+                        setActiveSubIndex(defaultQa.childIndex);
+                        setSelectedMenuIndex(-1);
+                        hasAutoSelectedDefaultQaRef.current = true;
+                        props.handleMouseEvent(undefined, "expandleList", defaultQa.child);
+                    } else if (menu.length === 1 && menu[0].subMenu?.length === 1) {
+                        menu[0].isOpen = true;
+                        menu[0].subMenu[0].isSelected = true;
+                        setSelectedEntId(menu[0].subMenu[0].EntID as string | undefined);
+                        props.handleMouseEvent(undefined, "expandleList", menu[0].subMenu[0]);
+                        setSelectedMenuIndex(-1);
+                        menu[0].isSelected = false;
+                        hasAutoSelectedDefaultQaRef.current = true;
+                    }
                 }
 
                 setOriginalMenuMenu([...menu]);
@@ -92,6 +133,7 @@ const ExpandableList = (props: IExpandableList) => {
                     if (sub.EntID === item.EntID) {
                         sub.isSelected = true;
                         ele.isSelected = true;
+                        ele.isOpen = true;
                     }
                     else {
                         sub.isSelected = false;
@@ -134,9 +176,10 @@ const ExpandableList = (props: IExpandableList) => {
                 }
             }, 300);
             const subMenuLength = item.subMenu?.length ?? 0;
+            const isOpeningGroup = !item.isOpen;
 
-            // One child under this group: select the child, not the parent.
-            if (subMenuLength === 1 && item.subMenu) {
+            // Auto-select only when this group has exactly one child.
+            if (isOpeningGroup && subMenuLength === 1 && item.subMenu) {
                 handleSubListItemClick(event, index, item.subMenu[0]);
                 return;
             }

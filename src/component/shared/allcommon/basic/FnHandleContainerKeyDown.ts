@@ -713,7 +713,7 @@ const NESTED_KEYBOARD_ZONES = [
 
 /*
  * Container keyboard handler that skips nested zones with their own navigation.
- * Use on parents that wrap SearchControlWithFilter, ag-grid, or libalerts filters (e.g. ForensicLog, AlertLog).
+ * Use on parents that wrap ag-grid or libalerts filters (e.g. ForensicLog, AlertLog).
  */
 function handleNestedZoneContainerKeyDown(
     event: KeyboardEvent<HTMLElement>,

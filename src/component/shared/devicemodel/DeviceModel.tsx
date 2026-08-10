@@ -65,13 +65,6 @@ const getProductDownloadCartPayload = (node: ITreeNode): { mfg: string; prodno: 
 	return { mfg, prodno, EQID }
 }
 
-const NetZoomDeviceLibAttribute = [
-	{ "isAttribute": "All" },
-	{ "isAttribute": "Racks/Cabinets" },
-	{ "isAttribute": "Rackmountable" },
-	{ "isAttribute": "Cards/Modules" },
-	{ "isAttribute": "Chassis" }];
-
 const leftSideTabs: IActionLabelTabs = {
 	labels: [
 		{
@@ -531,7 +524,6 @@ const DeviceModel = (props: IDeviceModel) => {
 	 * Product nodes only — Front/Rear view nodes are not added to the Result tree. */
 	const formatDataForFlatTree = async (data: IDeviceEqTypeRecord[]): Promise<IFlatTreeFormattedRow[]> => {
 		let formattedData: IFlatTreeFormattedRow[] = [];
-		const isForInventory = selectedRadio === DeviceModelFEnums.Inventory;
 		try {
 			for (let index = 0; index < data.length; index++) {
 				const element = data[index];
@@ -569,7 +561,7 @@ const DeviceModel = (props: IDeviceModel) => {
 						EqtypeParentID: `${nodeObj.mfg}`,
 						EqtypeHasChildren: nodeObj.pno ? true : false,
 						EqtypeDeviceEntId: nodeObj.entid,
-						ProductEntID: isForInventory ? nodeObj.entid : nodeObj.id,
+						ProductEntID: nodeObj.id,
 						ProductEQID: nodeObj.id,
 						ProductEQType: nodeObj.ty,
 						ProductName: nodeObj.pno,
@@ -749,11 +741,9 @@ const DeviceModel = (props: IDeviceModel) => {
 			const keywordsToSearch = (searchKeywords ?? searchText)?.trim() ?? ""
 			const andOrFlag: "AND" | "OR" = selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND"
 
+			alert(`Yadav-searchcriteria DeviceModel: ${JSON.stringify({ keywordsToSearch, andOrFlag, mfg, eqtype, prod })}`)
+			props.saveSearchCriteria(keywordsToSearch, andOrFlag, mfg, eqtype, prod)
 			if (keywordsToSearch) {
-				alert(`
-          Yadav-searchcriteria DeviceModel: ${JSON.stringify({ keywordsToSearch, andOrFlag, mfg, eqtype, prod })}`)
-
-				props.saveSearchCriteria(keywordsToSearch, andOrFlag, mfg, eqtype, prod)
 				SetDisableFromWhileSearching(true)
 				setFilterMfg(null)
 				statusBarContext.setIsLoading(true)
@@ -935,10 +925,10 @@ const DeviceModel = (props: IDeviceModel) => {
 
 				if (name === "Manufacturer" && value) {
 
-					// Keep manufacturer + attribute rows only; drop prior eqtype/product options
+					// Keep manufacturer rows only; drop prior eqtype/product options
 					// (product rows have pno but no mty, so filtering !mty alone left stale pnos)
 					let removeEqType = optionDataRef.current.filter(
-						(item) => !!item.isAttribute || (item.mfg != null && item.mfg !== '')
+						(item) => item.mfg != null && item.mfg !== ''
 					);
 					let selectedMfgOption = typeof value === 'string'
 						? optionDataRef.current.find((item) => item.mfg === value)
@@ -1085,14 +1075,13 @@ const DeviceModel = (props: IDeviceModel) => {
 				(item, index, self) =>
 					index === self.findIndex((t) => t.mfg === item.mfg)
 			);
-			const attributeOptions = NetZoomDeviceLibAttribute;
 			// await FnExtractKeyObjects(searchText.MfgAcronym, "mfg")
 
 			if (Manufacturer.length === 1) {
 				const String = { label: Manufacturer[0].mfg, ...Manufacturer[0], value: Manufacturer[0].mfg }
 				profileString["Manufacturer"] = String
 				setProfileString(profileString)
-				optionDataRef.current = [...Manufacturer, ...attributeOptions]
+				optionDataRef.current = [...Manufacturer]
 				handleValueChangeForForm(String, "Manufacturer", false)
 			} else {
 				const AllObject = [{
@@ -1106,19 +1095,19 @@ const DeviceModel = (props: IDeviceModel) => {
 						const String = { label: filteredManufacturer[0].mfg, ...filteredManufacturer[0], value: filteredManufacturer[0].mfg }
 						profileString["Manufacturer"] = String
 						setProfileString(profileString)
-						optionDataRef.current = [...filteredManufacturer, ...attributeOptions]
+						optionDataRef.current = [...filteredManufacturer]
 						handleValueChangeForForm(String, "Manufacturer", false)
 					} else {
 						const orderMfg = filteredManufacturer.sort((a, b) => (a.mfg ?? '').localeCompare(b.mfg ?? ''));
 						if (filteredManufacturer.length === 0) {
 							setErrorMessage("No Manufacturer found for the given keyword. Please try again with a different keyword.")
 						}
-						optionDataRef.current = [...AllObject, ...orderMfg, ...attributeOptions]
+						optionDataRef.current = [...AllObject, ...orderMfg]
 						setProfileString({ ...profileString })
 					}
 				} else {
 					const orderMfg = Manufacturer.sort((a, b) => (a.mfg ?? '').localeCompare(b.mfg ?? ''));
-					optionDataRef.current = [...AllObject, ...orderMfg, ...attributeOptions]
+					optionDataRef.current = [...AllObject, ...orderMfg]
 					setProfileString({ ...profileString })
 				}
 
@@ -1128,7 +1117,7 @@ const DeviceModel = (props: IDeviceModel) => {
 	}
 
 
-	/* Device/site MFG: wait for HEAD check so we don't fetch local then remote. */
+	/* Device MFG: wait for HEAD check so we don't fetch local then remote. */
 	useEffect(() => {
 		void GetManufacturers("");
 	}, [selectedRadio, isDeviceURLAvailable, isDeviceUrlValidated])

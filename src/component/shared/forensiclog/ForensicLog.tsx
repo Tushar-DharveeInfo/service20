@@ -1,5 +1,5 @@
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as XLSX from 'xlsx';
 import { saveAs } from "file-saver";
 import { EditableCallbackParams, ICellRendererParams } from 'ag-grid-community';
@@ -15,14 +15,11 @@ import {
     TGridRowData,
 } from '../allinterface/tablegrid/IBasicGrid';
 import { IDateRangeField, IForensicLog, IForensicLogColumn, IForensicLogFilterFormData, IForensicLogPayload, IForensicLogTableData } from '../allinterface/sidebar/IForensicLog';
-import { SearchControlWithFilter } from '../searchfilter/searchcontrolwithfilter/SearchControlWithFilter';
-import { SiteTenantUserCascade } from './SiteTenantUserCascade';
 import { FnGetSessionStorageItem } from '../allcommon/basic/FnGetSessionStorageItem';
 import { FnHandleAPIResponse } from '../allcommon/basic/FnHandleAPIResponse';
 import { useSessionContext } from '../context/hooks/SessionHooks';
 import { useStatusBarContext } from '../context/hooks/StatusBarHooks';
 import { handleNestedZoneContainerKeyDown } from '../allcommon/basic/FnHandleContainerKeyDown';
-import { formControls } from '../../../sampledata/sidebar/TestFormContainer';
 import { sampleForensicLogApiResponse } from '../../../sampledata/sidebar/ForensicLogSampleData';
 import { FnGetColumnWidthFromSession } from '../allcommon/tablegrid/FnGetColumnWidthFromSession';
 import { FORENSIC_LOG_EM_TABLE, FnGetDataGridColumnHide, getExcludeDataGridFieldValue } from '../allcommon/tablegrid/FnGetDataGridColumnHide';
@@ -32,8 +29,6 @@ import { FnConvertDateToUtcOrUtcToDate } from '../../appcontainer/allcommon/FnCo
 import { FnGetAppDateFormat } from '../allcommon/basic/FnGetAppDateFormat';
 import { ISession } from '../context/allinterface/ISession';
 import { BasicGrid } from '../tablegrid/BasicGrid';
-import { IControl } from '../allinterface/settingsform/ISettingsLibForm';
-import { FnParseJsonSafely } from '../../appcontainer/allcommon/FnParseJsonSafely';
 
 const padDatePart = (value: number) => value.toString().padStart(2, '0');
 
@@ -126,15 +121,6 @@ const getInitialPayloadStartDate = (): string => {
 };
 
 const getInitialPayloadEndDate = (): string => formatForensicLogDateTime(new Date());
-
-/*Form controls: calendar date only (e.g. 07/01/2026). */
-const getDefaultFormStartDate = (): string => {
-    const start = new Date();
-    start.setTime(start.getTime() - 24 * 60 * 60 * 1000);
-    return formatForensicLogDate(start);
-};
-
-const getDefaultFormEndDate = (): string => formatForensicLogDate(new Date());
 
 /*Narrow unknown API / form values to a plain object. */
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -273,19 +259,13 @@ const ForensicLog = (props: IForensicLog) => {
     const [columnDefs, setColumnDefs] = useState<IBasicGridColDef[]>([]);
     const [rowData, setRowData] = useState<TGridRowData | null | undefined>()
     const [forensicLogTableData, setForensicLogTableData] = useState<IForensicLogTableData | null>(null);
-    const [filterOpen, setFilterOpen] = useState<boolean>(true)
-    const [dynamicHeight, setDynamicHeight] = useState<number>(290)
     const [totalRecords, setTotalRecords] = useState<number>(0)
-    const [filterControl, setFilterControl] = useState<IControl[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
-    const [fromProfile, setFromProfile] = useState<string>('')
-    const [hasUserAppliedFilter, setHasUserAppliedFilter] = useState(false)
     const [initRecordCount, setInitRecordCout] = useState<number>(0)
     const sessionData = useSessionContext()
     const mainAppContext = useMainAppContext();
     const statusBarContext = useStatusBarContext();
     const gridRef = useRef<AgGridReact>(null);
-    const sessionFilterInitializedRef = useRef(false);
     const initialApiLoadedRef = useRef(false);
     const selectedNodeReloadKeyRef = useRef<string>('');
     const emRecordsRef = useRef(mainAppContext.emRecords);
@@ -295,21 +275,11 @@ const ForensicLog = (props: IForensicLog) => {
     emRecordsRef.current = mainAppContext.emRecords;
     const emRecordsLoaded = mainAppContext.emRecords.length > 0;
 
-    const appliedProfileFilters = useMemo((): Record<string, unknown> => {
-        if (!fromProfile) {
-            return {};
-        }
-        const parsed: unknown = FnParseJsonSafely(fromProfile);
-        return isRecord(parsed) ? parsed : {};
-    }, [fromProfile]);
-
     useEffect(() => {
         if (forensicLogTableData === null) {
             forensicColumnBuildKeyRef.current = null;
             completedForensicColumnBuildKeyRef.current = null;
             setRowData(null);
-            setFilterOpen(false);
-            setDynamicHeight(290);
             return;
         }
 
@@ -430,12 +400,10 @@ const ForensicLog = (props: IForensicLog) => {
         if (selectedNodeReloadKey !== selectedNodeReloadKeyRef.current) {
             selectedNodeReloadKeyRef.current = selectedNodeReloadKey;
             initialApiLoadedRef.current = false;
-            sessionFilterInitializedRef.current = false;
-            setHasUserAppliedFilter(false);
             setLoading(true);
         }
 
-        if (initialApiLoadedRef.current || hasUserAppliedFilter) {
+        if (initialApiLoadedRef.current) {
             return;
         }
 
@@ -469,7 +437,7 @@ const ForensicLog = (props: IForensicLog) => {
 
         }
         init()
-    }, [sessionData.SessionList, hasUserAppliedFilter, props.selectedNode])
+    }, [sessionData.SessionList, props.selectedNode])
 
 
     const apiCallForGridData = async (
@@ -603,29 +571,18 @@ const ForensicLog = (props: IForensicLog) => {
         let userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
         let defaultSite: ISession[] | null = FnGetSessionVariableFromStorage("Location", "SiteName", sessionData.SessionList)
         let TenantNameObj: ISession[] | null = FnGetSessionVariableFromStorage("Filter", "TenantName", sessionData.SessionList)
-        let profileFilters: IForensicLogFilterFormData = {};
-        try {
-            if (fromProfile?.length) {
-                const parsedProfile: unknown = JSON.parse(fromProfile);
-                if (isRecord(parsedProfile)) {
-                    profileFilters = parsedProfile;
-                }
-            }
-        } catch (error) {
-            console.error('ForensicLog: invalid fromProfile JSON for download', error);
-            profileFilters = {};
-        }
+        const profileFilters: IForensicLogFilterFormData = {};
         // Download requires session defaults when profile fields are missing.
         if (userDetails && userDetails?.length > 0 && defaultSite && defaultSite?.length > 0 && TenantNameObj && TenantNameObj?.length > 0) {
             apiCallForGridData({
                 filterJsonString: JSON.stringify({
                     ...profileFilters,
-                    Users: profileFilters.UserName ?? userDetails[0].SessionValue,
-                    ANDOR: profileFilters.ANDOR ?? "and",
-                    Keywords: profileFilters.Keywords ?? "",
+                    Users: userDetails[0].SessionValue,
+                    ANDOR: "and",
+                    Keywords: "",
                     FilterBy: props.loginType,
-                    SiteName: profileFilters.SiteName ?? defaultSite[0].SessionValue,
-                    TenantName: profileFilters.TenantName ?? TenantNameObj[0].SessionValue,
+                    SiteName: defaultSite[0].SessionValue,
+                    TenantName: TenantNameObj[0].SessionValue,
                 }),
                 startPage: 1,
                 recordCount: totalRecords,
@@ -634,63 +591,6 @@ const ForensicLog = (props: IForensicLog) => {
             )
         }
     }
-
-
-    useEffect(() => {
-        if (hasUserAppliedFilter) {
-            return;
-        }
-
-        const setValueForFilter = async () => {
-            const defaultStartDate = getDefaultFormStartDate();
-            const defaultEndDate = getDefaultFormEndDate();
-            let data: IControl[] = []
-            const gridColumns = ["StartDate", "EndDate"]
-            const userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
-            const defaultSite: ISession[] | null = FnGetSessionVariableFromStorage("Location", "SiteName", sessionData.SessionList)
-            const TenantNameObj: ISession[] | null = FnGetSessionVariableFromStorage("Filter", "TenantName", sessionData.SessionList)
-            let propfile: Record<string, string | null> = {}
-
-            for (let index = 0; index < gridColumns.length; index++) {
-                const element = gridColumns[index];
-                if (element !== '') {
-                    const staticData = formControls.find((item: IControl) => item.Name?.toLowerCase() === element?.toLowerCase())
-
-                    if (element === "StartDate" && staticData) {
-                        const valueOFStaticData: IControl = { ...staticData, DefaultAPValue: defaultStartDate }
-                        data.push(valueOFStaticData)
-                    } else if (element === "EndDate" && staticData) {
-                        const valueOFStaticData: IControl = { ...staticData, DefaultAPValue: defaultEndDate }
-                        data.push(valueOFStaticData)
-                    }
-                }
-            }
-            if (defaultSite?.length) {
-                propfile.SiteName = defaultSite[0].SessionValue ?? ""
-            }
-            if (TenantNameObj?.length) {
-                propfile.TenantName = TenantNameObj[0].SessionValue ?? ""
-            }
-            if (userDetails?.length) {
-                propfile.UserName = userDetails[0].SessionValue?.toLowerCase() ?? ""
-            }
-            if (data.length > 0) {
-                setFilterControl([...data])
-                if (!sessionFilterInitializedRef.current) {
-                    // Date range reads StartDate / EndDate from profile when session fields are present.
-                    setFromProfile(JSON.stringify({
-                        ...propfile,
-                        StartDate: defaultStartDate,
-                        EndDate: defaultEndDate,
-                    }))
-                    sessionFilterInitializedRef.current = true;
-                }
-            } else {
-                setFilterControl(null)
-            }
-        }
-        setValueForFilter()
-    }, [sessionData.SessionList, hasUserAppliedFilter])
 
 
     useEffect(() => {
@@ -718,98 +618,11 @@ const ForensicLog = (props: IForensicLog) => {
     return (
         <div className='nz-forensic-log-root' tabIndex={1} onKeyDown={handleNestedZoneContainerKeyDown}>
             <div className='nz-main-search-control-log'>
-                {!props.hideSearchControl && <div className={rowData && rowData.length > 0 ? 'nz-log-searchControl' : 'nz-searchControl-not-display'} >
-                    {filterControl &&
-                        <SearchControlWithFilter
-                            controls={filterControl}
-                            filterIconTooltip='Filter'
-                            fromProfileString={fromProfile}
-                            allowSiteUserCascade
-                            loginType={props.loginType}
-                            renderCascadeFilter={({
-                                uniqueName,
-                                loginType,
-                                profileSiteName,
-                                onValuesChange,
-                            }) => (
-                                <SiteTenantUserCascade
-                                    uniqueName={uniqueName}
-                                    loginType={loginType}
-                                    profileSiteName={profileSiteName}
-                                    initialSiteName={
-                                        hasUserAppliedFilter
-                                            ? String(appliedProfileFilters.SiteName ?? '')
-                                            : undefined
-                                    }
-                                    initialTenantName={
-                                        hasUserAppliedFilter
-                                            ? String(appliedProfileFilters.TenantName ?? '')
-                                            : undefined
-                                    }
-                                    initialUserName={
-                                        hasUserAppliedFilter
-                                            ? String(appliedProfileFilters.UserName ?? '')
-                                            : undefined
-                                    }
-                                    onValuesChange={onValuesChange}
-                                />
-                            )}
-                            handleFilterFormData={(data: Record<string, unknown>) => {
-                                setFilterOpen(false);
-                                setHasUserAppliedFilter(true);
-                                // Flatten dateRange to StartDate / EndDate so reopening the filter restores dates.
-                                const normalizedFilters = buildForensicLogFilterPayload(data);
-
-                                function buildHeaderFilterString(filters: Record<string, unknown>): string {
-                                    const formatLabel = (key: string): string =>
-                                        key.replace(/([a-z])([A-Z])/g, '$1 $2');
-
-                                    const parts = Object.entries(filters)
-                                        .filter(([_, value]) => value !== null && value !== undefined && value !== '')
-                                        .map(([key, value]) => {
-                                            return `${formatLabel(key)}: ${value}`;
-                                        });
-
-                                    return parts.length ? `(${parts.join(' | ')})` : '';
-                                }
-
-                                props.handleUpdateHeaderTitle && props.handleUpdateHeaderTitle(buildHeaderFilterString(normalizedFilters))
-                                if (Object.keys(normalizedFilters).length > 0) {
-                                    const isNodeFilter = String(props.loginType ?? '').toLowerCase() === 'node';
-                                    const filtersWithFilterBy = {
-                                        ...normalizedFilters,
-                                        FilterBy: props.loginType,
-                                    };
-                                    setFromProfile(JSON.stringify(filtersWithFilterBy))
-                                    apiCallForGridData({
-                                        filterJsonString: JSON.stringify(filtersWithFilterBy), startPage: 1,
-                                        recordCount: isNodeFilter ? 100 : 10
-                                    })
-                                }
-                            }}
-                            handleFilterFormClick={() => {
-                                setFilterOpen((previous) => !previous);
-                            }}
-                            uniqueName={'search-log'}
-                            searchProps={{
-                                uniqueName: "filtericon",
-                                isShowFilterControl: true, //show filter control.
-                                lensDirty: false,
-                                filterDirty: false,
-                                searchInputValue: '',
-                                hideRightMouseMenu: false,
-                                hideSearchControl: false,
-                                searchValueChange: (_value: string) => { },// to pass input value of parent control.
-                                handleFilterMouse: () => { },// handle mouse event for filter
-                                handleLensMouse: (_selectedCondion: string) => { },// handle mouse event for lens
-                            }} />
-                    }
-                </div>}
-                <div className={filterOpen ? `nz-logs-grid nz-log-filter-open ${props.isSetting ? "" : "nz-exproer-log"}` : `nz-logs-grid  ${props.isSetting ? "" : "nz-exproer-filter-close-log"}`}>
+                <div className="nz-logs-grid">
 
                     {loading ? (
                         <div className="nz-forensic-log-loading nz-forensic-log-no-data-to-show">Loading...</div>
-                    ) : rowData && rowData.length > 0 && dynamicHeight ? (
+                    ) : rowData && rowData.length > 0 ? (
                         <BasicGrid
                             gridRef={gridRef}
                             showGrid={true}

@@ -8,8 +8,6 @@ interface IForensicLog {
     loginType: string // we are passing user and node base on setting and logs
     selectedNode?: ITreeNode // selected node for tree
     allowSort?: boolean // allow sort column or not
-    hideSearchControl?: boolean
-    handleUpdateHeaderTitle?: (title: string) => void; // to update header title
     handleShowUserMessage?: (messageText: string) => void;
 }
 
@@ -37,7 +35,7 @@ interface IForensicLogTableData {
     apiParams: IForensicLogPayload & IForensicLogPaginationPayload;
 }
 
-/* Parsed filter profile from SearchControlWithFilter / download. */
+/* Filter fields used when building GetFilteredLog / download payloads. */
 interface IForensicLogFilterFormData extends Record<string, unknown> {
     Users?: string;
     UserName?: string;

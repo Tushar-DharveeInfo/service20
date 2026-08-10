@@ -62,15 +62,6 @@ const buildComboOptions = (
 	return options;
 };
 
-/* Static attribute filter options for the Filter By Attribute combo. */
-const attributeFilterOptions: ISearchComboOption[] = [
-	{ Option: 'All' },
-	{ Option: 'Racks/Cabinets' },
-	{ Option: 'Rackmountable' },
-	{ Option: 'Cards/Modules' },
-	{ Option: 'Chassis' },
-];
-
 /* String key/value map accepted by CascadingComboForm initialValues. */
 type ICascadingComboInitialValues = Record<string, string | null>;
 
@@ -164,29 +155,16 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 				},
 			];
 
-			if (!searchTabProps.ShowOnlyLibraryRadioB) {
-				myConfig.push({
-					id: 'Filter By Attribute',
-					label: 'Filter By Attribute',
-					populateOptions: () => attributeFilterOptions,
-					onChange: (value) => {
-						searchTabProps.handeleValueChangeForForm(value ?? '', 'Filter By Attribute', false);
-					},
-				});
-			}
 			setOptionConfig(myConfig);
 		} catch (error) {
 			console.error('SearchTab: failed to build combo config', error);
 			setOptionConfig(undefined);
 		}
-	}, [optionData, searchTabProps.ShowOnlyLibraryRadioB]);
+	}, [optionData]);
 
 	/* Radio options for search source selection. */
 	const sampleDataForRadio: IOptionItem[] = [
 		{ label: DeviceModelFEnums.NetZoomDeviceLibrary, value: DeviceModelFEnums.NetZoomDeviceLibrary },
-		{ label: DeviceModelFEnums.Inventory, value: DeviceModelFEnums.Inventory },
-		{ label: DeviceModelFEnums.CurrentSite, value: DeviceModelFEnums.CurrentSite },
-		{ label: DeviceModelFEnums.AllSites, value: DeviceModelFEnums.AllSites },
 	];
 
 	/* Set available source radios based on feature and selected node type. */

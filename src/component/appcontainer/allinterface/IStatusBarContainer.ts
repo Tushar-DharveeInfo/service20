@@ -82,8 +82,6 @@ interface IStatusBarTitleContainer {
     isOpen: boolean;
     cardsCount: number;
     isInternetAvailable: boolean;
-    isSiteLocked: boolean;
-    isSiteManaged: boolean;
     handleOpenCloseStatusBar: () => void;
     criticalAlertCount?: number;
     isShowFullTitle?: boolean;
