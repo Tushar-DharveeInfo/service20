@@ -1,5 +1,5 @@
 
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { handleContainerKeyDown } from '../allcommon/basic/FnHandleContainerKeyDown'
 import { Splitter, SplitterPanel } from 'primereact/splitter'
 import { ICellRendererParams } from 'ag-grid-community'
@@ -240,21 +240,10 @@ const PropertyTab = (props: IPropertyTab) => {
                             {props.views?.length ? (
                                 <ViewContainer
                                     views={props.views}
-                                    responsive={false}
-                                    featureId={props.featureId}
                                     selectedTabName={props.selectedTabName ?? ''}
                                     title={'Device View'}
                                     uniqueName={'deviceview'}
-                                    isEncrypted={false}
                                     entID={''}
-                                    handleMouseDoubleClick={(_event: React.MouseEvent, actionCode?: string) => {
-                                        alert('Double clicked' + actionCode);
-                                    }}
-                                    viewType={'device'}
-                                    hideTreeDView={true}
-                                    hideChartAndAsk={true}
-                                    SvgParentJSONForThreeD={undefined}
-                                    viewLabel={undefined}
                                 />
                             ) : (
                                 <div className='nz-wh-100 nz-d-flex-hv-left'>
