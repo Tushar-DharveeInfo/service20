@@ -19,5 +19,4 @@
 .nz-my-profile-address,
 .nz-my-profile-form {
     padding: var(--spacing-1);
-    overflow: auto;
 }
