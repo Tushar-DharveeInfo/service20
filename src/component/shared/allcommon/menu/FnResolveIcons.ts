@@ -356,7 +356,6 @@ import {
     RequestVisioStencils24x24,
     Services24x24,
     VisioStencils24x24,
-    Buy24x24,
     Cart24x24,
     ContactUs24x24,
     Details24x24,
@@ -371,7 +370,6 @@ import {
     NetZoom24x24,
     Orders24x24,
     Other24x24,
-    Purchase24x24,
 } from "@n20a/libicon";
 
 import type { ComponentType } from "react";
@@ -731,7 +729,6 @@ const rawIconMap: IconMap = {
     RequestVisioStencils24x24,
     Services24x24,
     VisioStencils24x24,
-    Buy24x24,
     Cart24x24,
     ContactUs24x24,
     Details24x24,
@@ -746,7 +743,6 @@ const rawIconMap: IconMap = {
     NetZoom24x24,
     Orders24x24,
     Other24x24,
-    Purchase24x24,
 };
 
 //  normalize once

@@ -79,10 +79,14 @@ const Eula = lazy(() => import('../../features/profile/eula/Eula.tsx'))
 const MyProfile = lazy(() => import('../../features/profile/myprofile/MyProfile.tsx'))
 const MyActivities = lazy(() => import('../../features/profile/myactivities/MyActivities.tsx'))
 const MySubscriptions = lazy(() => import('../../features/profile/mysubscriptions/MySubscriptions.tsx'))
+
 const NetZoom = lazy(() => import('../../features/products/netzoom/NetZoom.tsx'))
 const VisioStencils = lazy(() => import('../../features/products/visiostencils/VisioStencils.tsx'))
+
 const RequestVisioStencils = lazy(() => import('../../features/services/requestvisiostencils/RequestVisioStencils.tsx'))
-const RequestDeviceModels = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
+const RequestDeviceModelsContainer = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
+const RequestSupport = lazy(() => import('../../appqa/AppQaContactUs.tsx'))
+
 const DownloadVisioStencils = lazy(() => import('../../features/download/downloadvisiostencils/DownloadVisioStencils.tsx'))
 const DownloadNetZoom = lazy(() => import('../../features/download/downloadnetzoom/DownloadNetZoom.tsx'))
 const TicketExplorerContainer = lazy(() => import('../../shared/ticketexplorercontainer/TicketExplorerContainer.tsx'))
@@ -94,12 +98,15 @@ const FeaturesWithOwnLayout: string[] = [
     ProfileEnums.MyActivities,
     ProfileEnums.MySubscriptions,
     ProductsEnums.EULA,
+
+    ProductsEnums.Purchase,
     ProductsEnums.NetZoom,
     ProductsEnums.VisioStencils,
     ProductsEnums.Other,
     ServicesEnums.RequestSupport,
     ServicesEnums.RequestVisioStencils,
     ServicesEnums.RequestDeviceModels,
+    ServicesEnums.MyRequests,
     DownloadEnums.DownloadVisioStencils,
     DownloadEnums.DownloadNetZoom
 ];
@@ -171,6 +178,15 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
+        case ProductsEnums.Purchase:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        {/* Purchase  */}
+                    </Suspense>
+                </ErrorBoundary>
+            );
+
         case ProductsEnums.NetZoom:
             return (
                 <ErrorBoundary>
@@ -211,11 +227,11 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 </ErrorBoundary>
             );
 
-        case ServicesEnums.RequestSupport:
+        case ServicesEnums.MyRequests:
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        {/*<RequestSupport />*/}
+                        {/*<MyRequests />*/}
                         <TicketExplorerContainer uniqueName={'request-support'} headerText={featureContainerProps.headerText ?? "Service Request"} />
                     </Suspense>
                 </ErrorBoundary>
@@ -234,7 +250,18 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <RequestDeviceModels />
+                        <RequestDeviceModelsContainer formData={{searchText: "", Mfg: "", EqType: "", ProdNo: "", MoreInfo: ""}} />
+                    </Suspense>
+                </ErrorBoundary>
+            );
+            
+        case ServicesEnums.RequestSupport:
+            return (
+                <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                        <RequestSupport
+                            uniqueName={'feature-request-support'}
+                            headerText={"Request Support"} />
                     </Suspense>
                 </ErrorBoundary>
             );

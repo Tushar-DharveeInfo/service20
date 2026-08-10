@@ -31,9 +31,9 @@ interface ISearchTab {
     /** True when search results are pending or stale. */
     isLensDirty?: boolean;
     isDisableForm?: boolean;
-    selectedRedioValue?: string;
+    selectedRadioBValue?: string;
     /** When true, only the NetZoom Device Library radio is shown. */
-    ShowOnlyLibraryRedio?: boolean;
+    ShowOnlyLibraryRadioB?: boolean;
     handleValueChangeRadio: (value: string, name: string, isDefault?: boolean) => void;
     handleLensMouse: (selectedRtmValue: string) => void;
     searchValueChange: (value: string) => void;

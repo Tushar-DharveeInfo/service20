@@ -301,4 +301,41 @@ const AppQaContactUs = (contactUsProps: IAppQaContactUs) => {
         </div>
     )
 }
+
+
+const RequestSupport = () => {
+    /* Same selected-node shape the sidebar notes expects. */
+    const contactUsSelectedNode = useMemo<ITreeNode>(() => ({
+        key: "contact-us",
+        NodeEntityname: "ContactUs",
+        NodeEntID: "CONTACT-US",
+        stepNo: 0,
+        parentEntID: null,
+        NodeState: null,
+        Description: "ContactUs",
+        title: "ContactUs",
+        children: [],
+        treetype: "ContactUs",
+        Name: "ContactUs",
+        Type: "ContactUs",
+        icon: null,
+        HasChildren: 0,
+        NodeType: "ContactUs",
+    }), []);
+
+    return (
+        <div className="nz-w-100 nz-h-100 nz-contact-us-container" tabIndex={1} onKeyDown={handleContainerKeyDown} key={`requestsupport-uniqueName`}>
+            <div className='nz-sub-header'>
+                <Label uniqueName={`requestsupport-task-header`} label={`Request Support`} />
+            </div>
+            <div className="nz-w-100 nz-h-100 nz-contact-us-notes-pane">
+                <ContactUsNotes
+                    uniqueName={`requestsupport-notes`}
+                    selectedNode={contactUsSelectedNode}
+                />
+            </div>
+        </div>
+    )
+}
+export { RequestSupport, AppQaContactUs }
 export default AppQaContactUs

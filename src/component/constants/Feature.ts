@@ -51,6 +51,7 @@ enum ServicesEnums {
     RequestSupport = "152",
     RequestVisioStencils = "154",
     RequestDeviceModels = "156",
+    MyRequests = "158",
 }
 
 // Download menu feature ids
@@ -67,7 +68,7 @@ enum FaqEnums {
     NetZoom = "304",
 }
 
-// Purchase QA feature ids (under Buy > Purchase)
+// Purchase QA feature ids (under Buy Purchase)
 enum PurchaseEnums {
     Cart = "1222",
     Orders = "1224",

@@ -107,11 +107,11 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 	const [searchText, setSearchText] = useState<string>('');
 	const [optionConfig, setOptionConfig] = useState<ICombo[]>();
 	const [optionData, setOptionData] = useState<IDeviceSearchOption[]>([]);
-	const [redioFromControls, setRedioFromControls] = useState<IOptionItem[] | null>(null);
-	const [hideRedioBtn, setHideRedioBtn] = useState<boolean>(
-		!!searchTabProps.ShowOnlyLibraryRedio
+	const [RadioBFromControls, setRadioBFromControls] = useState<IOptionItem[] | null>(null);
+	const [hideRadioBBtn, setHideRadioBBtn] = useState<boolean>(
+		!!searchTabProps.ShowOnlyLibraryRadioB
 	);
-	const [selectedRedio, setSelectedRedio] = useState<string>(
+	const [selectedRadioB, setSelectedRadioB] = useState<string>(
 		DeviceModelFEnums.NetZoomDeviceLibrary
 	);
 
@@ -164,7 +164,7 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 				},
 			];
 
-			if (!searchTabProps.ShowOnlyLibraryRedio) {
+			if (!searchTabProps.ShowOnlyLibraryRadioB) {
 				myConfig.push({
 					id: 'Filter By Attribute',
 					label: 'Filter By Attribute',
@@ -179,7 +179,7 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 			console.error('SearchTab: failed to build combo config', error);
 			setOptionConfig(undefined);
 		}
-	}, [optionData, searchTabProps.ShowOnlyLibraryRedio]);
+	}, [optionData, searchTabProps.ShowOnlyLibraryRadioB]);
 
 	/* Radio options for search source selection. */
 	const sampleDataForRadio: IOptionItem[] = [
@@ -192,22 +192,22 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 	/* Set available source radios based on feature and selected node type. */
 	useEffect(() => {
 		try {
-			if (searchTabProps.ShowOnlyLibraryRedio) {
-				setHideRedioBtn(true);
-				setSelectedRedio(DeviceModelFEnums.NetZoomDeviceLibrary);
-				setRedioFromControls([
+			if (searchTabProps.ShowOnlyLibraryRadioB) {
+				setHideRadioBBtn(true);
+				setSelectedRadioB(DeviceModelFEnums.NetZoomDeviceLibrary);
+				setRadioBFromControls([
 					{ label: DeviceModelFEnums.NetZoomDeviceLibrary, value: DeviceModelFEnums.NetZoomDeviceLibrary },
 				]);
 				return;
 			}
 
-			setHideRedioBtn(false);
-			setRedioFromControls(sampleDataForRadio);
+			setHideRadioBBtn(false);
+			setRadioBFromControls(sampleDataForRadio);
 		} catch (error) {
 			console.error('SearchTab: failed to set radio controls', error);
-			setRedioFromControls(sampleDataForRadio);
+			setRadioBFromControls(sampleDataForRadio);
 		}
-	}, [searchTabProps.selectedNode, searchTabProps.treeData, searchTabProps.searchTypeValue, searchTabProps.ShowOnlyLibraryRedio, searchTabProps.featureId]);
+	}, [searchTabProps.selectedNode, searchTabProps.treeData, searchTabProps.searchTypeValue, searchTabProps.ShowOnlyLibraryRadioB, searchTabProps.featureId]);
 
 	/* Debounced keyword search callback to parent. */
 	const debouncedSearch = useMemo(
@@ -238,10 +238,10 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 	}, [searchTabProps.isLensDirty]);
 
 	/* Handles search source radio selection. */
-	function handleValueRedio(value: unknown, meta: IChangeMeta): void {
+	function handleValueRadioB(value: unknown, meta: IChangeMeta): void {
 		const radioValue = typeof value === 'string' ? value : String(value ?? '');
 		searchTabProps.handleValueChangeRadio(radioValue, '', false);
-		setSelectedRedio(radioValue);
+		setSelectedRadioB(radioValue);
 	}
 
 	/* Profile as string map for CascadingComboForm (manufacturer objects are flattened). */
@@ -254,11 +254,11 @@ export const SearchTab = (searchTabProps: ISearchTab) => {
 	return (
 		<div className='nz-searchtab-container'>
 			<div className='nz-searchtab-radio'>
-				{!hideRedioBtn && redioFromControls && (
+				{!hideRadioBBtn && RadioBFromControls && (
 					<RadioButtonGroupControl
-						options={redioFromControls}
-						value={selectedRedio}
-						onChange={handleValueRedio}
+						options={RadioBFromControls}
+						value={selectedRadioB}
+						onChange={handleValueRadioB}
 					/>
 				)}
 			</div>

@@ -154,8 +154,8 @@ const getMfgNameFromFormValue = (
 	selectedOption?: IDeviceSearchOption
 ): string =>
 	(typeof formValue !== 'string' ? formValue.mfg : undefined) ?? selectedOption?.mfg ?? '';
-const DeviceModel = (props: IDeviceModel) => {
 
+const DeviceModel = (props: IDeviceModel) => {
 	const BASE_URL_DEVICE_MODEL = FnGetEnvVariableByKey(envVarEnums.BASE_URL_LIB);
 	const [isDeviceURLAvailable, setIsDeviceURLAvailable] = useState<boolean>(true);
 	const [isDeviceUrlValidated, setIsDeviceUrlValidated] = useState<boolean>(true);
@@ -211,9 +211,9 @@ const DeviceModel = (props: IDeviceModel) => {
 		openAllNodes: false,
 		allowCheckStrictly: false,
 		onAddToDownloadCart: (node: ITreeNode) => {
-			const { mfg, prodno, EQID } = getProductDownloadCartPayload(node)
+			const {  mfg, prodno, EQID } = getProductDownloadCartPayload(node)
 			if (props.addToDownloadCart) {
-				props.addToDownloadCart(mfg, prodno, EQID)
+				props.addToDownloadCart( mfg, prodno, EQID)
 			} else {
 				alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`)
 			}
@@ -268,13 +268,13 @@ const DeviceModel = (props: IDeviceModel) => {
 	// 	mainAppContext.isInternetAvailable
 	// ]);
 
-	/* Device Library only when ShowOnlyLibraryRedio (hides radios in SearchTab). */
+	/* Device Library only when ShowOnlyLibraryRadioB (hides radios in SearchTab). */
 	useEffect(() => {
-		if (props.ShowOnlyLibraryRedio) {
+		if (props.ShowOnlyLibraryRadioB) {
 			setSelectedRadio(DeviceModelFEnums.NetZoomDeviceLibrary);
 		}
 	}, [
-		props.ShowOnlyLibraryRedio,
+		props.ShowOnlyLibraryRadioB,
 	]);
 
 	const libraryDocumentSource = useMemo(() => {
@@ -780,8 +780,9 @@ const DeviceModel = (props: IDeviceModel) => {
 				}
 				searchTextArray.push(...keywordsToSearch.toLocaleLowerCase().split(' '))
 				let searchResult = searchData ? wildSearch(searchData, searchTextArray as string[], selectedRtmValue === "AND" ? true : false) : []
-
-
+        alert(`
+          Yadav-searchcriteria: ${JSON.stringify({ keywordsToSearch, searchType: selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND", mfg, eqtype, prod })}`)
+        props.saveSearchCriteria(keywordsToSearch, selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND", mfg, eqtype, prod)
 
 				if (searchResult.length > 50 && mfg) {
 					setShowMessage(true)
@@ -1224,7 +1225,7 @@ const DeviceModel = (props: IDeviceModel) => {
 									featureId={props.featureId}
 									treeData={props.treeData}
 									isLensDirty={isLensDirty}
-									ShowOnlyLibraryRedio={props.ShowOnlyLibraryRedio}
+									ShowOnlyLibraryRadioB={props.ShowOnlyLibraryRadioB}
 									isDisableForm={disableFromWhileSearching}
 									handleValueChangeRadio={handleValueChange}
 									handleLensMouse={handleLensMouse}
@@ -1310,5 +1311,3 @@ const DeviceModel = (props: IDeviceModel) => {
 }
 
 export { DeviceModel }
-
-

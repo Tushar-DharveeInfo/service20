@@ -11,17 +11,20 @@ type IExternalSearch = {
 }
 
 /* Props for the DeviceModel sidebar search and result pane. */
-interface IDeviceModel {
-    uniqueName: string,
-    featureId: string
-    selectedNode: ITreeNode
-    selectedFeatuerQa?: string
-    isLibFolder?: boolean
-    ShowOnlyLibraryRedio?: boolean;
+interface IDeviceModel 
+{
+    uniqueName: string;
+    featureId: string;
+    selectedNode: ITreeNode;
+    selectedFeatuerQa?: string;
+    isLibFolder?: boolean;
+    ShowOnlyLibraryRadioB?: boolean;
     treeData?: ITreeNode[] | null;
     externalSearch?: IExternalSearch
     /** Called when user clicks Add to Download cart on a selected product node. */
-    addToDownloadCart?: (mfg: string, prodno: string, EQID: string) => void;
+    addToDownloadCart?: ( mfg: string, prodno: string, EQID: string) => void;
+    /** Called when user clicks Search on the DeviceModel search pane, it gives the search criteria to embedding code. */
+    saveSearchCriteria: (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => void;
 }
 
 /* Shared DeviceModel search, API, and tree-building types. */
