@@ -7,8 +7,8 @@ import type { IDeploymentEnv, IDeploymentEnvResponse } from "../../component/sha
 /* Deployment variables the app reads after startup. */
 const sampleDeploymentEnv: IDeploymentEnv[] = [
     { key: "DEPLOYMENT", value: "OnPremises" },
-    { key: "DEPLOYMENT_N20_API_URL", value: "/n20api" },
-    { key: "DEPLOYMENT_N20_API_BASEURL", value: "https://n20a.netzoom.com" },
+    { key: "DEPLOYMENT_N20_API_URL", value: "" },
+    { key: "DEPLOYMENT_N20_API_BASEURL", value: "" },
     { key: "DEPLOYMENT_DCMLISTENER_API_URL", value: "/dcmlistener" },
     { key: "DEPLOYMENT_EXPSERVER_API_URL", value: "/expapi" },
     { key: "DEPLOYMENT_NZINTHUB_API_URL", value: "/nzinthubapi" },
