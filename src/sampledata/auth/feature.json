@@ -141,7 +141,7 @@
     "Tooltip": "NetZoom Subscriptions",
     "SortOrder": "3",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "N.svg"
   },
   {
     "Secured": "",
@@ -153,7 +153,7 @@
     "Tooltip": "Visio Stencils Subscriptions",
     "SortOrder": "4",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "Visio.svg"
   },
   {
     "Secured": "",
@@ -201,7 +201,7 @@
     "Tooltip": "Request Visio Stencils",
     "SortOrder": "2",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "Visio.svg"
   },
   {
     "Secured": "1",
@@ -213,7 +213,7 @@
     "Tooltip": "Request Device Models",
     "SortOrder": "3",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "N.svg"
   },
   {
     "Secured": "1",
@@ -249,7 +249,7 @@
     "Tooltip": "Download Visio Stencils",
     "SortOrder": "1",
     "DefaultQA": "1",
-    "Alias": ""
+    "Alias": "Visio.svg"
   },
   {
     "Secured": "1",
@@ -261,7 +261,7 @@
     "Tooltip": "Download NetZoom files",
     "SortOrder": "2",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "N.svg"
   },
   {
     "Secured": "1",
