@@ -7,7 +7,6 @@ import { ITreeNode } from '../../../shared/allinterface/tree/ITreeControl';
 import { Helptip } from '../../../shared/Help';
 import { useHelpTipContext } from '../../../shared/context/hooks/HelptipHooks';
 import { RequestShapeFormContainer } from '../requestshapeformcontainer/RequestShapeFormContainer';
-import './RequestVisioStencils.css';
 export interface IRequestShapeFormData {
     searchText: string;
     AndOr: "AND" | "OR";

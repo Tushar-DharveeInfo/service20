@@ -9,7 +9,6 @@ import { ITreeNode } from '../../../shared/allinterface/tree/ITreeControl';
 import { type IRequestShapeFormData } from '../requestdevicemodels/RequestDeviceModels';
 import { RequestShapeFormContainer } from '../requestshapeformcontainer/RequestShapeFormContainer';
 import './RequestVisioStencils.css';
-import { set } from 'lodash';
 // import downloadSampleCart from '../../../../sampledata/downloadsampleCart.json';
 
 // const typedInitialCart = downloadSampleCart as IDownloadCart[];
@@ -88,8 +87,8 @@ const RequestVisioStencils = (props: IRequest = {}) => {
                 >
                     <SplitterPanel
                         tabIndex={-1}
-                        size={40}
-                        minSize={20}
+                        size={100}
+                        minSize={40}
                         className="nz-d-flex-column nz-pane-1 nz-request-visio-pane"
                     >
                         <DeviceModel
@@ -106,36 +105,6 @@ const RequestVisioStencils = (props: IRequest = {}) => {
                                 props.saveSearchCriteria && props.saveSearchCriteria(searchText as string, AndOr, mfg, eqtype, pno);
                             }} />
                     </SplitterPanel>
-                    <SplitterPanel
-                        tabIndex={-1}
-                        size={30}
-                        minSize={15}
-                        className="nz-d-flex-column nz-pane-2 nz-request-visio-pane"
-                    >
-                        <div className="nz-request-visio-empty-pane">
-                            {/* {typedInitialCart.length === 0 ? (
-                            <div className="nz-request-visio-empty-cart">
-                              <p>Your download cart is empty.</p>
-                            </div>
-                          ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-                              {<DownloadCartPane
-                                initialCart={typedInitialCart}
-                                onDownload={handleDownload}
-                                onDeleteFromCart={handleDeleteFromCart}
-                              />}
-                            </div>
-                          )} */}
-                        </div>
-                    </SplitterPanel>
-                    {/* <SplitterPanel
-                        tabIndex={-1}
-                        size={30}
-                        minSize={15}
-                        className="nz-d-flex-column nz-pane-3 nz-request-visio-pane"
-                    >
-                        <div className="nz-request-visio-empty-pane" />
-                    </SplitterPanel> */}
                 </Splitter>
             </div>
             <div className="request-button-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '24px', marginTop: 'auto', gap: '6px' }}>
