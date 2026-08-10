@@ -7,27 +7,10 @@ const FnGetTooltipForTreeNode = (treeNode: ITreeNode): string => {
         // Map node types to the properties we want in tooltip
         const relevantPropsMap: Record<string, (keyof ITreeNode)[]> = {
             alldatacenters: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType"],
-            site: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID"],
-            tenant: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID"],
-            room: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID"],
-            floor: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID"],
-            location: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID"],
-            audit: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "NodeState", "DateApproved", "CloseDate"],
             device: [
                 "Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "DeviceID", "EQType", "EQID", "HasPowerPorts",
                 "HasNetworkPorts", "IntelDCMState", "MountedDeviceName", "SlotsNeeded", "WOID",
                 "NodeState"
-            ],
-            mounteddevice: [
-                "Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "DeviceID", "EQType", "EQID", "HasPowerPorts",
-                "HasNetworkPorts", "IntelDCMState", "MountedDeviceName", "Height", "Width", "Length", "SlotsNeeded", "WOID",
-                "NodeState"
-            ],
-            port: [
-                "Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "PortStatus", "EQID", "ParentName", "NodeState", "WOID"
-            ],
-            slot: [
-                "Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "PortStatus", "EQID", "ParentName", "NodeState", "WOID"
             ],
             rearview: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID", "ShapeID", "NodeState", "ViewShortName", "MountedDeviceID"],
             frontview: ["Name", "Description", "NodeEntID", "NodeEntityname", "NodeType", "parentEntID", "ShapeID", "NodeState", "ViewShortName", "MountedDeviceID"],

@@ -1,5 +1,4 @@
 
-import { FnCheckAllowCheckbox } from "./FnCheckAllowCheckbox";
 import { FnDeepClone } from "./FnDeepClone";
 import { IFeatureTree } from "../../allinterface/tree/ITreeForHierarchicalDataContainer";
 import { ITreeNode } from "../../allinterface/tree/ITreeControl";
@@ -28,7 +27,6 @@ const FnAddSubNode = async (
                 if (treeDataPorps && featureId) {
 
                     node.title = TreeNodeTitle(node, treeDataPorps, featureId);
-                    node.checkable = FnCheckAllowCheckbox(node, featureId);
 
                     if (treeDataPorps.allowIcon) {
                         node.icon = TreeNodeIcon(node, treeDataPorps.instanceName ?? "");

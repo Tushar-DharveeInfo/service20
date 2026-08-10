@@ -8,16 +8,12 @@ import { TitleContainer } from "./titlecontainer/TitleContainer"
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { FnGenerateUID } from '../shared/allcommon/settingsform/FnGenerateUID'
 import { AppQA, FeatureMenuRange } from '../constants/Feature'
-import { useStatusBarContext } from '../shared/context/hooks/StatusBarHooks'
 import { useSessionContext } from '../shared/context/hooks/SessionHooks'
 import { ISession } from '../shared/context/allinterface/ISession'
 import { FnGetSessionVariableFromStorage } from '../shared/allcommon/basic/FnGetSessionVariableFromStorage'
 import { useMainAppContext } from '../shared/context/hooks/MainAppHooks'
 import { IFeatureItem } from '../shared/context/allinterface/IMainApp'
 import { FnUpdateFeatureLabelFromSession } from '../shared/allcommon/basic/FnUpdateFeatureLabelFromSession'
-import { IFnCreateForensiclog } from './allinterface/IFnCreateForensiclog'
-import { FnCreateForensiclog } from './allcommon/FnCreateForensiclog'
-import { LogGroupName, LogName, LogSubGroupName } from './alldefaultprops/DefaultPropsForensiclog'
 import { MainMenu } from '../shared/menu/mainmenu/MainMenu'
 
 // Type guard for IMenuItem validation
@@ -34,14 +30,12 @@ const isMenuItem = (item: unknown): item is IMenuItem => {
 
 const AppContainer = (appContainerProps: IAppContainer) => {
     const [searchParams] = useSearchParams();
-    const siteId = searchParams.get("siteid");
 
     const [selectedFeatureData, setSelectedFeatureData] = useState<IMenuItem | null>(null);
     const [selectedAppQAData, setSelectedAppQAData] = useState<IMenuItem | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const navigate = useNavigate();
     const location = useLocation();
-    const statusBarContext = useStatusBarContext();
     const sessionContext = useSessionContext();
     const mainAppContext = useMainAppContext();
     const selectedFeatureIdRef = useRef<string | undefined>(undefined);
@@ -193,91 +187,8 @@ const AppContainer = (appContainerProps: IAppContainer) => {
                 return;
             }
             if (!sessionVariables?.length || !featureData.length) return;
-
-            // Get Feature ID from URL
-            // Example: /feature/123
-            const pathParts = location.pathname
-                .split("/")
-                .filter(Boolean);
-
-            const featureIdFromUrl =
-                pathParts[0]?.toLowerCase() === "feature"
-                    ? pathParts[1]
-                    : undefined;
-
             /*
              * CASE 1:
-             * URL contains Feature ID + siteid 
-             */
-            if (featureIdFromUrl && siteId) {
-                // Check whether URL feature is available to the user
-                const featureFromUrl = featureData.find(
-                    feature =>
-                        String(feature._Feature).toLowerCase() ===
-                        featureIdFromUrl.toLowerCase()
-                );
-
-                // User doesn't have access to this feature.
-                // Do nothing and don't perform session redirect.
-                if (!featureFromUrl) {
-                    return;
-                }
-
-                const hierarchy = searchParams.get("hierarchy");
-
-                // Handle URL redirect only when both params exist
-                if (siteId && hierarchy) {
-                    // UpdateSession succeeded.
-                    // Continue with feature processing.
-                    const parentFeature = featureData.find(
-                        item =>
-                            item._Feature ===
-                            featureFromUrl.MenuID
-                    );
-
-                    const featureWithParent = {
-                        ...featureFromUrl,
-                        parentName: parentFeature?.Label
-                    };
-
-                    const updatedFeature =
-                        FnUpdateFeatureLabelFromSession(
-                            [featureWithParent],
-                            sessionVariables
-                        );
-
-                    const finalFeature = updatedFeature[0];
-
-                    // Update help context
-                    if (finalFeature?._Feature) {
-                        mainAppContext.setSelectedFeatureForHelp({
-                            featureID:
-                                finalFeature._Feature.toString(),
-                            featureName:
-                                finalFeature.Label
-                        });
-                    }
-                    // Navigate with entid ONLY after
-                    // SESSION.UpdateSession succeeds
-                    const params = new URLSearchParams();
-
-                    params.set("hierarchy", hierarchy);
-                    navigate(
-                        `/feature/${featureIdFromUrl}?${params.toString()}`,
-                        {
-                            replace: true,
-                            state: {
-                                ...finalFeature,
-                                IsAppqa: false
-                            }
-                        }
-                    );
-                    return;
-                }
-            }
-
-            /*
-             * CASE 2:
              * No URL-based redirect.
              * Use existing session-based redirect.
              */
@@ -345,60 +256,9 @@ const AppContainer = (appContainerProps: IAppContainer) => {
         },
         [
             location.pathname,
-            siteId,
             mainAppContext.setSelectedFeatureForHelp
         ]
     );
-
-    useEffect(() => {
-        const rafIds: number[] = [];
-
-        if (sessionContext.SessionList.length > 0 && mainAppContext.featureRecords.length > 0) {
-
-            // This is to prevent redirect based on session when we have query params to redirect on perticular feature
-            const eqid = searchParams?.get("eqid");
-            const wo = searchParams?.get("wo");
-            if (!eqid && !wo) {
-                const rafId1 = requestAnimationFrame(() => {
-                    redirectBaseOnSession(sessionContext.SessionList, mainAppContext.featureRecords);
-                });
-                rafIds.push(rafId1);
-            }
-            const rafId2 = requestAnimationFrame(() => {
-                const title_ele = document.getElementById("nz_title_tab");
-                if (title_ele && sessionContext.SessionList.length) {
-                    const sessionIdVar = sessionContext.SessionList.find((ele: ISession) => {
-                        return ele.VariableContext === "Session" && ele.VariableName === "UserSessionNameID"
-                    });
-                    if (sessionIdVar)
-                        title_ele.innerHTML = "NZ-" + (sessionIdVar.SessionValue ? sessionIdVar.SessionValue as string : "0");
-                    else
-                        title_ele.innerHTML = "NZ"
-                }
-            });
-            rafIds.push(rafId2);
-
-            if (appContainerProps.isNewSession) {
-
-                const payload: IFnCreateForensiclog = {
-                    logType: 'UserAction',
-                    GroupName: LogGroupName.ForensicLogTemplate,
-                    _Forensiclog: LogSubGroupName.Auth,
-                    SubGroupName: LogSubGroupName.Auth,
-                    LogName: LogName.LogIn,
-                    sessionContext: sessionContext,
-                    statusBarContext: statusBarContext,
-                    RefTableItems: mainAppContext.refTableRecords
-                }
-                FnCreateForensiclog(payload)
-            }
-
-        }
-
-        return () => {
-            rafIds.forEach(id => cancelAnimationFrame(id));
-        };
-    }, [mainAppContext.featureRecords.length, mainAppContext.refTableRecords.length, sessionContext.SessionList.length, appContainerProps.isNewSession])
 
     /*
     renders titlebar with appqa items

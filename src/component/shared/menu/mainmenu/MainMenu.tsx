@@ -55,16 +55,6 @@ const MainMenu = (menuProps: IMainMenu) => {
     }
   }
 
-  useEffect(() => {
-    if (sessionContext.SessionList?.length) {
-      const locationSessionKey = sessionContext.SessionList
-        ?.filter((item) => item.VariableContext?.toLowerCase() === "location" && item.VariableName?.toLowerCase() === "sitename")
-        .map((item) => item.SessionValue)
-        .join("|");
-      setSessionValues(locationSessionKey)
-    }
-  }, [sessionContext.SessionList])
-
 
   useEffect(() => {
     if (menuProps.featureData) {

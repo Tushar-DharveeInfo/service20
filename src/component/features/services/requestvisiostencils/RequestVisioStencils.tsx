@@ -9,6 +9,7 @@ import { ITreeNode } from '../../../shared/allinterface/tree/ITreeControl';
 import { type IRequestShapeFormData } from '../requestdevicemodels/RequestDeviceModels';
 import { RequestShapeFormContainer } from '../requestshapeformcontainer/RequestShapeFormContainer';
 import './RequestVisioStencils.css';
+import { set } from 'lodash';
 // import downloadSampleCart from '../../../../sampledata/downloadsampleCart.json';
 
 // const typedInitialCart = downloadSampleCart as IDownloadCart[];
@@ -19,6 +20,7 @@ interface IRequest {
     helpTipText?: string;
     isShowHelptip?: boolean;
     onRequestClick?: () => void;
+    saveSearchCriteria?: (searchText: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => void
 }
 
 const DEFAULT_HELP_TIP =
@@ -43,19 +45,20 @@ const EMPTY_SELECTED_NODE: ITreeNode = {
 };
 
 const RequestVisioStencils = (props: IRequest = {}) => {
+    console.log('props RequestVisioStencils', props)
     const uniqueName = props.uniqueName ?? 'request-visio-stencils';
     const featureId = props.featureId ?? ServicesEnums.RequestVisioStencils;
     const showHelptip = props.isShowHelptip !== false;
     const { onRequestClick } = props;
     const helpTipsContext = useHelpTipContext();
 
-  // function handleDownload(cart: IDownloadCart[]) {
-  //   console.log('Download checkout submitted:', cart);
-  // }
+    // function handleDownload(cart: IDownloadCart[]) {
+    //   console.log('Download checkout submitted:', cart);
+    // }
 
-  // function handleDeleteFromCart(eqid: string) {
-  //   console.log('Removed download item:', eqid);
-  // }
+    // function handleDeleteFromCart(eqid: string) {
+    //   console.log('Removed download item:', eqid);
+    // }
 
     const helpTipText = useMemo(() => {
         if (props.helpTipText) {
@@ -98,7 +101,10 @@ const RequestVisioStencils = (props: IRequest = {}) => {
                             addToDownloadCart={(mfg, prodno, EQID) => {
                                 alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`);
                             }}
-                        />
+                            saveSearchCriteria={function (searchText?: string, AndOr?: 'AND' | 'OR', mfg?: string, eqtype?: string, pno?: string): void {
+                                alert(`RequestVisioStencils Search criteria saved: ${searchText}, ${AndOr}, ${mfg}, ${eqtype}, ${pno}`);
+                                props.saveSearchCriteria && props.saveSearchCriteria(searchText as string, AndOr, mfg, eqtype, pno);
+                            }} />
                     </SplitterPanel>
                     <SplitterPanel
                         tabIndex={-1}
@@ -107,7 +113,7 @@ const RequestVisioStencils = (props: IRequest = {}) => {
                         className="nz-d-flex-column nz-pane-2 nz-request-visio-pane"
                     >
                         <div className="nz-request-visio-empty-pane">
-                          {/* {typedInitialCart.length === 0 ? (
+                            {/* {typedInitialCart.length === 0 ? (
                             <div className="nz-request-visio-empty-cart">
                               <p>Your download cart is empty.</p>
                             </div>
@@ -133,12 +139,12 @@ const RequestVisioStencils = (props: IRequest = {}) => {
                 </Splitter>
             </div>
             <div className="request-button-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '24px', marginTop: 'auto', gap: '6px' }}>
-              <label className="request-link-label" style={{ lineHeight: '24px', margin: 0 }}>
-                Can't Find the Device/Stencil you are looking for?
-              </label>
-              <button className="request-link-btn" onClick={onRequestClick} style={{ height: '24px', lineHeight: '1', padding: '0 8px', backgroundColor: '#ffff99', color: '#333' }}>
-                Request it here
-              </button>
+                <label className="request-link-label" style={{ lineHeight: '24px', margin: 0 }}>
+                    Can't Find the Device/Stencil you are looking for?
+                </label>
+                <button className="request-link-btn" onClick={onRequestClick} style={{ height: '24px', lineHeight: '1', padding: '0 8px', backgroundColor: '#ffff99', color: '#333' }}>
+                    Request it here
+                </button>
             </div>
         </div>
     );
@@ -151,8 +157,9 @@ type RenderPage = 'searchPage' | 'requestPage';
 
 const RequestVisioStencilsContainer = (props: IRequest) => {
     const [renderPage, setRenderPage] = useState<RenderPage>('searchPage');
-    const [formData] = useState<IRequestShapeFormData>({
+    const [formData, setFormData] = useState<IRequestShapeFormData>({
         searchText: '',
+        AndOr: "AND",
         Mfg: '',
         EqType: '',
         ProdNo: '',
@@ -164,9 +171,21 @@ const RequestVisioStencilsContainer = (props: IRequest) => {
     };
 
     if (renderPage === 'searchPage') {
+        function handleSaveSearchCriteria(searchText: string, AndOr?: 'AND' | 'OR' | undefined, mfg?: string | undefined, eqtype?: string | undefined, pno?: string | undefined): void {
+            setFormData({
+                searchText: searchText,
+                AndOr: AndOr ?? "AND",
+                Mfg: mfg ?? '',
+                EqType: eqtype ?? '',
+                ProdNo: pno ?? '',
+                MoreInfo: ''
+            });
+        }
+
         return (
             <RequestVisioStencils
                 {...props}
+                saveSearchCriteria={handleSaveSearchCriteria}
                 onRequestClick={handleRequestClick}
             />
         );
@@ -175,6 +194,9 @@ const RequestVisioStencilsContainer = (props: IRequest) => {
     return (
         <RequestShapeFormContainer
             {...formData}
+            onSearchClick={function (searchText?: string, AndOr?: 'AND' | 'OR', mfg?: string, eqtype?: string, pno?: string): void {
+                throw new Error('Function not implemented.');
+            }}
             onBack={() => setRenderPage('searchPage')}
             formData={formData}
         />
@@ -225,8 +247,8 @@ const RequestDeviceModels = (props: IRequest = {}) => {
                             addToDownloadCart={(mfg, prodno, EQID) => {
                                 alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`);
                             }}
-                            saveSearchCriteria={(searchText, AndOr, mfg, eqtype, pno) => {  
-                                console.log(`Search criteria saved: ${searchText}, ${AndOr}, ${mfg}, ${eqtype}, ${pno}`);
+                            saveSearchCriteria={(searchText, AndOr, mfg, eqtype, pno) => {
+                                alert(`RequestDeviceModels Search criteria saved: ${searchText}, ${AndOr}, ${mfg}, ${eqtype}, ${pno}`);
                             }}
                         />
                     </div>

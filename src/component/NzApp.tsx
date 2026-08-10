@@ -136,8 +136,8 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
                     userInfo: {
                         displayName: displayName || userProfileRecord["_User"][0]?.Shortname || "User",
                         username: user?.username ?? "",
-                        email: user?.email,
-                        tenantNickname: user?.tenantNickname,
+                        email: user?.email as string,
+                        tenantNickname: user?.tenantNickname as string,
                     },
                     subscription: sampleUserLicenses,
                 };
@@ -147,7 +147,7 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
                 return;
             }
 
-            console.warn("[sample-data] SESSION.InitSession not called — features, site hierarchy, and LoginUserJson loaded from sample JSON");
+            console.warn("[sample-data] SESSION.InitSession not called — features, and LoginUserJson loaded from sample JSON");
 
             sessionContext.setSessionList(sampleSessionVariables);
             setIsSessionCreated(true);

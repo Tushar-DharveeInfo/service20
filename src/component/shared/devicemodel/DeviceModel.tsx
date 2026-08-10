@@ -50,7 +50,6 @@ import { YesNoFormContainer } from '../basic/yesnoformcontainer/YesNoFormContain
 import '@n20a/libform/style.css'
 import { NodeDragEventParams } from 'rc-tree/lib/contextTypes';
 import { Label } from '../basic/label/Label';
-// import { axiosInterceptorForHead } from '../../interceptors/Interceptor';
 
 
 /* True when DeviceModel is searching the local NetZoom device or cable library. */
@@ -211,9 +210,9 @@ const DeviceModel = (props: IDeviceModel) => {
 		openAllNodes: false,
 		allowCheckStrictly: false,
 		onAddToDownloadCart: (node: ITreeNode) => {
-			const {  mfg, prodno, EQID } = getProductDownloadCartPayload(node)
+			const { mfg, prodno, EQID } = getProductDownloadCartPayload(node)
 			if (props.addToDownloadCart) {
-				props.addToDownloadCart( mfg, prodno, EQID)
+				props.addToDownloadCart(mfg, prodno, EQID)
 			} else {
 				alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`)
 			}
@@ -748,7 +747,13 @@ const DeviceModel = (props: IDeviceModel) => {
 			const eqtype = eqtypeFromProfile
 			const prod = profileString["Product Number"] ? profileString["Product Number"] === "All" ? "" : profileString["Product Number"] : ""
 			const keywordsToSearch = (searchKeywords ?? searchText)?.trim() ?? ""
+			const andOrFlag: "AND" | "OR" = selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND"
+
 			if (keywordsToSearch) {
+				alert(`
+          Yadav-searchcriteria DeviceModel: ${JSON.stringify({ keywordsToSearch, andOrFlag, mfg, eqtype, prod })}`)
+
+				props.saveSearchCriteria(keywordsToSearch, andOrFlag, mfg, eqtype, prod)
 				SetDisableFromWhileSearching(true)
 				setFilterMfg(null)
 				statusBarContext.setIsLoading(true)
@@ -779,10 +784,7 @@ const DeviceModel = (props: IDeviceModel) => {
 					searchTextArray.push(prod)
 				}
 				searchTextArray.push(...keywordsToSearch.toLocaleLowerCase().split(' '))
-				let searchResult = searchData ? wildSearch(searchData, searchTextArray as string[], selectedRtmValue === "AND" ? true : false) : []
-        alert(`
-          Yadav-searchcriteria: ${JSON.stringify({ keywordsToSearch, searchType: selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND", mfg, eqtype, prod })}`)
-        props.saveSearchCriteria(keywordsToSearch, selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND", mfg, eqtype, prod)
+				let searchResult = searchData ? wildSearch(searchData, searchTextArray as string[], andOrFlag === "AND") : []
 
 				if (searchResult.length > 50 && mfg) {
 					setShowMessage(true)

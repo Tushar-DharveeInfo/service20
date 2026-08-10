@@ -745,29 +745,29 @@ const BasicGrid = (gridProps: IBasicGrid) => {
         rowDataPre: TGridRowData,
     ) => {
         setIsLoading(true)
-        const handleApiGetFilteredLogResponse = (response: unknown) => {
-            const logResponse = response as IFilteredLogApiResponse;
-            if (logResponse?.logJson) {
-                const logs: unknown = FnParseJsonSafely(logResponse.logJson)
-                const data = Object.values(logs as Record<string, unknown>)
-                let TotalRecords = 0
-                if (data.length > 0 && Array.isArray(data[0]) && data[0].length > 0) {
-                    const Rowdata = data[0] as Array<Record<string, unknown>>
-                    const totalValue = Rowdata[0]?.TotalRecords;
-                    TotalRecords = typeof totalValue === 'number' ? totalValue : 0
-                }
-                const resposeData = FnHandleAPIResponse(logResponse.logJson, "Dataset")
-                if (resposeData && Array.isArray(resposeData)) {
-                    for (let index = 0; index < resposeData.length; index++) {
-                        const element = resposeData[index] as TGridRow;
-                        rowDataPre.push(element);
-                    }
-                    setRowData([...rowDataPre])
-                } else {
-                    setRowData([...rowDataPre])
-                }
-            }
-        }
+        // const handleApiGetFilteredLogResponse = (response: unknown) => {
+        //     const logResponse = response as IFilteredLogApiResponse;
+        //     if (logResponse?.logJson) {
+        //         const logs: unknown = FnParseJsonSafely(logResponse.logJson)
+        //         const data = Object.values(logs as Record<string, unknown>)
+        //         let TotalRecords = 0
+        //         if (data.length > 0 && Array.isArray(data[0]) && data[0].length > 0) {
+        //             const Rowdata = data[0] as Array<Record<string, unknown>>
+        //             const totalValue = Rowdata[0]?.TotalRecords;
+        //             TotalRecords = typeof totalValue === 'number' ? totalValue : 0
+        //         }
+        //         const resposeData = FnHandleAPIResponse(logResponse.logJson, "Dataset")
+        //         if (resposeData && Array.isArray(resposeData)) {
+        //             for (let index = 0; index < resposeData.length; index++) {
+        //                 const element = resposeData[index] as TGridRow;
+        //                 rowDataPre.push(element);
+        //             }
+        //             setRowData([...rowDataPre])
+        //         } else {
+        //             setRowData([...rowDataPre])
+        //         }
+        //     }
+        // }
         // SAMPLE DATA: API call commented out
         // axiosInterceptor({
         //     url: LOG.GetFilteredLog,
@@ -775,8 +775,8 @@ const BasicGrid = (gridProps: IBasicGrid) => {
         //     setFetchData: handleApiGetFilteredLogResponse
         // }, statusBarContext)
         // Keep current rows for sample mode (no live pagination API).
-        void payload;
-        void handleApiGetFilteredLogResponse;
+        // void payload;
+        // void handleApiGetFilteredLogResponse;
         setIsLoading(false);
 
 

@@ -79,34 +79,7 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
 
     useEffect(() => {
         const GetRefLibData = async (refName: string, uniqueName: string | null = null, manufacturer: string | null = null, equipmentType: string | null = null, id: string | null = null) => {
-            // return new Promise<any[]>((resolve, reject) => {   // <-- note Promise<any[]> instead of Promise<any>
-            //     const handleGetLibRefListApiResponse = (getLibRefListApiResponse: unknown) => {
-            //         if (getLibRefListApiResponse && typeof getLibRefListApiResponse === "object" && 'jsonString' in getLibRefListApiResponse) {
-            //             try {
-            //                 const parsedData = JSON.parse((getLibRefListApiResponse as any).jsonString as string);
-            //                 if (parsedData && Array.isArray(parsedData)) {
-            //                     resolve(parsedData);
-            //                 } else {
-            //                     resolve([]);
-            //                 }
-            //             } catch (error) {
-            //                 console.log('Error in hanlde reflist api response :', error);
-            //                 resolve([]);
-            //             }
-            //         } else {
-            //             resolve([]);
-            //         }
-            //     }
-            //     axiosInterceptor({
-            //         url: MISC.GetLibRefList,
-            //         data: {
-            //             groupName: refName,
-            //             actualMfgAcronym: manufacturer ?? undefined,
-            //             eqtype: equipmentType ?? undefined
-            //         },
-            //         setFetchData: handleGetLibRefListApiResponse
-            //     }, statusBarContext)
-            // });
+
             return []
         }
         const GetRefDataBasedOnSelection = async (controls: IControl[], parsedProfile: any, id: string | null, refDataObject: any[] | null = null) => {
@@ -303,16 +276,7 @@ const SettingsContainer = (formContainerProps: ISettingsContainer) => {
         );
     };
     const handleYesButtonClick = () => {
-        const handleApiCallApProfileDelete = (apDeleteResponse: unknown, status?: string) => {
-            if (status === "200" && apDeleteResponse !== undefined) {
-                apProfileContext.fetchApProfile(true, statusBarContext);
-            }
-        }
-        // axiosInterceptor({
-        //     url: AP.DeleteApInstance,
-        //     data: { recID: selectedItem?.actionCode },
-        //     setFetchData: handleApiCallApProfileDelete
-        // }, statusBarContext);
+
         setIsShowConfirmDialog(false);
 
     }

@@ -218,11 +218,7 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
                         <GenerateReportHost />
-                        {/* <OtherProducts
-                            uniqueName={'feature-products-other'}
-                            featureId={featureContainerProps.featureId}
-                            headerText={featureContainerProps.headerText}
-                            handleShowUserMessage={handleShowUserMessage} /> */}
+
                     </Suspense>
                 </ErrorBoundary>
             );
@@ -250,11 +246,14 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
             return (
                 <ErrorBoundary>
                     <Suspense fallback={<Loader />}>
-                        <RequestDeviceModelsContainer formData={{searchText: "", Mfg: "", EqType: "", ProdNo: "", MoreInfo: ""}} />
+                        <RequestDeviceModelsContainer formData={{ searchText: "", AndOr: "AND", Mfg: "", EqType: "", ProdNo: "", MoreInfo: "" }}
+                            onSearchClick={function (searchText?: string, AndOr?: 'AND' | 'OR', mfg?: string, eqtype?: string, pno?: string): void {
+                                throw new Error('Function not implemented.')
+                            }} />
                     </Suspense>
                 </ErrorBoundary>
             );
-            
+
         case ServicesEnums.RequestSupport:
             return (
                 <ErrorBoundary>

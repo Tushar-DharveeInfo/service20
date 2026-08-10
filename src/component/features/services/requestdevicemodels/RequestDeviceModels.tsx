@@ -8,7 +8,7 @@ import { Helptip } from '../../../shared/Help';
 import { useHelpTipContext } from '../../../shared/context/hooks/HelptipHooks';
 import {RequestShapeFormContainer} from '../requestshapeformcontainer/RequestShapeFormContainer';
 
-interface IRequestShapeFormData {
+export interface IRequestShapeFormData {
   searchText: string;
   AndOr: "AND" | "OR";
   Mfg: string;
@@ -120,8 +120,6 @@ const RequestDeviceModelsContainer = (props: IRequestShape) => {
     const [requestformData, setRequestFormData] = useState<IRequestShape>(props);
 
   const handleSearchClick = (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => {
-    console.log('Yadav-handleSearchClick received form data:', {searchText, AndOr, mfg, eqtype, pno});
-    
     setRequestFormData(prev => ({
         ...prev,
         formData: {
@@ -154,6 +152,7 @@ const RequestDeviceModelsContainer = (props: IRequestShape) => {
     return (
         <RequestShapeFormContainer
             {...requestformData}
+            onSearchClick={handleSearchClick}
             onBack={() => setRenderPage('searchPage')}
         />
     );

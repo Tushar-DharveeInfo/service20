@@ -33,7 +33,6 @@ const searchProps: ExpandableListSearchState = {
 };
 
 const ExpandableList = (props: IExpandableList) => {
-    const isConfigureMenu = props.uniqueName === "configure";
     const [mainMenu, setMainMenu] = useState<IMenuItem[] | null>(null);
     const [searchControlProps, setSearchControlProps] = useState<ExpandableListSearchState>(searchProps);
     const [originalMenuMenu, setOriginalMenuMenu] = useState<IMenuItem[] | null>(null);
@@ -45,48 +44,13 @@ const ExpandableList = (props: IExpandableList) => {
     const mainRefs = useRef<(HTMLDivElement | null)[]>([]);
     const subRefs = useRef<{ [key: number]: (HTMLDivElement | null)[] }>({});
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const configureDefaultSelectedRef = useRef(false);
-
-    const openAllConfigureMenuGroups = (menu: IMenuItem[]): IMenuItem[] =>
-        menu.map((ele) => ({
-            ...ele,
-            isOpen: ele.subMenu && ele.subMenu.length > 0 ? true : ele.isOpen,
-        }));
-
-    const applyConfigureDefaultSelection = (menu: IMenuItem[]): IMenuItem[] => {
-        if (configureDefaultSelectedRef.current || selectedEntId) {
-            return menu;
-        }
-
-        const firstGroup = menu.find((ele) => ele.subMenu && ele.subMenu.length > 0);
-        const defaultSub = firstGroup?.subMenu?.[0];
-        if (!firstGroup || !defaultSub) {
-            return menu;
-        }
-
-        firstGroup.isSelected = true;
-        defaultSub.isSelected = true;
-        setSelectedEntId(defaultSub.EntID as string | undefined);
-        setSelectedMenuIndex(-1);
-        configureDefaultSelectedRef.current = true;
-        props.handleMouseEvent(undefined, "expandleList", defaultSub);
-
-        return menu.map((ele) => ({
-            ...ele,
-            isSelected: ele.EntID === firstGroup.EntID,
-            subMenu: ele.subMenu?.map((sub) => ({
-                ...sub,
-                isSelected: sub.EntID === defaultSub.EntID,
-            })),
-        }));
-    };
 
     useEffect(() => {
         if (props.menuData && props.menuData.length > 0) {
             if (!isEqual(props.menuData, originalMenuMenu)) {
                 const menu: IMenuItem[] = [...props.menuData];
                 // One group, one child: open group and select the child on load.
-                if (!isConfigureMenu && menu.length === 1 && menu[0].subMenu?.length === 1) {
+                if (menu.length === 1 && menu[0].subMenu?.length === 1) {
                     menu[0].isOpen = true
                     menu[0].subMenu[0].isSelected = true
                     setSelectedEntId(menu[0].subMenu[0].EntID as string | undefined)
@@ -95,23 +59,19 @@ const ExpandableList = (props: IExpandableList) => {
                     menu[0].isSelected = false
                 }
 
-                const nextMenu = isConfigureMenu
-                    ? applyConfigureDefaultSelection(openAllConfigureMenuGroups(menu))
-                    : menu;
-                setOriginalMenuMenu([...nextMenu]);
+                setOriginalMenuMenu([...menu]);
 
                 // This condition depends on searchValue
                 if (!searchValue) {
-                    setMainMenu([...nextMenu]);
+                    setMainMenu([...menu]);
                 }
             }
         }
-    }, [props.menuData, searchValue, isConfigureMenu]); // searchValue: avoid overwriting filtered mainMenu while user is searching
+    }, [props.menuData, searchValue]); // searchValue: avoid overwriting filtered mainMenu while user is searching
     useEffect(() => {
         return () => {
             setMainMenu(null);
             setOriginalMenuMenu(null);
-            configureDefaultSelectedRef.current = false;
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
@@ -192,13 +152,11 @@ const ExpandableList = (props: IExpandableList) => {
                 if (isClickedItem) {
                     ele.isSelected = true;
                     if (elementHasSubMenu) {
-                        ele.isOpen = isConfigureMenu
-                            ? true
-                            : ele.isOpen === undefined ? true : !ele.isOpen;
+                        ele.isOpen = ele.isOpen === undefined ? true : !ele.isOpen;
                     }
                 } else {
                     ele.isSelected = false;
-                    if (!isConfigureMenu && elementHasSubMenu) {
+                    if (elementHasSubMenu) {
                         ele.isOpen = false;
                     }
                 }
@@ -247,14 +205,12 @@ const ExpandableList = (props: IExpandableList) => {
                 return {
                     ...ele,
                     isSelected: isSelected,
-                    isOpen: isConfigureMenu
-                        ? Boolean(ele.subMenu?.length)
-                        : isAnySubSelected,
+                    isOpen: isAnySubSelected,
                     subMenu: subMenu,
                 };
             });
 
-            setMainMenu(isConfigureMenu ? openAllConfigureMenuGroups(restored) : [...restored]);
+            setMainMenu([...restored]);
         }
 
         setSearchValue(value);
@@ -294,7 +250,7 @@ const ExpandableList = (props: IExpandableList) => {
                         (element.subMenu?.length ?? 0) > 0
                     );
                 });
-                setMainMenu(isConfigureMenu ? openAllConfigureMenuGroups(filterData) : [...filterData]);
+                setMainMenu([...filterData]);
 
             } else {
                 const filteredData = originalMenuMenu.map((element: IMenuItem) => {
@@ -313,9 +269,7 @@ const ExpandableList = (props: IExpandableList) => {
             originalMenuMenu && originalMenuMenu?.length > 0 &&
             (searchValue === "" || searchValue === null || searchValue === undefined)
         ) {
-            filterData = isConfigureMenu
-                ? openAllConfigureMenuGroups(originalMenuMenu)
-                : originalMenuMenu;
+            filterData = originalMenuMenu;
             setMainMenu([...filterData]);
         }
     };
@@ -356,7 +310,7 @@ const ExpandableList = (props: IExpandableList) => {
                 ele.isSelected = true;
                 return;
             }
-            if (!isConfigureMenu && ele.subMenu?.length) {
+            if (ele.subMenu?.length) {
                 ele.isOpen = false;
             }
         });
@@ -364,7 +318,7 @@ const ExpandableList = (props: IExpandableList) => {
     };
 
     const closeMainMenuGroup = (index: number) => {
-        if (!mainMenu || isConfigureMenu) {
+        if (!mainMenu) {
             return;
         }
         const item = mainMenu[index];
@@ -423,13 +377,12 @@ const ExpandableList = (props: IExpandableList) => {
             subIndex !== null
             && mainMenu[mainIndex]?.subMenu?.length
             && !mainMenu[mainIndex]?.isOpen
-            && !isConfigureMenu
         ) {
             openMainMenuGroup(mainIndex);
         }
         setActiveMainIndex(mainIndex);
         setActiveSubIndex(subIndex);
-    }, [mainMenu, resolveSelectionIndices, isConfigureMenu]);
+    }, [mainMenu, resolveSelectionIndices]);
 
     // Align keyboard focus when user selects a different menu item (click or app state).
     useEffect(() => {
@@ -463,7 +416,6 @@ const ExpandableList = (props: IExpandableList) => {
             if (
                 navSubIndex !== null
                 && !mainMenu[navMainIndex]?.isOpen
-                && !isConfigureMenu
             ) {
                 openMainMenuGroup(navMainIndex);
             }
@@ -511,7 +463,7 @@ const ExpandableList = (props: IExpandableList) => {
                 }
             },
         });
-    }, [activeMainIndex, activeSubIndex, mainMenu, resolveSelectionIndices, isConfigureMenu]);
+    }, [activeMainIndex, activeSubIndex, mainMenu, resolveSelectionIndices]);
     const handleIconForMenu = (label: string) => {
         const name = label.replace(/\s*\(.*?\)/, "")
 
@@ -537,7 +489,7 @@ const ExpandableList = (props: IExpandableList) => {
             }
 
             const mainItem = mainMenu?.[activeMainIndex];
-            if (mainItem?.subMenu?.length && !mainItem.isOpen && !isConfigureMenu) {
+            if (mainItem?.subMenu?.length && !mainItem.isOpen) {
                 openMainMenuGroup(activeMainIndex);
                 setTimeout(focusSubItem, 100);
                 return;
@@ -546,7 +498,7 @@ const ExpandableList = (props: IExpandableList) => {
             focusSubItem();
         }, 0);
         return () => clearTimeout(id);
-    }, [activeMainIndex, activeSubIndex, mainMenu, isConfigureMenu]);
+    }, [activeMainIndex, activeSubIndex, mainMenu]);
 
     return (
         <div
@@ -592,7 +544,7 @@ const ExpandableList = (props: IExpandableList) => {
                             return (
                                 <Fragment key={index}>
                                     <li key={index}
-                                        className='nz-nav-link' id={(isConfigureMenu && element.subMenu?.length) || element.isOpen ? `nz-nav-open` : "nz-nav-close"}>
+                                        className='nz-nav-link' id={element.isOpen ? `nz-nav-open` : "nz-nav-close"}>
                                         {/* Menu Item */}
                                         <ListItemButton
                                             ref={(el) => {
@@ -618,7 +570,7 @@ const ExpandableList = (props: IExpandableList) => {
 
                                             </ListItemIcon>}
                                             <ListItemText className={`nz-nav-menu-text ${props.hideIcon ? 'nz-only-show-label' : ""}`} primary={element.Label} style={{ opacity: 1 }} />
-                                            {element.subMenu && element.subMenu.length > 0 && !isConfigureMenu && (<>
+                                            {element.subMenu && element.subMenu.length > 0 && (<>
                                                 <div
                                                     className={`nz-nav-i-arrow ${element.isOpen ? '' : 'closed'}`}
                                                 >
@@ -631,7 +583,7 @@ const ExpandableList = (props: IExpandableList) => {
                                             </>)}
                                         </ListItemButton>
                                     </li>
-                                    <Collapse key={"Clps_" + index.toString()} in={(isConfigureMenu && element.subMenu && element.subMenu.length > 0) || Boolean(element.isOpen)} timeout="auto" unmountOnExit>
+                                    <Collapse key={"Clps_" + index.toString()} in={Boolean(element.isOpen)} timeout="auto" unmountOnExit>
                                         {/*submenu Items*/}
                                         <List component="div" key={"Cli_" + index.toString()} disablePadding>
                                             {element.subMenu && element.subMenu.map((subEle: IMenuItem, subIndex: number) => {

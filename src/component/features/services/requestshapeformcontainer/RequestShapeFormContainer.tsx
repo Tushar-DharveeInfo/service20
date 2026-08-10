@@ -18,9 +18,9 @@ const RequestShapeFormContainer = (props: IRequestShape) => {
     const [requestformData, setRequestFormData] = useState<IRequestShape | null>(props);
     useEffect(() => {
         setRequestFormData(props);
-    }, []);
+    }, [props.formData]);
 
-    const uniqueName =  'request-visio-stencils';
+    const uniqueName = 'request-visio-stencils';
     const featureId = props.featureId ?? ServicesEnums.RequestVisioStencils;
     const showHelptip = props.isShowHelptip !== false;
     const { onBack } = props;
@@ -93,49 +93,49 @@ const RequestShapeFormContainer = (props: IRequestShape) => {
 // ---------- RequestShapePage ----------
 
 function RequestShapePage() {
-  const [lastSaved, setLastSaved] = useState<IRequestShape | null>(null);
-  const prettyJson = useMemo(() => (lastSaved ? JSON.stringify(lastSaved, null, 2) : ''), [lastSaved]);
+    const [lastSaved, setLastSaved] = useState<IRequestShape | null>(null);
+    const prettyJson = useMemo(() => (lastSaved ? JSON.stringify(lastSaved, null, 2) : ''), [lastSaved]);
 
-  const handleSave = (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => {
-    const formdata: IRequestShape = {
-      formData: {
-        searchText: searchText ?? '',
-        AndOr: AndOr ?? "AND",
-        Mfg: mfg ?? '',
-        EqType: eqtype ?? '',
-        ProdNo: pno ?? '',
-        MoreInfo: ''
-      },
-      onSearchClick: handleSave
+    const handleSave = (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => {
+        const formdata: IRequestShape = {
+            formData: {
+                searchText: searchText ?? '',
+                AndOr: AndOr ?? "AND",
+                Mfg: mfg ?? '',
+                EqType: eqtype ?? '',
+                ProdNo: pno ?? '',
+                MoreInfo: ''
+            },
+            onSearchClick: handleSave
+        };
+        console.log('RequestShapeForm save:', formdata);
+        setLastSaved(formdata);
     };
-    console.log('RequestShapeForm save:', formdata);
-    setLastSaved(formdata);
-  };
 
 
-  return (
-    <div className="spa-page spa-page--scroll">
-      <RequestShapeForm
-        formData={{
-          searchText: lastSaved?.formData.searchText ?? '',
-          AndOr: lastSaved?.formData.AndOr ?? "AND",
-          Mfg: lastSaved?.formData.Mfg ?? '',
-          EqType: lastSaved?.formData.EqType ?? '',
-          ProdNo: lastSaved?.formData.ProdNo ?? '',
-          MoreInfo: lastSaved?.formData.MoreInfo ?? ''
-        }}
-        onSearchClick={handleSave}
-      />
-      {lastSaved ? (
-        <section className="spa-diagnostics" style={{ marginTop: '12px' }}>
-          <div className="spa-diagnostics__header">
-            <span>Last Saved Request Shape</span>
-          </div>
-          <pre className="test-json-modal__viewer" style={{ maxHeight: '220px' }}>{prettyJson}</pre>
-        </section>
-      ) : null}
-    </div>
-  );
+    return (
+        <div className="spa-page spa-page--scroll">
+            <RequestShapeForm
+                formData={{
+                    searchText: lastSaved?.formData.searchText ?? '',
+                    AndOr: lastSaved?.formData.AndOr ?? "AND",
+                    Mfg: lastSaved?.formData.Mfg ?? '',
+                    EqType: lastSaved?.formData.EqType ?? '',
+                    ProdNo: lastSaved?.formData.ProdNo ?? '',
+                    MoreInfo: lastSaved?.formData.MoreInfo ?? ''
+                }}
+                onSearchClick={handleSave}
+            />
+            {lastSaved ? (
+                <section className="spa-diagnostics" style={{ marginTop: '12px' }}>
+                    <div className="spa-diagnostics__header">
+                        <span>Last Saved Request Shape</span>
+                    </div>
+                    <pre className="test-json-modal__viewer" style={{ maxHeight: '220px' }}>{prettyJson}</pre>
+                </section>
+            ) : null}
+        </div>
+    );
 }
 
 

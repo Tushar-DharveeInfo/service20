@@ -6,24 +6,12 @@ interface IFeaturePermission {
 }
 
 
-const editableFeaturePermissions: string[] = [
-    "Configure Device",
-    "Move Add Change",
-    "Inventory Management",
-    "Inventory Configuration",
-    "Edit Floor Layout"
-]
-
 const FnCheckPermissionToEditName = (
     session: IFeaturePermission | string,
     isFeature?: boolean
 ): boolean => {
-    if (isFeature && typeof session === "string") {
-        return editableFeaturePermissions.includes(session)
-    }
-    else {
-        return false
-    }
+
+    return false
 };
 
 export { FnCheckPermissionToEditName };

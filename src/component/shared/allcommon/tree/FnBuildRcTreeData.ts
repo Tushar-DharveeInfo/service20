@@ -27,7 +27,7 @@ function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, fea
         for (let index = 0; index < data.length; index++) {
             const item = data[index];
 
-            const nodeTypes = ['Site', 'Tenant', 'Room', 'Floor', 'Location', 'Manufacturer', 'Eqtype', 'Product', 'View', 'Device', 'DeviceView', 'DeviceSlot', 'DeviceNetworkPort', 'DevicePowerPort', 'Entity', 'PropertyGroup', 'Property', 'Root', 'Group', 'SubGroup'];
+            const nodeTypes = ['Manufacturer', 'Eqtype', 'Product', 'View', 'Device', 'DeviceView', 'Entity', 'PropertyGroup', 'Property', 'Root', 'Group', 'SubGroup'];
             for (let i = 0; i < nodeTypes.length; i++) {
                 const deviceParentType = item["LocationType"];
                 const nodeType = nodeTypes[i];
@@ -119,7 +119,7 @@ function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, fea
         for (let index = 0; index < data.length; index++) {
             const item = data[index];
 
-            const nodeTypes = ['Site', 'Tenant', 'Room', 'Floor', 'Location', 'Manufacturer', 'Eqtype', 'Product', 'View', 'Device', 'DeviceView', 'DeviceSlot', 'DeviceNetworkPort', 'DevicePowerPort', 'Entity', 'PropertyGroup', 'Property', 'Root', 'Group', 'SubGroup'];
+            const nodeTypes = ['Manufacturer', 'Eqtype', 'Product', 'View', 'Device', 'DeviceView', 'PropertyGroup', 'Property', 'Root', 'Group', 'SubGroup'];
             for (let index = 0; index < nodeTypes.length; index++) {
                 const nodeType = nodeTypes[index];
                 const id = item[`${nodeType}EntID`];

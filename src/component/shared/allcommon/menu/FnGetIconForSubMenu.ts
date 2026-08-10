@@ -7,7 +7,6 @@ const subMenuAliases = {
     assign24x24: "assetassigment24x24",
     ask24x24: "info24x24",
     settings24x24: "setting24x24",
-    "more...24x24": "more24x24",
     rear24x24: "R24x24",
     front24x24: "F24x24",
     download24x24: "Download24x24",

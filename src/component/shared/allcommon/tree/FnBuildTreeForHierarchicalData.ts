@@ -1,7 +1,6 @@
 
 import { Key } from "rc-tree/lib/interface";
 import { FnCreateTreeNode } from "./FnCreateTreeNode";
-import { FnCheckAllowCheckbox } from "./FnCheckAllowCheckbox";
 import { ISortOptions, ITreeForHierarchicalDataContainer } from "../../allinterface/tree/ITreeForHierarchicalDataContainer";
 import { ITreeNode } from "../../allinterface/tree/ITreeControl";
 import { TreeNodeTitle } from "../../tree/treenodetitle/TreeNodeTitle";
@@ -46,7 +45,6 @@ const FnBuildTreeForHierarchicalData = async (
                     if (treeContainerProps.featureTreeProps.allowIcon) {
                         treeNode.icon = TreeNodeIcon(treeNode, treeContainerProps.featureTreeProps.instanceName ?? "");
                     }
-                    treeNode.checkable = FnCheckAllowCheckbox(treeNode, treeContainerProps.featureId, treeContainerProps.featureTreeProps.instanceName);
                 }
 
                 // Process child nodes recursively

@@ -370,6 +370,8 @@ import {
     NetZoom24x24,
     Orders24x24,
     Other24x24,
+    Buy24x24,
+    Purchase24x24
 } from "@n20a/libicon";
 
 import type { ComponentType } from "react";
@@ -389,7 +391,8 @@ const rawIconMap: IconMap = {
     Report24x24,
     Reminder24x24,
     Help24x24,
-
+    Buy24x24,
+    Purchase24x24,
     Property24x24,
     Profile24x24,
     AddNewAuditSession24x24,

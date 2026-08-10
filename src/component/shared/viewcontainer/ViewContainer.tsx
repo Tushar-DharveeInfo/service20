@@ -8,15 +8,9 @@ import { ITab } from '../allinterface/deviceview/ITab';
 import { ResponsiveDeviceView } from '../deviceview/responsivedeviceview/ResponsiveDeviceView';
 import { ThreeDView } from '../deviceview/threedview/ThreeDView';
 import { OverlayTab } from '../basic/overlaytab/OverlayTab';
-import { DashboardChart } from '../../features/home/dashboardchartscontainer/DashbordChart';
-import { DELIMITER } from '../alldefaultprops/tablegrid/DefaultPropsOneToManyGrid';
-import { axiosInterceptor } from '../interceptors/Interceptor';
-import { EM } from '../interceptors/EndPoints';
 import { useStatusBarContext } from '../context/hooks/StatusBarHooks';
 import { AIContainer } from '../aicontainer/AIContainer';
 import { useSessionContext } from '../context/hooks/SessionHooks';
-import { FnParseJsonSafely } from '../../appcontainer/allcommon/FnParseJsonSafely';
-import { FEnums } from '../../constants/Feature';
 import { FnCreateReportForPrint } from '../allcommon/generatepdf/FnCreateReportForPrint';
 import { GeneratePdf } from '../generatepdf/GeneratePdf';
 import { TReportLayoutJson } from '../../appqa/allinterface/IGeneratePdf';
@@ -117,16 +111,7 @@ const ViewContainer = (props: IViewContainer) => {
 	useEffect(() => {
 		handleSelectedTabChangesRef.current = props.handleSelectedTabChanges;
 	}, [props.handleSelectedTabChanges])
-	const isCabling = [
-		FEnums.ReviewPowerCabling.toString(),
-		FEnums.PowerTrace.toString(),
-		FEnums.PowerNavigate.toString(),
-		FEnums.EditPowerCabling.toString(),
-		FEnums.ReviewNetworkCabling.toString(),
-		FEnums.NetworkTrace.toString(),
-		FEnums.NetworkNavigate.toString(),
-		FEnums.EditNetworkCabling.toString(),
-	].includes(props.featureId);
+
 
 	const {
 		tabsObj,
@@ -191,7 +176,7 @@ const ViewContainer = (props: IViewContainer) => {
 					? CHART_AND_ASK_TABS
 					: CHART_TABS;
 
-			if (props.selectedNode?.NodeEntityname?.toLowerCase().includes("cable") || isCabling) {
+			if (props.selectedNode?.NodeEntityname?.toLowerCase().includes("cable")) {
 				analyticsTabs = analyticsTabs.filter(
 					(tab) => tab.label.toLowerCase() !== "chart"
 				);
@@ -295,73 +280,7 @@ const ViewContainer = (props: IViewContainer) => {
 	const handleApiCallForDeviceInfo = useCallback(async () => {
 		if (props.selectedNode && props.selectedNode.NodeEntID && props.selectedNode.NodeEntityname) {
 			setIsAskLoading(true);
-			axiosInterceptor({
-				url: EM.GetTableVsProperty,
-				data: {
-					entityName: props.selectedNode.NodeEntityname
-				},
-				allowShowLoader: true,
-				setFetchData: (getTableVsPropertyApiResponse: unknown, status?: string) => {
-					if (getTableVsPropertyApiResponse && status === "200" && Array.isArray(getTableVsPropertyApiResponse) && getTableVsPropertyApiResponse.length > 0) {
-						let oneToOneTables: string[] = [];
-						for (let index = 0; index < getTableVsPropertyApiResponse.length; index++) {
-							const element = getTableVsPropertyApiResponse[index];
-							if (!element.isOneToManyRelation)
-								oneToOneTables.push(element.tableName)
-						}
 
-						if (oneToOneTables.length > 0 && props.selectedNode && props.selectedNode.NodeEntID) {
-							axiosInterceptor({
-								url: EM.GetAllTablesRecord,
-								data: {
-									entID: props.selectedNode.NodeEntID,
-									tableNames: oneToOneTables.join(DELIMITER.separator),
-								},
-								allowShowLoader: true,
-								setFetchData: (response: unknown, status?: string) => {
-
-									if (status === "200" && response && typeof response === "object" && 'jsonStringOutput' in response) {
-										if (response.jsonStringOutput) {
-											const jsonData = FnParseJsonSafely(response.jsonStringOutput as string);
-											const result: Record<string, any> = {};
-
-											if (!Array.isArray(jsonData?.AllTables)) {
-												return;
-											}
-											jsonData.AllTables.forEach((table: any) => {
-												if (!Array.isArray(table?.TableData)) return;
-
-												table.TableData.forEach((item: any) => {
-													if (item?.Name !== undefined) {
-														result[item.Name] = item.Value;
-													}
-												});
-											});
-											setSelectedNodeAllProperties(result)
-										}
-										else {
-											setSelectedNodeAllProperties({})
-										}
-									}
-									else {
-										setSelectedNodeAllProperties({})
-									}
-									setIsAskLoading(false);
-								}
-							}, statusBarContext);
-
-						}
-						else {
-							setSelectedNodeAllProperties({})
-							setIsAskLoading(false);
-						}
-					}
-					else {
-						setSelectedNodeAllProperties({})
-						setIsAskLoading(false);
-					}
-				}
-			}, statusBarContext)
 		} else {
 			setSelectedNodeAllProperties({})
 			setIsAskLoading(false);
@@ -461,22 +380,6 @@ const ViewContainer = (props: IViewContainer) => {
 
 					</div>
 				})}
-
-				{/* Chart and Ask rendering */}
-				{shouldRenderChart && props.selectedNode?.NodeType && (
-					<DashboardChart
-						hideHeader={true}
-						title='Dashboardchart'
-						uniqueName={props.uniqueName}
-						featureId={props.featureId ?? ""}
-						outputFormat={"jsx"}
-						displayPerRow={1}
-						isDashboard={false}
-						selectedNode={props.selectedNode}
-						parentClassName={props.selectedNode.NodeType === "MountedDevice" ? 'nz-chart-mounted-device' : 'nz-chart-device-preview'}
-						handleFinishApiCall={() => {
-						}} />)
-				}
 				{
 					shouldRenderAsk && <div className='nz-Floor-ask-componet'>
 						{isAskLoading || !selectedNodeAllProperties ? (

@@ -11,7 +11,7 @@ const deferGridTask = (task: () => void, delayMs: number): ReturnType<typeof set
 const onGridReady = (params: GridReadyEvent, props: IBasicGrid) => {
 
 
-    if (props.containerName === "nz_forcensic_log" && props.featureId && props.featureId !== AppQA.Settings) {
+    if (props.containerName === "nz_forcensic_log" && props.featureId) {
         deferGridTask(() => {
 
             const sidebarContainer: HTMLElement | null = document.querySelector('.nz-qa-sidebar-container');

@@ -1,6 +1,5 @@
 
 import "../../allcss/searchfilter/FilterKeywordControl.css";
-import { handleContainerKeyDown } from '../../allcommon/basic/FnHandleContainerKeyDown';
 import { KeyboardEvent } from "react";
 import { Filter24x24 } from "@n20a/libicon";
 import { FnGetCssVariable } from "../../../appcontainer/allcommon/FnGetCssVariable";
