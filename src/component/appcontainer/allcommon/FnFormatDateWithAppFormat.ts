@@ -4,11 +4,10 @@ import { FnGetAppDateFormat } from "../../shared/allcommon/basic/FnGetAppDateFor
 const FnFormatDateWithAppFormat = (
   dateInput: string | Date,
   showTime: boolean = true,
-  muForSite?: string
 ): string => {
   try {
     //  Basic validation
-    
+
     if (!dateInput) {
       console.warn("FnFormatDate: Empty date input");
       return "";
@@ -22,7 +21,7 @@ const FnFormatDateWithAppFormat = (
       return "";
     }
 
-    const format = muForSite ? muForSite.toLowerCase() === "europe" ? "dd/MM/yyyy" : "MM/dd/yyyy" : FnGetAppDateFormat(); // "MM/dd/yyyy" or "dd/MM/yyyy"
+    const format = "MM/dd/yyyy"
 
     const pad = (n: number) => n.toString().padStart(2, "0");
 

@@ -318,7 +318,6 @@ const DeviceModel = (props: IDeviceModel) => {
 		defaultSelectedKeys: [], // default selected keys to set if already tree data generated
 		defaultCheckedKeys: [], // default checked keys to set if already tree data generated
 		defaultSelectedNodeInfo: undefined, // default selected node set if needed
-		isSiteByTenant: false, // Enables tenant-specific hierarchy
 		isFloorTree: false, // Indicates this is not a Floor Pane tree
 		allowAPICallOnExpand: false, // Enables API calls on node expansion
 		allowAdd: false, // Allows adding new nodes
@@ -676,7 +675,7 @@ const DeviceModel = (props: IDeviceModel) => {
 				}
 
 				const apiData = await formatDataForFlatTree(filterData)
-				const hierarchyData = await FnConvertFlatDataToHierarchyData({ "deviceModel": apiData }, null, props.featureId, "AllSites", "DeviceModel", disableSort)
+				const hierarchyData = await FnConvertFlatDataToHierarchyData({ "deviceModel": apiData }, null, props.featureId, "DeviceModel", disableSort)
 				if (hierarchyData) {
 					const updatedTreeData = FnUpdateNodeWithTitleAndIcon(hierarchyData, treeProps.featureTreeProps, props.featureId)
 

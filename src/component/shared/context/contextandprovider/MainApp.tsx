@@ -1,9 +1,7 @@
 import { createContext, useEffect, useMemo, useState, useCallback } from "react";
-import { IAlertProfileItem, IApItem, IApProfileItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, ISiteProperties, IUserInfoAndSubscription, IUserProfileRecord } from "../allinterface/IMainApp";
+import { IAlertProfileItem, IApItem, IEmItem, IFeatureForHelp, IFeatureItem, IMainApp, IRefItem, IUserInfoAndSubscription, IUserProfileRecord } from "../allinterface/IMainApp";
 import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
 import { IStatusBar } from "../allinterface/IStatusBar";
-import { ISession } from "../allinterface/ISession";
-import { FnHandleAPIResponse } from "../../allcommon/basic/FnHandleAPIResponse";
 import { FnIsInternetAvailable } from "../../../appcontainer/allcommon/FnIsInternetAvailable";
 import { AuthSession } from "@n20a/libauth";
 
@@ -20,23 +18,16 @@ function MainAppProvider({ children }: IAppContextWrapper) {
     const [apRecords, setApRecords] = useState<IApItem[]>([]);
     const [featureRecords, setFeatureRecords] = useState<IFeatureItem[]>([]);
     const [emRecords, setEmRecords] = useState<IEmItem[]>([]);
-    const [apProfileRecords, setApProfileRecords] = useState<IApProfileItem[]>([]);
     const [alertProfileRecords, setAlertProfileRecords] = useState<IAlertProfileItem[]>([]);
     const [alertRecords, setAlertRecords] = useState<Record<string, any>[]>([]);
     const [refTableRecords, setRefTableRecords] = useState<IRefItem[]>([]);
-    const [apiProfileRecords, setApiProfileRecords] = useState<Record<string, any>[]>([]);
-    const [floorLayoutRecord, setFloorLayoutRecord] = useState<Record<string, any>>({});
     const [isInternetAvailable, setIsInternetAvailable] = useState<boolean>(true);
     const [deploymentVars, setDeploymentVars] = useState<Record<string, any>[]>([]);
-    const [siteProperties, setSiteProperties] = useState<ISiteProperties>();
     const [allFeatureRecords, setAllFeatureRecords] = useState<IFeatureItem[]>([]);
-    const [dciRecords, setDciRecords] = useState<Record<string, any>[] | undefined>();
-    const [autoExecuteWorkorder, setAutoExecuteWorkorder] = useState<boolean>(false);
     const [selectedFeatureForHelp, setSelectedFeatureForHelp] = useState<IFeatureForHelp>()
     const [userProfileRecord, setUserProfileRecord] = useState<IUserProfileRecord>()
     const [authSession, setAuthSession] = useState<AuthSession>()
     const [userInfoAndSubscription, setUserInfoAndSubscription] = useState<IUserInfoAndSubscription>()
-    const [impUserProfileRecord, setImpUserProfileRecord] = useState<IUserProfileRecord>()
 
     useEffect(() => {
         try {
@@ -64,27 +55,11 @@ function MainAppProvider({ children }: IAppContextWrapper) {
                 filtered = filtered.filter(item => !item.Internet);
             }
 
-            if (siteProperties?.Locked) {
-                filtered = filtered.filter(item => !item.Lock);
-            }
-
             setFeatureRecords(filtered);
         } catch (error) {
             console.error("Error filtering feature records:", error);
         }
-    }, [isInternetAvailable, siteProperties?.Locked, allFeatureRecords]);
-
-    const checkIsInternetAvailable = useCallback(async (): Promise<boolean> => {
-        try {
-            const value = await FnIsInternetAvailable();
-            setIsInternetAvailable(value);
-            return value;
-        } catch (error) {
-            console.error("Error checking internet availability:", error);
-            setIsInternetAvailable(false);
-            return false;
-        }
-    }, []);
+    }, [isInternetAvailable, allFeatureRecords]);
 
     useEffect(() => {
         const checkInternet = async () => {
@@ -107,135 +82,12 @@ function MainAppProvider({ children }: IAppContextWrapper) {
         checkInternet();
     }, [apRecords]);
 
-    const fetchFeatures = useCallback(async (statusBarContext: IStatusBar, sessionVars: ISession[]) => {
-        const handleFeatureApiData = async (featureDataResponse: unknown, status?: string) => {
-            if (status === "200" && featureDataResponse && typeof featureDataResponse === "object" && 'jsonString' in featureDataResponse) {
-                try {
-                    const parsedData = JSON.parse(featureDataResponse.jsonString as string);
-                    if (sessionVars && parsedData.Features && parsedData.Features.length) {
-                        const impersonatedUserName = (sessionVars as ISession[]).find((item) => { return item.VariableName === "ImpersonatedUserName" });
-                        for (let index = 0; index < parsedData.Features.length; index++) {
-                            const element = parsedData.Features[index];
-                            if (element && element.Label && element.Label?.toLowerCase() === "user") {
-                                element.Tooltip = impersonatedUserName && impersonatedUserName.SessionValue ? `Impersonating user ${impersonatedUserName.SessionValue}` : element.Tooltip;
-                            }
-                        }
-                        setAllFeatureRecords(parsedData.Features);
-                        setFeatureRecords(parsedData.Features);
-                    }
-                } catch (error) {
-                    console.error("Error parsing feature data:", error);
-                    setAllFeatureRecords([]);
-                    setFeatureRecords([]);
-                }
-            }
-        };
-
-        // if (statusBarContext) {
-        //     try {
-        //         await axiosInterceptor({
-        //             url: FEATURE.GetFeatures,
-        //             data: {},
-        //             setFetchData: handleFeatureApiData
-        //         }, statusBarContext);
-        //     } catch (error) {
-        //         console.error("Error fetching features:", error);
-        //     }
-        // }
-    }, []);
-
-    const fetchApRecords = useCallback(async (statusBarContext?: IStatusBar) => {
-        const handleApProfileData = async (apProfileResponse: unknown, status?: string) => {
-            if (status === "200" && apProfileResponse && typeof apProfileResponse === "object" && 'jsonString' in apProfileResponse) {
-                try {
-                    const parsedData = FnHandleAPIResponse(apProfileResponse.jsonString, "Dataset");
-
-                    if (Array.isArray(parsedData) && parsedData.length) {
-                        setApRecords(parsedData);
-                    }
-                } catch (error) {
-                    console.error("Error processing AP records:", error);
-                    setApRecords([]);
-                }
-            }
-        };
-
-        // if (statusBarContext) {
-        //     try {
-        //         await axiosInterceptor({
-        //             url: AP.GetAllCol,
-        //             data: {
-        //                 applyUserValue: true
-        //             },
-        //             setFetchData: handleApProfileData
-        //         }, statusBarContext);
-        //     } catch (error) {
-        //         console.error("Error fetching AP records:", error);
-        //     }
-        // }
-    }, []);
-
-    const fetchApProfileRecords = useCallback(async (statusBarContext?: IStatusBar) => {
-        const handleApProfileData = async (apProfileResponse: any) => {
-            try {
-                const parsedData = FnHandleAPIResponse(apProfileResponse, "Dataset");
-
-                if (typeof parsedData === "object" && parsedData["PG.APProfile"]) {
-                    setApProfileRecords(parsedData["PG.APProfile"]);
-                }
-            } catch (error) {
-                console.error("Error processing AP profile records:", error);
-                setApProfileRecords([]);
-            }
-        };
-
-        // if (statusBarContext) {
-        //     try {
-        //         await axiosInterceptor({
-        //             url: EM.GetEntityRecords,
-        //             data: {
-        //                 entityName: "AP",
-        //                 tableName: "PG.APProfile",
-        //                 entIDs: ""
-        //             },
-        //             setFetchData: handleApProfileData
-        //         }, statusBarContext);
-        //     } catch (error) {
-        //         console.error("Error fetching AP profile records:", error);
-        //     }
-        // }
-    }, []);
-
-    const fetchAlertProfileRecords = useCallback((statusBarContext: IStatusBar) => {
-        // try {
-        //     axiosInterceptor({
-        //         url: EM.GetEntityRecords,
-        //         data: {
-        //             "entityName": "AlertProfile",
-        //             "tableName": "_AlertProfile",
-        //         },
-        //         setFetchData: (handleApiResponse: unknown, status?: string) => {
-        //             try {
-        //                 if (status === "200" && handleApiResponse) {
-        //                     const alertProfiles = FnHandleAPIResponse(handleApiResponse, "Dataset");
-        //                     if (alertProfiles && typeof alertProfiles === "object"
-        //                         && alertProfiles._AlertProfile && Array.isArray(alertProfiles._AlertProfile)) {
-        //                         setAlertProfileRecords(alertProfiles._AlertProfile);
-        //                     }
-        //                 }
-        //             } catch (error) {
-        //                 console.error("Error processing alert profile records:", error);
-        //                 setAlertProfileRecords([]);
-        //             }
-        //         }
-        //     }, statusBarContext);
-        // } catch (error) {
-        //     console.error("Error fetching alert profile records:", error);
-        // }
+    const fetchAlertProfileRecords = useCallback((_statusBarContext: IStatusBar) => {
+        // SAMPLE DATA: Alert profile API not called.
     }, []);
 
     const providers = useMemo(
-        () => ({
+        (): IMainApp => ({
             apRecords,
             setApRecords,
             featureRecords,
@@ -244,18 +96,12 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             setAllFeatureRecords,
             emRecords,
             setEmRecords,
-            apProfileRecords,
-            setApProfileRecords,
             alertProfileRecords,
             setAlertProfileRecords,
             alertRecords,
             setAlertRecords,
             refTableRecords,
             setRefTableRecords,
-            apiProfileRecords,
-            setApiProfileRecords,
-            floorLayoutRecord,
-            setFloorLayoutRecord,
             isInternetAvailable,
             setIsInternetAvailable,
             userProfileRecord,
@@ -264,50 +110,27 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             setAuthSession,
             userInfoAndSubscription,
             setUserInfoAndSubscription,
-            impUserProfileRecord,
-            setImpUserProfileRecord,
-            siteProperties,
-            setSiteProperties,
             deploymentVars,
-            dciRecords,
-            autoExecuteWorkorder,
-            setAutoExecuteWorkorder,
+            setDeploymentVars,
             selectedFeatureForHelp,
             setSelectedFeatureForHelp,
-            setDciRecords,
-            setDeploymentVars,
-            fetchFeatures,
-            fetchApRecords,
-            fetchApProfileRecords,
             fetchAlertProfileRecords,
-            checkIsInternetAvailable
         }),
         [
             apRecords,
             featureRecords,
             emRecords,
-            apProfileRecords,
             alertProfileRecords,
             alertRecords,
             refTableRecords,
-            apiProfileRecords,
             isInternetAvailable,
             deploymentVars,
-            siteProperties,
             allFeatureRecords,
-            dciRecords,
-            autoExecuteWorkorder,
-            floorLayoutRecord,
             selectedFeatureForHelp,
             userProfileRecord,
-            impUserProfileRecord,
             authSession,
             userInfoAndSubscription,
-            fetchFeatures,
-            fetchApRecords,
-            fetchApProfileRecords,
             fetchAlertProfileRecords,
-            checkIsInternetAvailable
         ]
     );
 

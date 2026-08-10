@@ -263,7 +263,6 @@ const SettingsLibForm = ({ id, container, refDataObject, uniqueName, allowShowSe
              * Supports:
              * Address1
              * ContactDetails_Address1
-             * Site_Address1
              * AnyPrefix_Address1
              */
             const getProfileValue = (fieldName: string): string => {

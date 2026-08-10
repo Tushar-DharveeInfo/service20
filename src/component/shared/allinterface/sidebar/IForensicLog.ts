@@ -42,8 +42,5 @@ interface IForensicLogFilterFormData extends Record<string, unknown> {
     ANDOR?: string;
     Keywords?: string;
     FilterBy?: string;
-    SiteName?: string;
-    TenantName?: string;
-    CompanyName?: string;
 }
 export type { IForensicLog, IForensicLogPayload, IDateRangeField, IForensicLogColumn, IForensicLogTableData, IForensicLogFilterFormData }

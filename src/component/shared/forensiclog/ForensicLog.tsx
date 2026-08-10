@@ -14,7 +14,7 @@ import {
     TGridRow,
     TGridRowData,
 } from '../allinterface/tablegrid/IBasicGrid';
-import { IDateRangeField, IForensicLog, IForensicLogColumn, IForensicLogFilterFormData, IForensicLogPayload, IForensicLogTableData } from '../allinterface/sidebar/IForensicLog';
+import { IForensicLog, IForensicLogColumn, IForensicLogPayload, IForensicLogTableData } from '../allinterface/sidebar/IForensicLog';
 import { FnGetSessionStorageItem } from '../allcommon/basic/FnGetSessionStorageItem';
 import { FnHandleAPIResponse } from '../allcommon/basic/FnHandleAPIResponse';
 import { useSessionContext } from '../context/hooks/SessionHooks';
@@ -32,15 +32,6 @@ import { BasicGrid } from '../tablegrid/BasicGrid';
 
 const padDatePart = (value: number) => value.toString().padStart(2, '0');
 
-/*Format year/month/day using app date format without UTC timezone shift. */
-const formatLocalCalendarDate = (year: number, month: number, day: number): string => {
-    const format = FnGetAppDateFormat();
-    if (format === 'MM/dd/yyyy') {
-        return `${padDatePart(month)}/${padDatePart(day)}/${year}`;
-    }
-    return `${padDatePart(day)}/${padDatePart(month)}/${year}`;
-};
-
 /*Format local datetime for forensic log API (e.g. 2026-07-02 13:45:30). */
 const formatForensicLogDateTime = (dateValue: Date): string => {
     const year = dateValue.getFullYear();
@@ -52,66 +43,6 @@ const formatForensicLogDateTime = (dateValue: Date): string => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
-/*API expects StartDate / EndDate as MM/DD/YYYY (e.g. 06/10/2026) — same calendar day user picked. */
-const formatForensicLogDate = (dateValue: unknown): string => {
-    if (dateValue == null || dateValue === '') {
-        return '';
-    }
-
-    if (dateValue instanceof Date && !isNaN(dateValue.getTime())) {
-        return formatLocalCalendarDate(
-            dateValue.getFullYear(),
-            dateValue.getMonth() + 1,
-            dateValue.getDate()
-        );
-    }
-
-    const dateText = String(dateValue).trim();
-    if (!dateText) {
-        return '';
-    }
-
-    // Date picker value (e.g. 04/05/2026) — do not run through UTC conversion.
-    const slashParts = dateText.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-    if (slashParts) {
-        const first = Number(slashParts[1]);
-        const second = Number(slashParts[2]);
-        const year = Number(slashParts[3]);
-        const format = FnGetAppDateFormat();
-        if (format === 'MM/dd/yyyy') {
-            return formatLocalCalendarDate(year, first, second);
-        }
-        return formatLocalCalendarDate(year, second, first);
-    }
-
-    // ISO date only (YYYY-MM-DD) — use date parts as-is, not UTC midnight.
-    const isoParts = dateText.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (isoParts) {
-        return formatLocalCalendarDate(
-            Number(isoParts[1]),
-            Number(isoParts[2]),
-            Number(isoParts[3])
-        );
-    }
-
-    return FnConvertDateToUtcOrUtcToDate(dateText, false, false);
-};
-
-const FORENSIC_LOG_DATETIME_PATTERN = /^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})$/;
-
-const isForensicLogDateTime = (dateValue: unknown): boolean =>
-    FORENSIC_LOG_DATETIME_PATTERN.test(String(dateValue ?? '').trim());
-
-/*API payload: keep datetime when present; otherwise use calendar date from picker/profile. */
-const formatForensicLogDateForPayload = (dateValue: unknown): string => {
-    if (dateValue == null || dateValue === '') {
-        return '';
-    }
-    if (isForensicLogDateTime(dateValue)) {
-        return String(dateValue).trim();
-    }
-    return formatForensicLogDate(dateValue);
-};
 
 /*Initial API payload: last 24 hours with time (e.g. 2026-07-01 13:45:30). */
 const getInitialPayloadStartDate = (): string => {
@@ -126,9 +57,6 @@ const getInitialPayloadEndDate = (): string => formatForensicLogDateTime(new Dat
 const isRecord = (value: unknown): value is Record<string, unknown> =>
     value !== null && typeof value === 'object' && !Array.isArray(value);
 
-/*dateRange control stores { startDate, endDate } instead of flat StartDate / EndDate. */
-const isDateRangeField = (value: unknown): value is IDateRangeField =>
-    isRecord(value) && ('startDate' in value || 'endDate' in value);
 
 const isForensicLogColumn = (value: unknown): value is IForensicLogColumn =>
     isRecord(value) &&
@@ -163,94 +91,11 @@ const getDisplayControlFromColDef = (colDef: EditableCallbackParams['colDef']): 
     return typeof displayControl === 'string' ? displayControl : undefined;
 };
 
-/*Read dates from dateRange control or legacy StartDate / EndDate fields. */
-const extractFilterDates = (filters: Record<string, unknown>) => {
-    const dateRange = filters.dateRange;
-    if (isDateRangeField(dateRange)) {
-        return { start: dateRange.startDate, end: dateRange.endDate };
-    }
 
-    for (const key of Object.keys(filters)) {
-        if (!key.toLowerCase().includes("daterange")) {
-            continue;
-        }
-        const value = filters[key];
-        if (isDateRangeField(value)) {
-            return { start: value.startDate, end: value.endDate };
-        }
-    }
-
-    return { start: filters.StartDate, end: filters.EndDate };
-};
-
-/*API uses StartDate / EndDate only — not dateRange objects. */
-const removeDateRangeFields = (payload: Record<string, unknown>) => {
-    delete payload.dateRange;
-    Object.keys(payload).forEach((key) => {
-        if (key.toLowerCase().includes("daterange")) {
-            delete payload[key];
-        }
-    });
-};
-
-/*API expects lowercase "and" / "or". */
-const normalizeForensicLogAndOr = (value: unknown): string => {
-    const normalized = String(value ?? 'and').trim().toLowerCase();
-    return normalized === 'or' ? 'or' : 'and';
-};
-
-/*API uses StartDate / EndDate only — not dateRange objects. */
-const normalizeForensicLogNameFilter = (value: unknown): string => {
-    const normalized = String(value ?? '').trim();
-    if (!normalized || normalized.toLowerCase() === 'all') {
-        return '';
-    }
-    return normalized;
-};
 
 const buildForensicLogFilterPayload = (filters: Record<string, unknown>, removeUserName?: boolean): Record<string, unknown> => {
 
     const payload: Record<string, unknown> = { ...filters };
-    payload.ANDOR = normalizeForensicLogAndOr(payload.ANDOR);
-
-    delete payload.CompanyName;
-
-    payload.SiteName = normalizeForensicLogNameFilter(payload.SiteName);
-    payload.TenantName = normalizeForensicLogNameFilter(payload.TenantName);
-
-    const normalizedUserName = normalizeForensicLogNameFilter(payload.UserName);
-    payload.Users = normalizedUserName
-        ? normalizedUserName.toLowerCase()
-        : '';
-    if (removeUserName) {
-        delete payload.UserName
-    }
-    if (!payload.TenantName) {
-        payload.TenantName = '';
-    }
-
-    const { start, end } = extractFilterDates(filters);
-    removeDateRangeFields(payload);
-
-    // FilterBy "Node": pass empty StartDate / EndDate.
-    if (String(payload.FilterBy ?? '').toLowerCase() === 'node') {
-        payload.StartDate = '';
-        payload.EndDate = '';
-        return payload;
-    }
-
-    const startDate = formatForensicLogDateForPayload(start);
-    const endDate = formatForensicLogDateForPayload(end);
-    if (startDate) {
-        payload.StartDate = startDate;
-    } else {
-        delete payload.StartDate;
-    }
-    if (endDate) {
-        payload.EndDate = endDate;
-    } else {
-        delete payload.EndDate;
-    }
 
     return payload;
 };
@@ -412,11 +257,9 @@ const ForensicLog = (props: IForensicLog) => {
             const defaultStartDate = getInitialPayloadStartDate();
             const defaultEndDate = getInitialPayloadEndDate();
             const isNodeFilter = String(props.loginType ?? '').toLowerCase() === 'node';
-            let userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
-            let defaultSite: ISession[] | null = FnGetSessionVariableFromStorage("Location", "SiteName", sessionData.SessionList)
-            let TenantNameObj: ISession[] | null = FnGetSessionVariableFromStorage("Filter", "TenantName", sessionData.SessionList)
-            // SAMPLE DATA: always load forensic log sample once session defaults are available (TenantName may be null).
-            if (userDetails && userDetails?.length > 0 && defaultSite && defaultSite?.length > 0) {
+            const userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
+            // SAMPLE DATA: load forensic log once session user is available.
+            if (userDetails && userDetails.length > 0) {
                 initialApiLoadedRef.current = true;
                 apiCallForGridData({
                     sessionId: FnGetSessionStorageItem("user_session") ?? "",
@@ -425,8 +268,6 @@ const ForensicLog = (props: IForensicLog) => {
                         ANDOR: "and",
                         Keywords: "",
                         FilterBy: props.loginType,
-                        SiteName: defaultSite[0].SessionValue ?? "",
-                        TenantName: TenantNameObj?.[0]?.SessionValue ?? "",
                         StartDate: isNodeFilter ? '' : defaultStartDate,
                         EndDate: isNodeFilter ? '' : defaultEndDate,
                     }),
@@ -568,21 +409,14 @@ const ForensicLog = (props: IForensicLog) => {
     }
 
     const handleDownloadData = async () => {
-        let userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
-        let defaultSite: ISession[] | null = FnGetSessionVariableFromStorage("Location", "SiteName", sessionData.SessionList)
-        let TenantNameObj: ISession[] | null = FnGetSessionVariableFromStorage("Filter", "TenantName", sessionData.SessionList)
-        const profileFilters: IForensicLogFilterFormData = {};
-        // Download requires session defaults when profile fields are missing.
-        if (userDetails && userDetails?.length > 0 && defaultSite && defaultSite?.length > 0 && TenantNameObj && TenantNameObj?.length > 0) {
+        const userDetails: ISession[] | null = FnGetSessionVariableFromStorage("RequestedBy", 'LoginShortName', sessionData.SessionList)
+        if (userDetails && userDetails.length > 0) {
             apiCallForGridData({
                 filterJsonString: JSON.stringify({
-                    ...profileFilters,
                     Users: userDetails[0].SessionValue,
                     ANDOR: "and",
                     Keywords: "",
                     FilterBy: props.loginType,
-                    SiteName: defaultSite[0].SessionValue,
-                    TenantName: TenantNameObj[0].SessionValue,
                 }),
                 startPage: 1,
                 recordCount: totalRecords,

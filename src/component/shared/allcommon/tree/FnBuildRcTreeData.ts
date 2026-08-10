@@ -1,7 +1,7 @@
 
 import { ITreeNode } from "../../allinterface/tree/ITreeControl";
 // This function convert flat data to Hierarchy data 
-function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, featureId: string | null = null, selectedDC: "AllSites" | "TenantsBySite" | "SitesByTenant" = "AllSites", instanceName?: string, disableSort?: boolean): ITreeNode[] {
+function FnBuildRcTreeData(data: any[], currentNodeId: string | null = null, featureId: string | null = null, instanceName?: string, disableSort?: boolean): ITreeNode[] {
     try {
         const nodeMap: { [key: string]: ITreeNode } = {};
 

@@ -69,7 +69,6 @@ interface ITreeForHierarchicalDataContainer {
     }; // default strictly checked keys to set if already tree data generated
     autoFocus?: boolean;
     defaultSelectedNodeInfo?: ISelectedNodeInfo;// selected Node info if initially selection needed
-    isSiteByTenant?: boolean;// This flag will change the hierarchy of 
     isFloorTree?: boolean;// indicates that whether tree is for Floor Pane or not 
     allowAPICallOnExpand?: boolean; // Whether API calls are allowed on node expansion
     allowAdd?: boolean; // Whether adding nodes is allowed

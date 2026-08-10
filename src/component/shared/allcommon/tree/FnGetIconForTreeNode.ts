@@ -2,7 +2,7 @@
 import { FnResolveIcons, Setting24x24 } from "../menu/FnResolveIcons";
 
 const treeAliases = {
-    helptip24x24: "sites24x24",
+    helptip24x24: "N24x24",
     entityvstable24x24: "entityvstable24x24"
 };
 

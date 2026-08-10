@@ -1,18 +1,8 @@
-import { ISession } from "./ISession";
+
 import { IStatusBar } from "./IStatusBar";
 import { AuthSession } from "@n20a/libauth";
 
-interface ISiteProperties {
-    GroupName: string;
-    _Site: string;
-    Desc250: string;
-    SiteType: string;
-    Managed: boolean;
-    Locked: boolean;
-    EntID: string;
-    RecID: string;
-    [key: string]: string | any;
-}
+
 interface IFeatureItem {
     PopupQa?: boolean;
     MenuID: string;
@@ -20,7 +10,7 @@ interface IFeatureItem {
     Label: string;
     NodeType: string;
     Tooltip: string;
-    FeatureTag: string;  // New property to categorize features
+    FeatureTag: string;
     SortOrder: number;
     DefaultQA: boolean;
     FilterForm: string;
@@ -66,6 +56,7 @@ interface IApItem {
     LastUpdated: string;
     EntityName: string;
 }
+
 interface IAlertProfileItem {
     GroupName: string;
     _AlertProfile: string;
@@ -86,39 +77,21 @@ interface IAlertProfileItem {
     EntityName: string;
 }
 
-interface IApProfileItem {
-    GroupName: string;
-    SubGroupName: string;
-    _AP: string;
-    InstanceName: string;
-    InstanceDesc: string;
-    ProfileType: string;
-    Multiple: string;
-    ProfileString: string;
-    EntID: string;
-    RecID: string;
-    LastUpdated: string;
-    EntityName: string;
-    NodeType: string;
-    Value?: string | any;
-
-}
-
 interface IFeatureForHelp {
     featureID: string;
     featureName: string;
 }
 
 interface IRefItem {
-    GroupName: string;         // Name of the group to which the reference belongs
-    SubGroupName: string;      // Name of the subgroup
-    Name: string;              // Name of the reference item
-    RefValue: string;          // Reference value
-    SortOrder: number;         // Sorting order for the item
-    IsNZ: boolean;             // Indicates if this is a NetZoom-related reference
-    EntID: string;             // Entity ID (unique identifier)
-    RecID: string;             // Record ID (unique identifier)
-    LastUpdated: string;       // Timestamp of the last update
+    GroupName: string;
+    SubGroupName: string;
+    Name: string;
+    RefValue: string;
+    SortOrder: number;
+    IsNZ: boolean;
+    EntID: string;
+    RecID: string;
+    LastUpdated: string;
 }
 
 interface IEmItem {
@@ -130,7 +103,7 @@ interface IEmItem {
     DisplayControl: string;
     ExcludeDataGridField?: boolean | number | string;
     NullNotAllowed?: boolean;
-    [key: string]: unknown; // Allow additional properties
+    [key: string]: unknown;
 }
 
 interface IUserProfileRecord {
@@ -140,7 +113,6 @@ interface IUserProfileRecord {
     Shortname: string;
     EntID: string;
     RecID: string;
-
     Designation?: string;
     TimeZone?: string;
     DisplayTheme?: string;
@@ -206,14 +178,6 @@ interface IMainApp {
         React.SetStateAction<IUserInfoAndSubscription | undefined>
     >;
 
-    impUserProfileRecord?: IUserProfileRecord;
-    setImpUserProfileRecord: React.Dispatch<React.SetStateAction<IUserProfileRecord | undefined>>;
-
-    apProfileRecords: IApProfileItem[];
-    setApProfileRecords: React.Dispatch<
-        React.SetStateAction<IApProfileItem[]>
-    >;
-
     alertProfileRecords: IAlertProfileItem[];
     setAlertProfileRecords: React.Dispatch<
         React.SetStateAction<IAlertProfileItem[]>
@@ -229,67 +193,30 @@ interface IMainApp {
         React.SetStateAction<IRefItem[]>
     >;
 
-    apiProfileRecords: Record<string, any>[];
-    setApiProfileRecords: React.Dispatch<
-        React.SetStateAction<Record<string, any>[]>
-    >;
-
     deploymentVars: Record<string, any>[];
     setDeploymentVars: React.Dispatch<
         React.SetStateAction<Record<string, any>[]>
     >;
 
-    floorLayoutRecord: Record<string, any>;
-    setFloorLayoutRecord: React.Dispatch<
-        React.SetStateAction<Record<string, any>>
-    >;
-
     isInternetAvailable: boolean;
     setIsInternetAvailable: React.Dispatch<
         React.SetStateAction<boolean>
-    >
-    checkIsInternetAvailable: () => Promise<boolean>;
-
-    siteProperties?: ISiteProperties;
-    setSiteProperties: React.Dispatch<
-        React.SetStateAction<ISiteProperties | undefined>
-    >
-    dciRecords?: Record<string, any>[];
-    setDciRecords: React.Dispatch<
-        React.SetStateAction<Record<string, any>[] | undefined>
-    >
-    autoExecuteWorkorder?: boolean;
-    setAutoExecuteWorkorder: React.Dispatch<
-        React.SetStateAction<boolean>
-    >
+    >;
 
     selectedFeatureForHelp?: IFeatureForHelp;
     setSelectedFeatureForHelp: React.Dispatch<
         React.SetStateAction<IFeatureForHelp | undefined>
-    >
+    >;
 
-
-    fetchFeatures: (
-        statusBarContext: IStatusBar,
-        sessionVars: ISession[]
-    ) => void;
-
-    fetchApRecords: (statusBarContext: IStatusBar
-    ) => Promise<void>;
-    fetchApProfileRecords: (statusBarContext: IStatusBar
-    ) => void;
-    fetchAlertProfileRecords: (statusBarContext: IStatusBar
-    ) => void;
+    fetchAlertProfileRecords: (statusBarContext: IStatusBar) => void;
 }
 
 
 export type {
     IMainApp,
-    ISiteProperties,
     IApItem,
     IFeatureItem,
     IFeatureForHelp,
-    IApProfileItem,
     IAlertProfileItem,
     IRefItem,
     IEmItem,

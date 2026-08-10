@@ -20,8 +20,6 @@ const sampleSessionVariables: ISession[] = [
     { VariableContext: "RequestedBy", VariableName: "LoginShortName", SessionValue: "Admin" },
     { VariableContext: "RequestedBy", VariableName: "LoginUserBasicRoleName", SessionValue: "Administrator" },
 
-    { VariableContext: "Location", VariableName: "SiteID", SessionValue: "SAMPLE-SITE-0001" },
-    { VariableContext: "Location", VariableName: "SiteName", SessionValue: "" },
     { VariableContext: "Location", VariableName: "RoomID", SessionValue: "SAMPLE-ROOM-0001" },
     { VariableContext: "Location", VariableName: "RoomName", SessionValue: "sample R 1" },
     { VariableContext: "Location", VariableName: "FloorID", SessionValue: "SAMPLE-FLOOR-0001" },

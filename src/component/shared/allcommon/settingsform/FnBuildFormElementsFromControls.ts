@@ -387,8 +387,8 @@ const FnBuildFormElementsFromControls = (
 
                         if (col.Name === "StartDate") {
 
-                            const startValue = selectedProfile?.StartDate ? FnFormatDateWithAppFormat(selectedProfile?.StartDate, false, measurementUnit) : undefined;
-                            const endValue = selectedProfile?.EndDate ? FnFormatDateWithAppFormat(selectedProfile?.EndDate, false, measurementUnit) : undefined;
+                            const startValue = selectedProfile?.StartDate ? FnFormatDateWithAppFormat(selectedProfile?.StartDate, false) : undefined;
+                            const endValue = selectedProfile?.EndDate ? FnFormatDateWithAppFormat(selectedProfile?.EndDate, false) : undefined;
 
                             isDateRangeCreated = true;
 

@@ -23,8 +23,6 @@ interface ITreeNode {
     GroupName?: string;
     IsAuthorized?: boolean;
     IsPatchPort?: boolean;
-    DCIFromSiteNode?: Record<string, string | any>;
-    DCIToSiteNode?: Record<string, string | any>;
     className?: string;
     PortStatus?: string | null;
     NodeType?: string;

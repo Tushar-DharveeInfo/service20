@@ -37,18 +37,6 @@
                     "AvgLength": 32
                 },
                 {
-                    "PName": "SiteName",
-                    "PropertyLabel": "Site Name",
-                    "Description": "Site name",
-                    "AvgLength": 32
-                },
-                {
-                    "PName": "TenantName",
-                    "PropertyLabel": "Tenant",
-                    "Description": "",
-                    "AvgLength": 32
-                },
-                {
                     "PName": "NodeType",
                     "PropertyLabel": "NodeType",
                     "Description": "NodeType",
@@ -402,7 +390,7 @@
                     "LastUpdated": "2026-07-27T14:02:25.883",
                     "LogType": "Log",
                     "_ForensicLog": "Log",
-                    "LogString": "Update Site Statistics successful",
+                    "LogString": "Update  Statistics successful",
                     "UserName": "Admin",
                     "TenantName": null,
                     "NodeType": "ForensicLogNode",

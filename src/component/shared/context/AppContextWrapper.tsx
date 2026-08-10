@@ -1,8 +1,5 @@
 import { IAppContextWrapper } from "./allinterface/IAppContextWrapper";
-import { ApProfileProvider } from "./contextandprovider/ApProfile";
-import { AppqaSettingsProvider } from "./contextandprovider/AppqaSettingsVar";
 import { CommonVariableProvider } from "./contextandprovider/CommonVariable";
-import { ExplorerTreeProvider } from "./contextandprovider/ExplorerTree";
 import { HelpTipProvider } from "./contextandprovider/Helptip";
 import { MainAppProvider } from "./contextandprovider/MainApp";
 import { SessionProvider } from "./contextandprovider/Session";
@@ -12,10 +9,7 @@ import { StatusBarProvider } from "./contextandprovider/StatusBar";
 const AppContextWrapper = ({ children }: IAppContextWrapper) => {
     const providers = [
         MainAppProvider,
-        ExplorerTreeProvider,
         SessionProvider,
-        ApProfileProvider,
-        AppqaSettingsProvider,
         HelpTipProvider,
         StatusBarProvider,
         CommonVariableProvider,

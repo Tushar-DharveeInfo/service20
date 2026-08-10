@@ -14,7 +14,6 @@ import {
     R24x24,
     ThreeD24x24,
     AssetAssigment24x24,
-    Sites24x24,
     EntityvsTable24x24,
 
     // feature.json Labels that have matching libicon exports
@@ -105,7 +104,6 @@ const sharedIconMap: IconMap = {
     R24x24,
     ThreeD24x24,
     AssetAssigment24x24,
-    Sites24x24,
     EntityvsTable24x24,
 };
 
