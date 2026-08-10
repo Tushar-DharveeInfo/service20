@@ -6,19 +6,18 @@ import { DeviceModel } from '../../../shared/devicemodel/DeviceModel';
 import { ITreeNode } from '../../../shared/allinterface/tree/ITreeControl';
 import { Helptip } from '../../../shared/Help';
 import { useHelpTipContext } from '../../../shared/context/hooks/HelptipHooks';
-import {RequestShapeFormContainer} from '../requestshapeformcontainer/RequestShapeFormContainer';
-
+import { RequestShapeFormContainer } from '../requestshapeformcontainer/RequestShapeFormContainer';
+import './RequestVisioStencils.css';
 export interface IRequestShapeFormData {
-  searchText: string;
-  AndOr: "AND" | "OR";
-  Mfg: string;
-  EqType: string;
-  ProdNo: string;
-  MoreInfo: string;
+    searchText: string;
+    AndOr: "AND" | "OR";
+    Mfg: string;
+    EqType: string;
+    ProdNo: string;
+    MoreInfo: string;
 }
 
-export interface IRequestShape 
-{
+export interface IRequestShape {
     formData: IRequestShapeFormData;
     uniqueName?: string;
     featureId?: string;
@@ -32,9 +31,9 @@ export interface IRequestShape
 const DEFAULT_HELP_TIP =
     'Use the **Device Model** pane to browse and search the NetZoom device library for Visio stencil shapes. Request and Download panes will support stencil request workflows.';
 
-/** Minimal explorer node so DeviceModel SearchTab can mount outside an inventory tree. */
+/** Minimal explorer node so DeviceModel SearchTab can mount outside an tree. */
 const EMPTY_SELECTED_NODE: ITreeNode = {
-    key: 'request-device-models-root', 
+    key: 'request-device-models-root',
     NodeEntityname: null,
     NodeEntID: null,
     stepNo: 0,
@@ -50,7 +49,7 @@ const EMPTY_SELECTED_NODE: ITreeNode = {
     HasChildren: 0,
 };
 
-const RequestDeviceModels = (props: IRequestShape ) => {
+const RequestDeviceModels = (props: IRequestShape) => {
 
     const uniqueName = props.uniqueName ?? 'request-visio-stencils';
     const featureId = props.featureId ?? ServicesEnums.RequestDeviceModels;
@@ -92,19 +91,19 @@ const RequestDeviceModels = (props: IRequestShape ) => {
                             selectedNode={EMPTY_SELECTED_NODE}
                             treeData={null}
                             ShowOnlyLibraryRadioB={true}
-                            addToDownloadCart={(mfg, prodno, EQID) => {alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`);}}
+                            addToDownloadCart={(mfg, prodno, EQID) => { alert(`mfg: ${mfg}\nprodno: ${prodno}\nEQID: ${EQID}`); }}
                             saveSearchCriteria={props.onSearchClick}
                         />
                     </div>
                 </Splitter>
             </div>
             <div className="request-button-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '24px', marginTop: 'auto', gap: '6px' }}>
-              <label className="request-link-label" style={{ lineHeight: '24px', margin: 0 }}>
-                Can't Find the Device/Stencil you are looking for?
-              </label>
-              <button className="request-link-btn" onClick={onRequestClick} style={{ height: '24px', lineHeight: '1', padding: '0 8px', backgroundColor: '#ffff99', color: '#333' }}>
-                Request it here
-              </button>
+                <label className="request-link-label" style={{ lineHeight: '24px', margin: 0 }}>
+                    Can't Find the Device/Stencil you are looking for?
+                </label>
+                <button className="request-link-btn" onClick={onRequestClick} style={{ height: '24px', lineHeight: '1', padding: '0 8px', backgroundColor: '#ffff99', color: '#333' }}>
+                    Request it here
+                </button>
             </div>
         </div>
     );
@@ -119,25 +118,25 @@ const RequestDeviceModelsContainer = (props: IRequestShape) => {
     const [renderPage, setRenderPage] = useState<RenderPage>('searchPage');
     const [requestformData, setRequestFormData] = useState<IRequestShape>(props);
 
-  const handleSearchClick = (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => {
-    setRequestFormData(prev => ({
-        ...prev,
-        formData: {
-            searchText: searchText ?? '',
-            AndOr: AndOr ?? "AND",
-            Mfg: mfg ?? '',
-            EqType: eqtype ?? '',
-            ProdNo: pno ?? '',
-            MoreInfo: ''
-        }
-    }));
-  }
+    const handleSearchClick = (searchText?: string, AndOr?: "AND" | "OR", mfg?: string, eqtype?: string, pno?: string) => {
+        setRequestFormData(prev => ({
+            ...prev,
+            formData: {
+                searchText: searchText ?? '',
+                AndOr: AndOr ?? "AND",
+                Mfg: mfg ?? '',
+                EqType: eqtype ?? '',
+                ProdNo: pno ?? '',
+                MoreInfo: ''
+            }
+        }));
+    }
 
-  const handleRequestClick = () => {
-    //also fetch the form data from the RequestDeviceModels component 
+    const handleRequestClick = () => {
+        //also fetch the form data from the RequestDeviceModels component 
 
-    setRenderPage('requestPage');
-  };
+        setRenderPage('requestPage');
+    };
 
     if (renderPage === 'searchPage') {
         return (

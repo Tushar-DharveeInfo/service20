@@ -17,18 +17,16 @@ const TreeNodeTitle = (treeNode: ITreeNode, treeDataProps: IFeatureTree, feature
     const titleContent = `${treeNode.Name} ${treeNode.Desc250 ? ` (${treeNode.Desc250.trim()})` : ""}` || "";
 
     const renderNodeName = () => {
-        const nodeName = treeNode.TableLabel ? (treeNode.Type === "Table" ? `${treeNode.TableLabel} (${treeNode.Name})` : treeNode.TableLabel) : treeNode.Name;
-
         return (
             <Fragment key={`node-title-content-${treeNode.key}`}>
-                {treeDataProps.instanceName === "Import_export_tree" ? nodeName : treeNode.TableLabel || titleContent}
+                {treeNode.TableLabel || titleContent}
                 {treeNode.RecordCount >= 0 ? ` (${treeNode.RecordCount})` : ""}
                 {treeNode.HwEntityName ? ` (${treeNode.HwEntityName})` : ""}
             </Fragment>
         );
     };
 
-    const container = treeNode.HwEntityName || treeNode.NodeType?.toLowerCase() === "hwentity" || treeDataProps.instanceName === "model_by_type_treeview" || treeDataProps.instanceName === "model_by_type_treeview_cable" ? `entity_mfg_eqtype_tree${treeDataProps.instanceName === "model_by_type_treeview_cable" ? "_cable" : ""}` : (treeDataProps.instanceName === "datacenter_hierarchy_treeview" || treeDataProps.instanceName === "inventory_hierarchy_treeview" || treeDataProps.instanceName === "dci_left_tree" || treeDataProps.instanceName === "edit_report_layout" || treeDataProps.instanceName === "edit_floor_layout") ? treeDataProps.instanceName : "explorer_tree"
+    const container = treeDataProps.instanceName ?? "explorer_tree"
 
     const handleDownloadClick = (event: MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();

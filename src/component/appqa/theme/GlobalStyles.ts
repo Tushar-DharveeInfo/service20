@@ -1,6 +1,6 @@
 
 import { createGlobalStyle } from "styled-components";
-import { FnHexToRGB } from "../shared/allcommon/basic/FnHexToRGB";
+import { FnHexToRGB } from "../../shared/allcommon/basic/FnHexToRGB";
 
 declare module 'styled-components' {
   export interface DefaultTheme {

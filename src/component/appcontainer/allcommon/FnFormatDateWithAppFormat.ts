@@ -1,5 +1,4 @@
 
-import { FnGetAppDateFormat } from "../../shared/allcommon/basic/FnGetAppDateFormat";
 
 const FnFormatDateWithAppFormat = (
   dateInput: string | Date,

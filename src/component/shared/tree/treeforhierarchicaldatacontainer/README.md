@@ -69,7 +69,7 @@ interface ITreeForHierarchicalDataContainer {
     disableDelete?: boolean; // To disable Delete
     allowMultiple?: boolean; // Whether multiple node selection is allowed
     className?: string; // Optional CSS class name for styling
-    treeDataFor?: string; // This is used for Device Model whether it is "0" forLibrary or "1" for Inventory 
+    treeDataFor?: string; // This is used for Device Model whether it is "0" forLibrary or "1" for 
     selectedNodeExplorer?: { event: 'select'; selected: boolean; node: ITreeNode; selectedNodes: ITreeNode[]; nativeEvent: MouseEvent; }; // Explorer pane node if needed
     handleAIClick?: (event: any, actionCode?: string) => void; // Callback for AI button click
     handleNodeCheck?: (checked: Key[] | { checked: Key[]; halfChecked: Key[]; }, info: CheckInfo<ITreeNode>) => void;

@@ -4,12 +4,12 @@ import { ThemeProvider, DefaultTheme } from 'styled-components';
 import { ModuleRegistry as GridModuleRegistry, AllCommunityModule as GridAllCommunityModule } from 'ag-grid-community';
 
 import './allcss/NzApp.css';
-import themes from './theme/theme-provider.json';
+import themes from '../component/appqa/theme/theme-provider.json';
 import { useSessionContext } from './shared/context/hooks/SessionHooks';
 import { useMainAppContext } from './shared/context/hooks/MainAppHooks';
 import { AppContextWrapper } from './shared/context/AppContextWrapper';
 import { NodeHeight, SubMenuHeight } from '../component/appcontainer/alldefaultprops/DefaultPropsAppContainer';
-import { GlobalStyles } from './theme/GlobalStyles';
+import { GlobalStyles } from '../component/appqa/theme/GlobalStyles';
 import { FnHandleAPIResponse } from './shared/allcommon/basic/FnHandleAPIResponse';
 import { INzApp } from './allinterface/INzApp';
 import { IDeploymentEnv, IDeploymentEnvResponse } from './shared/allinterface/IApiResponse';

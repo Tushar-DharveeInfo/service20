@@ -1038,7 +1038,7 @@
                     "LastUpdated": "2026-07-23T21:22:54.240",
                     "LogType": "Log",
                     "_ForensicLog": "Log",
-                    "LogString": "Inventory has been Discard successful",
+                    "LogString": "test has been Discard successful",
                     "UserName": "Admin",
                     "TenantName": null,
                     "NodeType": "ForensicLogNode",

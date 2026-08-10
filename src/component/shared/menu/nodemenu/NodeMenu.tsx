@@ -292,25 +292,25 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
                 if (item.NodeType === "") {
                     menu.push(item)
                 } else {
-                 
-                        if (item.NodeType) {
 
-                            let nodeTypeArray = item.NodeType.split(";");
-                            nodeTypeArray = nodeTypeArray.map((el) => {
-                                return el.trim();
-                            });
+                    if (item.NodeType) {
 
-                            if (selectedRow?.NodeType) {
+                        let nodeTypeArray = item.NodeType.split(";");
+                        nodeTypeArray = nodeTypeArray.map((el) => {
+                            return el.trim();
+                        });
 
-                                nodeTypeArray.forEach((element) => {
-                                    if (element?.toLowerCase() === selectedRow?.NodeType?.toLowerCase()) {
-                                        menu.push(item)
-                                    }
-                                })
-                            }
+                        if (selectedRow?.NodeType) {
+
+                            nodeTypeArray.forEach((element) => {
+                                if (element?.toLowerCase() === selectedRow?.NodeType?.toLowerCase()) {
+                                    menu.push(item)
+                                }
+                            })
                         }
-
                     }
+
+                }
 
             }
         });
@@ -367,34 +367,6 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
 
                     }
                 }
-            } else if (nodeMenuProps.container === "entity_mfg_eqtype_tree" || nodeMenuProps.container === "entity_mfg_eq_tree_cable") {
-                if (selectedNodeData && selectedNodeData.node && (selectedNodeData.node.treetype?.toLowerCase() === "product" || selectedNodeData.node.NodeType?.toLowerCase() === "devicetype" || selectedNodeData.node.NodeType?.toLowerCase() === "cabletype")) {
-                    setShowKebabIcon(true);
-                }
-                else {
-                    setShowKebabIcon(false);
-                }
-                handleClick(null)
-            } else if (nodeMenuProps.container === "dashboard_chart") {
-                setShowKebabIcon(true);
-                handleClick(null)
-            } else if (nodeMenuProps.container === "datacenter_hierarchy_treeview"
-                || nodeMenuProps.container === "inventory_hierarchy_treeview"
-                || nodeMenuProps.container === "dci_left_tree") {
-
-                if (nodeMenuProps.featureData && nodeMenuProps.selectedNode) {
-                    if (selectedNodeData && selectedNodeData.node) {
-                        const menuData = await getExplorerMenuDataRef.current(nodeMenuProps.featureId);
-                        if (menuData && menuData?.length > 0) {
-                            setShowKebabIcon(true);
-                        }
-                        else {
-                            setShowKebabIcon(false);
-                        }
-                    }
-                    handleClick(null)
-                }
-
             }
             else if (nodeMenuProps.container === "fqa_property_tab") {
 

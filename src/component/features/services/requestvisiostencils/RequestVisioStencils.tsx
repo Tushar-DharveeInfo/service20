@@ -26,7 +26,7 @@ interface IRequest {
 const DEFAULT_HELP_TIP =
     'Use the **Device Model** pane to browse and search the NetZoom device library for Visio stencil shapes. Request and Download panes will support stencil request workflows.';
 
-/** Minimal explorer node so DeviceModel SearchTab can mount outside an inventory tree. */
+/** Minimal explorer node so DeviceModel SearchTab can mount outside an tree. */
 const EMPTY_SELECTED_NODE: ITreeNode = {
     key: 'request-visio-stencils-root',
     NodeEntityname: null,

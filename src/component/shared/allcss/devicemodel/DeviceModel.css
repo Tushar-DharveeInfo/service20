@@ -30,9 +30,12 @@
     flex-direction: column;
 }
 
+.nz-request-visio-panes {
+    height: 100%;
+}
+
 .nz-node-download-cart-icon {
     position: absolute;
-    right: 5px;
 }
 
 .nz-result-pane-container {

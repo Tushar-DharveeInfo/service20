@@ -38,12 +38,12 @@ import {
     MyRequests24x24,
     Download24x24,
     DownloadVisioStencils24x24,
-    DownloadNetZoom24x24,
     FAQ24x24,
     Cart24x24,
     Orders24x24,
     Details24x24,
     Notes24x24,
+    DownloadNetZoom24x24,
 } from "@n20a/libicon";
 
 import type { ComponentType } from "react";

@@ -232,10 +232,10 @@ const PropertyTab = (props: IPropertyTab) => {
                 </div>
             ) : (
                 <Splitter tabIndex={-1} layout="vertical" className='nz-w-100 nz-h-100' >
-                    <SplitterPanel tabIndex={-1} className='nz-property-splitter-panel'>
+                    <SplitterPanel tabIndex={-1} className='nz-property-splitter-panel' minSize={30}>
                         {propertyGrids}
                     </SplitterPanel>
-                    <SplitterPanel tabIndex={-1}>
+                    <SplitterPanel tabIndex={-1} minSize={30}>
                         <div className='nz-device-view-container'>
                             {props.views?.length ? (
                                 <ViewContainer
