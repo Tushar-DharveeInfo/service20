@@ -28,8 +28,7 @@ import {
     Buy24x24,
     Purchase24x24,
     Eula24x24,
-    NetZoom24x24,
-    VisioStencils24x24,
+    Visio,
     Other24x24,
     Services24x24,
     RequestSupport24x24,
@@ -67,8 +66,12 @@ const featureIconMap: IconMap = {
     Buy24x24,
     Purchase24x24,
     Eula24x24,
-    NetZoom24x24,
-    VisioStencils24x24,
+    // Label lookups keep VisioStencils24x24 / NetZoom24x24 / NZIcon24x24 keys.
+    VisioStencils24x24: Visio,
+    Visio,
+    NetZoom24x24: N,
+    NZIcon24x24: N,
+    N,
     Other24x24,
     Services24x24,
     RequestSupport24x24,
@@ -93,6 +96,9 @@ const featureAliases: Record<string, string> = {
     MyActivities24x24: "MyActvities24x24",
     EULA24x24: "Eula24x24",
     Settings24x24: "Setting24x24",
+    VisioStencils24x24: "Visio",
+    NetZoom24x24: "N",
+    NZIcon24x24: "N",
 };
 
 /** Shared icons used by tree/submenu aliases and Settings. */
