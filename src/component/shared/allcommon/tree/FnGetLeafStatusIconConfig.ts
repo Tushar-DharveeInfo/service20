@@ -1,9 +1,5 @@
 import type { ComponentType } from "react";
-import {
-    Accepted_24x24,
-    Received_24x24,
-    Released_24x24,
-} from "../../icons/TicketStatusIcons";
+import { Accept24x24, Download24x24, Upload24x24 } from "@n20a/libicon";
 
 type ILeafStatusIconConfig = {
     Icon: ComponentType<{ size?: number | string; fill?: string; strokeWidth?: number }>;
@@ -11,9 +7,9 @@ type ILeafStatusIconConfig = {
 };
 
 const LEAF_STATUS_ICON_MAP: Record<string, ILeafStatusIconConfig> = {
-    Released: { Icon: Released_24x24, tooltip: "Released" },
-    Accepted: { Icon: Accepted_24x24, tooltip: "Accepted" },
-    Received: { Icon: Received_24x24, tooltip: "Received" },
+    Released: { Icon: Upload24x24, tooltip: "Released" },
+    Accepted: { Icon: Accept24x24, tooltip: "Accepted" },
+    Received: { Icon: Download24x24, tooltip: "Received" },
 };
 
 const FnGetLeafStatus = (treeNode: {
