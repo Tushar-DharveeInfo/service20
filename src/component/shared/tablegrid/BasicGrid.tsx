@@ -17,7 +17,6 @@ import {
     IDataGridWidthPayload,
     IDescendingRowData,
     IExtendedBasicGridColDef,
-    IFilteredLogApiResponse,
     IGridRowWithSelection,
     IForensicLogPaginationPayload,
     TGridRow,
@@ -33,13 +32,11 @@ import { IActionImageForSubMenu } from '../allinterface/basic/IActionImageList';
 import { Copy24x24, Cross, Download24x24, Edit24x24 } from '@n20a/libicon';
 import { FnGetCssVariable } from '../../appcontainer/allcommon/FnGetCssVariable';
 import { FnGetSessionVariableFromStorage } from '../allcommon/basic/FnGetSessionVariableFromStorage';
-import { FnHandleAPIResponse } from '../allcommon/basic/FnHandleAPIResponse';
 
 // import { useSessionContext } from '../context/hooks/SessionHooks';
 import { sampleSessionContextFallback } from '../../../sampledata/sidebar/SampleContextFallbacks';
 import { OptionsFilter } from '../basic/optionsfilter/OptionsFilter';
 import { IOptionItem } from '../allinterface/basic/IOptionsFilter';
-import { FnParseJsonSafely } from '../../appcontainer/allcommon/FnParseJsonSafely';
 
 function isUtilityColumn(col: IBasicGridColDef): boolean {
     return !!(col.pinned || col.colId === 'index-cell');
@@ -1118,6 +1115,7 @@ const BasicGrid = (gridProps: IBasicGrid) => {
                                         handleSelect={handleFilterSelect}
                                         allowMultiSelect={true}
                                         allowHeader={true}
+                                        showSelectColumnIcon={true}
                                         options={columnToggleList}
                                     />}
                                 </div>

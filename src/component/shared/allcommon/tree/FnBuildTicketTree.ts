@@ -40,6 +40,7 @@ function createBaseNode(params: {
         isLeaf: params.isLeaf,
         checkable: false,
         ticketRecord: params.ticket,
+        Status: params.ticket?.Status,
     }
     return node
 }

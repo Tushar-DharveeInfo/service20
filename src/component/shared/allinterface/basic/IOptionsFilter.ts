@@ -11,6 +11,7 @@ interface IOptionsFilter {
     options: IOptionItem[];
     allowMultiSelect?: boolean;
     allowHeader?: boolean;
+    showSelectColumnIcon?: boolean;
     handleSelect: (value: any, updateData?: IOptionItem[]) => void;
 }
 export type { IOptionsFilter, IOptionItem }

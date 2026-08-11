@@ -1,7 +1,8 @@
 
 import { Fragment, MouseEvent } from 'react'
-import { Download24x24 } from '@n20a/libicon';
+import { Cart24x24 } from '@n20a/libicon';
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable';
+import { FnGetLeafStatusIconConfig } from '../../allcommon/tree/FnGetLeafStatusIconConfig';
 import { getfeaturesData } from '../../context/contextandprovider/MainApp';
 import { IActionImageForSubMenu } from '../../allinterface/basic/IActionImageList';
 import { IMenuItem } from '../../allinterface/menu/IMainMenu';
@@ -11,6 +12,7 @@ import { Image } from '../../basic/image/Image';
 import { NodeMenu } from '../../menu/nodemenu/NodeMenu';
 
 const TreeNodeTitle = (treeNode: ITreeNode, treeDataProps: IFeatureTree, featureId: string, showKebabIcon?: boolean, showCopyIcon?: boolean, selectedNodeExplorer?: ISelectedNodeInfo, handleKebabMenuSelect?: (selectedItem: IActionImageForSubMenu) => void) => {
+    console.log('treeNode TreeNodeTitle', treeNode)
     const featureData = getfeaturesData() as IMenuItem[] ?? null
     const clonedNode = { ...treeNode, title: "", icon: null, children: [] };
     const nodeTooltip = `${treeNode.Description ?? ""}${treeNode.WOID ? ` (${treeNode.WOID})` : ""}`
@@ -39,6 +41,10 @@ const TreeNodeTitle = (treeNode: ITreeNode, treeDataProps: IFeatureTree, feature
         const showDownloadIcon =
             treeNode.treetype?.toLowerCase() === "product" &&
             !!treeDataProps.onAddToDownloadCart;
+        const statusIconConfig = treeDataProps.showLeafStatusIcon
+            ? FnGetLeafStatusIconConfig(treeNode)
+            : null;
+        const StatusIcon = statusIconConfig?.Icon;
 
         return (
             <span className="nz-tree-node-icons-wrapper" key={`node-icons-${treeNode.key}`}>
@@ -60,6 +66,24 @@ const TreeNodeTitle = (treeNode: ITreeNode, treeDataProps: IFeatureTree, feature
                     </span>
                 )}
 
+                {StatusIcon && statusIconConfig && (
+                    <span
+                        key={`node-icons-status-${treeNode.key}`}
+                        className="nz-tree-node-nz-icon-div nz-tree-node-status-icon"
+                    >
+                        <Image
+                            source={<StatusIcon
+                                fill='none'
+                                strokeWidth={1}
+                                size={FnGetCssVariable('--image-size-1')} />}
+                            uniqueName={`${treeNode.key}-icon-status`}
+                            w={16}
+                            tooltip={statusIconConfig.tooltip}
+                            type='svg'
+                        />
+                    </span>
+                )}
+
                 {showDownloadIcon && (
                     <span
                         key={`node-icons-download-${treeNode.key}`}
@@ -77,7 +101,7 @@ const TreeNodeTitle = (treeNode: ITreeNode, treeDataProps: IFeatureTree, feature
                         }}
                     >
                         <Image
-                            source={<Download24x24
+                            source={<Cart24x24
                                 fill='none'
                                 strokeWidth={1}
                                 size={FnGetCssVariable('--image-size-1')} />}

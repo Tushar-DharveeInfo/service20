@@ -50,6 +50,8 @@ interface IFeatureTree {
     openAllNodes?: boolean;// Whether all nodes should be expanded by default
     allowCustomCheck?: boolean;//If true user need to handle handleCheck event 
     disableSelection?: boolean;// If true it will not allow selection
+    /** When true, leaf nodes with Status Released/Accepted/Received show a status icon. */
+    showLeafStatusIcon?: boolean;
     /** Called when product-node download icon is clicked (DeviceModel / Visio cart). */
     onAddToDownloadCart?: (node: ITreeNode) => void;
 }

@@ -32,6 +32,7 @@ interface IFeatureTree {
     openAllNodes?: boolean;// Whether all nodes should be expanded by default
     allowCustomCheck?: boolean;//If true user need to handle handleCheck event 
     disableSelection?: boolean;// Disable selection of node
+    showLeafStatusIcon?: boolean;
 }
 
 interface ITicketExplorerContainer {
@@ -61,6 +62,7 @@ function buildFeatureTreeProps(): IFeatureTree {
         openAllNodes: false,
         allowCustomCheck: false,
         disableSelection: false,
+        showLeafStatusIcon: true,
     }
 }
 

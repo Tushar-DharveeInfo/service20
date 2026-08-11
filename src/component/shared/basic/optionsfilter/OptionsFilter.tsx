@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Popover } from '@mui/material';
-import { Filter24x24 } from '@n20a/libicon';
+import { Filter24x24, SelectColumns24x24 } from '@n20a/libicon';
 import '../../allcss/basic/OptionsFilter.css';
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable';
 import { IOptionItem, IOptionsFilter } from '../../allinterface/basic/IOptionsFilter';
@@ -128,14 +128,17 @@ const OptionsFilter = (props: IOptionsFilter) => {
                     {...{
                         image: {
                             uniqueName: "Kebabimage",
-                            source: <Filter24x24
+                            source: props.showSelectColumnIcon ? <SelectColumns24x24
+                                size={FnGetCssVariable('--image-size-2')}
+                                fill='none'
+                                strokeWidth={1} /> : <Filter24x24
                                 size={FnGetCssVariable('--image-size-2')}
                                 fill='none'
                                 strokeWidth={1} />,
                             type: "svg",
                             w: "var(--image-size-2)",
                             h: "var(--image-size-2)",
-                            tooltip: "Filter"
+                            tooltip: props.showSelectColumnIcon ? "Select Columns" : "Filter"
                         },
                         handleMouse(event, actionCode) {
                         },

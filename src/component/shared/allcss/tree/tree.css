@@ -100,10 +100,8 @@ html {
     position: relative;
 }
 
-.rc-tree-treenode-switcher-open.ng-red-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before,
-.rc-tree-treenode-switcher-close.ng-red-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before {
+.rc-tree-treenode-switcher-open.ng-red-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before,
+.rc-tree-treenode-switcher-close.ng-red-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before {
     content: "";
     position: absolute;
     top: 0px;
@@ -113,10 +111,8 @@ html {
     background-color: transparent !important;
 }
 
-.rc-tree-treenode-switcher-open.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before,
-.rc-tree-treenode-switcher-close.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before {
+.rc-tree-treenode-switcher-open.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before,
+.rc-tree-treenode-switcher-close.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:before {
     content: "";
     position: absolute;
     top: 0px;
@@ -132,18 +128,14 @@ html {
     /* line-height: 12px; */
 }
 
-.rc-tree-treenode-switcher-open.ng-red-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after,
-.rc-tree-treenode-switcher-close.ng-red-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after {
+.rc-tree-treenode-switcher-open.ng-red-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after,
+.rc-tree-treenode-switcher-close.ng-red-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after {
     background-color: transparent;
     border-color: transparent !important;
 }
 
-.rc-tree-treenode-switcher-open.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after,
-.rc-tree-treenode-switcher-close.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate
-    .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after {
+.rc-tree-treenode-switcher-open.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after,
+.rc-tree-treenode-switcher-close.ng-remove-highlights-check.rc-tree-treenode-checkbox-indeterminate .rc-tree-checkbox.rc-tree-checkbox-indeterminate:after {
     background-color: transparent;
     border-color: transparent !important;
 }
@@ -254,7 +246,7 @@ html {
     flex-direction: row;
 }
 
-.rc-tree-title .nz-tree-node-title .nz-tree-node-content > span:first-child {
+.rc-tree-title .nz-tree-node-title .nz-tree-node-content>span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -401,7 +393,6 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 25px;
     margin-left: 5px;
     gap: 5px;
     width: auto;
@@ -417,7 +408,7 @@ html {
     align-items: center;
     justify-content: center;
     background-color: #ffff99;
-    border-radius: 2px;
+    border-radius: 50%;
     padding: 1px;
 }
 

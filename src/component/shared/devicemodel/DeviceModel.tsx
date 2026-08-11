@@ -740,7 +740,6 @@ const DeviceModel = (props: IDeviceModel) => {
 			const keywordsToSearch = (searchKeywords ?? searchText)?.trim() ?? ""
 			const andOrFlag: "AND" | "OR" = selectedRtmValue.toLowerCase() === 'or' ? "OR" : "AND"
 
-			alert(`Yadav-searchcriteria DeviceModel: ${JSON.stringify({ keywordsToSearch, andOrFlag, mfg, eqtype, prod })}`)
 			props.saveSearchCriteria(keywordsToSearch, andOrFlag, mfg, eqtype, prod)
 			if (keywordsToSearch) {
 				SetDisableFromWhileSearching(true)
