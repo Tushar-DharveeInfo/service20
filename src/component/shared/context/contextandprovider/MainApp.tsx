@@ -25,7 +25,6 @@ function MainAppProvider({ children }: IAppContextWrapper) {
     const [deploymentVars, setDeploymentVars] = useState<Record<string, any>[]>([]);
     const [allFeatureRecords, setAllFeatureRecords] = useState<IFeatureItem[]>([]);
     const [selectedFeatureForHelp, setSelectedFeatureForHelp] = useState<IFeatureForHelp>()
-    const [userProfileRecord, setUserProfileRecord] = useState<IUserProfileRecord>()
     const [authSession, setAuthSession] = useState<AuthSession>()
     const [userInfoAndSubscription, setUserInfoAndSubscription] = useState<IUserInfoAndSubscription>()
 
@@ -104,8 +103,6 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             setRefTableRecords,
             isInternetAvailable,
             setIsInternetAvailable,
-            userProfileRecord,
-            setUserProfileRecord,
             authSession,
             setAuthSession,
             userInfoAndSubscription,
@@ -127,7 +124,6 @@ function MainAppProvider({ children }: IAppContextWrapper) {
             deploymentVars,
             allFeatureRecords,
             selectedFeatureForHelp,
-            userProfileRecord,
             authSession,
             userInfoAndSubscription,
             fetchAlertProfileRecords,

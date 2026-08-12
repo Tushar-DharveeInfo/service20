@@ -166,9 +166,6 @@ interface IMainApp {
     emRecords: IEmItem[];
     setEmRecords: React.Dispatch<React.SetStateAction<IEmItem[]>>;
 
-    userProfileRecord?: IUserProfileRecord;
-    setUserProfileRecord: React.Dispatch<React.SetStateAction<IUserProfileRecord | undefined>>;
-
     authSession?: AuthSession;
     setAuthSession: React.Dispatch<React.SetStateAction<AuthSession | undefined>>;
 

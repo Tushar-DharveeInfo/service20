@@ -51,16 +51,16 @@ const FnGetAuthDisplayName = (authSession?: AuthSession | null): string => {
  */
 const FnGetLoggedInStatusMessage = (
     userInfoAndSubscription?: IUserInfoAndSubscription,
-    userProfileRecord?: IUserProfileRecord
+    authSession?: AuthSession | null,
 ): string => {
     const displayName =
+        authSession?.displayName ||
         userInfoAndSubscription?.userInfo.displayName?.trim()
-        || userProfileRecord?.Shortname?.trim()
-        || "";
+
 
     const subscriberProduct = FnGetSubscriberProduct(userInfoAndSubscription?.subscription);
 
-    if (!displayName && !subscriberProduct && !userProfileRecord) {
+    if (!displayName && !subscriberProduct && !authSession) {
         return "You are logged in as a guest user";
     }
 
@@ -76,6 +76,5 @@ const FnGetLoggedInStatusMessage = (
 
     return `You are logged in as a ${subscriberProduct}`;
 };
-
 export { FnGetLoggedInStatusMessage, FnGetAuthDisplayName, FnGetSubscriberProduct };
 export type { TSubscriberProduct };

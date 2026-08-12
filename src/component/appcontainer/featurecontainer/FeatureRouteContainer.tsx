@@ -39,9 +39,9 @@ const DynamicRouteComponent = () => {
     const loginStatusMessage = useMemo(
         () => FnGetLoggedInStatusMessage(
             mainAppContext.userInfoAndSubscription,
-            mainAppContext.userProfileRecord
+            mainAppContext.authSession
         ),
-        [mainAppContext.userInfoAndSubscription, mainAppContext.userProfileRecord]
+        [mainAppContext.userInfoAndSubscription, mainAppContext.authSession]
     );
 
     const getTipByFeatureId = (featureId: string, featureName?: string): string | undefined => {

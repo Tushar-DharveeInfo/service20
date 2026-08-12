@@ -10,13 +10,11 @@ import { useMainAppContext } from './shared/context/hooks/MainAppHooks';
 import { AppContextWrapper } from './shared/context/AppContextWrapper';
 import { NodeHeight, SubMenuHeight } from '../component/appcontainer/alldefaultprops/DefaultPropsAppContainer';
 import { GlobalStyles } from '../component/appqa/theme/GlobalStyles';
-import { FnHandleAPIResponse } from './shared/allcommon/basic/FnHandleAPIResponse';
 import { INzApp } from './allinterface/INzApp';
 import { IDeploymentEnv, IDeploymentEnvResponse } from './shared/allinterface/IApiResponse';
 import { AppContainer } from '../component/appcontainer/AppContainer';
 import { FnSetSessionStorageItem } from './appcontainer/allcommon/FnSetSessionStorageItem';
 import { sampleFeatureRecords } from '../sampledata/auth/ServiceFeatureSampleData';
-import { sampleLoginUserJson } from '../sampledata/auth/LoginUserSampleData';
 import { sampleDeploymentEnvResponse } from '../sampledata/auth/DeploymentEnvSampleData';
 import { sampleSessionId, sampleSessionVariables } from '../sampledata/auth/AuthorizationSampleData';
 import { sampleUserLicenses } from '../sampledata/features/MySubscriptionsSampleData';
@@ -120,34 +118,19 @@ function NzLoadContextAndVariables({ uniqueName, user, onError, onSuccess }: INz
             mainAppContext.setFeatureRecords(sampleFeatureRecords);
             mainAppContext.setAllFeatureRecords(sampleFeatureRecords);
 
-            const userProfileRecord = FnHandleAPIResponse(sampleLoginUserJson, "Dataset");
-            if (
-                typeof userProfileRecord === "object"
-                && userProfileRecord
-                && "_User" in userProfileRecord
-                && Array.isArray(userProfileRecord["_User"])
-                && userProfileRecord["_User"].length
-            ) {
-                mainAppContext.setUserProfileRecord(userProfileRecord["_User"][0]);
-                mainAppContext.setAuthSession(user);
+            mainAppContext.setAuthSession(user);
 
-                const displayName = FnGetAuthDisplayName(user);
-                const userInfoAndSubscription: IUserInfoAndSubscription = {
-                    userInfo: {
-                        displayName: displayName || userProfileRecord["_User"][0]?.Shortname || "User",
-                        username: user?.username ?? "",
-                        email: user?.email as string,
-                        tenantNickname: user?.tenantNickname as string,
-                    },
-                    subscription: sampleUserLicenses,
-                };
-                mainAppContext.setUserInfoAndSubscription(userInfoAndSubscription);
-            } else {
-                reportFatalError("User profile data not found.");
-                return;
-            }
-
-            console.warn("[sample-data] SESSION.InitSession not called — features, and LoginUserJson loaded from sample JSON");
+            const displayName = FnGetAuthDisplayName(user);
+            const userInfoAndSubscription: IUserInfoAndSubscription = {
+                userInfo: {
+                    displayName: displayName || "User",
+                    username: user?.username ?? "",
+                    email: user?.email as string,
+                    tenantNickname: user?.tenantNickname as string,
+                },
+                subscription: sampleUserLicenses,
+            };
+            mainAppContext.setUserInfoAndSubscription(userInfoAndSubscription);
 
             sessionContext.setSessionList(sampleSessionVariables);
             setIsSessionCreated(true);

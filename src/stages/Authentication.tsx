@@ -12,7 +12,6 @@ const Authentication = (authenticationProps: IAuthentication) => {
     const [authenticatedUser, setAuthenticatedUser] = useState<AuthSession | null>(null);
     const scheduledRef = useRef(false);
     const { AUTH_TYPE } = getRuntimeConfig();
-
     useEffect(() => {
         if (authenticatedUser) {
             authenticationProps.onSuccess(authenticatedUser);
@@ -24,7 +23,7 @@ const Authentication = (authenticationProps: IAuthentication) => {
             <AppAuthRoot
                 authType={AUTH_TYPE}
                 onAuthenticated={(user: AuthSession) => {
-                    console.log('authenticatedUser', JSON.stringify(user))
+                    console.log('authenticatedUser', user)
                     if (scheduledRef.current) return;
                     scheduledRef.current = true;
 
