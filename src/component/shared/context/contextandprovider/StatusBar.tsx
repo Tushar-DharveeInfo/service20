@@ -3,6 +3,8 @@ import { IAppContextWrapper } from "../allinterface/IAppContextWrapper";
 import { IStatusBar } from "../allinterface/IStatusBar";
 import { IErrorData } from "../../allinterface/IApiResponse";
 
+let userSession: string = "";
+const FnGetUserSessionId = () => { return userSession; }
 const StatusBarContext = createContext<IStatusBar | undefined>(undefined);
 
 function StatusBarProvider({ children }: IAppContextWrapper) {
@@ -14,6 +16,12 @@ function StatusBarProvider({ children }: IAppContextWrapper) {
     const [testApiData, setTestApiData] = useState<string>();
     const [actionLogData, setActionLogData] = useState<IErrorData[]>();
     const [statusBarStringData, setStatusBarStringData] = useState<string[]>();
+    const [userSessionId, setUserSessionIdState] = useState<string>("");
+
+    const setUserSessionId = useCallback((sessionId: string) => {
+        userSession = sessionId;
+        setUserSessionIdState(sessionId);
+    }, []);
 
     const clearAllStatus = useCallback(() => {
         try {
@@ -39,6 +47,7 @@ function StatusBarProvider({ children }: IAppContextWrapper) {
         TestApiData: testApiData,
         actionLogData,
         statusBarStringData,
+        userSessionId,
         setIsLoading,
         setLoadingLabel,
         setFetchError,
@@ -48,6 +57,7 @@ function StatusBarProvider({ children }: IAppContextWrapper) {
         clearAllStatus,
         setActionLogData,
         setStatusBarStringData,
+        setUserSessionId
     }), [
         isLoading,
         fetchError,
@@ -57,6 +67,8 @@ function StatusBarProvider({ children }: IAppContextWrapper) {
         actionLogData,
         statusBarStringData,
         loadingLabel,
+        userSessionId,
+        setUserSessionId,
         clearAllStatus
     ]);
 
@@ -70,4 +82,5 @@ function StatusBarProvider({ children }: IAppContextWrapper) {
 export {
     StatusBarContext,
     StatusBarProvider,
+    FnGetUserSessionId
 };

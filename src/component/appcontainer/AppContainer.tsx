@@ -154,7 +154,7 @@ const AppContainer = (appContainerProps: IAppContainer) => {
             const payloadData = { ...payload, key: FnGenerateUID() }
             if (handleMenuSelect) {
                 handleMenuSelect(value, actionCode, payloadData).then(() => {
-                    setIsOpen(false)
+                    // setIsOpen(false)
                 });
             }
         }

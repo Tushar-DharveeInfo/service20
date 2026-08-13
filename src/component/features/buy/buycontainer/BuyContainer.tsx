@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import '../../allcss/buy/BuyContainer.css'
 import { PdfDocumentViewer } from '../../pdfviewer/PdfDocumentViewer.tsx'
 import { PdfDownloadOverlay } from '../../pdfviewer/PdfDownloadOverlay.tsx'
-import { FnGetCloudFilePublicUrl } from '../../allcommon/FnGetCloudFilePublicUrl.ts'
+import { FnGetPrivatePdfUrl } from '../../allcommon/FnGetPrivatePdfUrl.ts'
 import { IBuyContainer } from '../../allinterface/buy/IBuyContainer.ts'
 import { Loader } from '../../../shared/loader/Loader.tsx'
 
-/* Shared brochure view for Buy EULA / NetZoom / Visio Stencils (cloud public URL). */
+/* Shared brochure view for Buy EULA / NetZoom / Visio Stencils (local public folder). */
 const BuyContainer = (buyContainerProps: IBuyContainer) => {
     const [pdfUrl, setPdfUrl] = useState<string>('')
     const [loadError, setLoadError] = useState<string>('')
@@ -16,13 +16,13 @@ const BuyContainer = (buyContainerProps: IBuyContainer) => {
     useEffect(() => {
         let isActive = true
 
-        const loadPublicUrl = async () => {
+        const loadPublicUrl = () => {
             setIsLoading(true)
             setLoadError('')
             setPdfUrl('')
 
             try {
-                const url = await FnGetCloudFilePublicUrl(buyContainerProps.brochureFileName)
+                const url = FnGetPrivatePdfUrl(buyContainerProps.brochureFileName)
                 if (isActive) {
                     setPdfUrl(url)
                 }
@@ -41,7 +41,7 @@ const BuyContainer = (buyContainerProps: IBuyContainer) => {
             }
         }
 
-        void loadPublicUrl()
+        loadPublicUrl()
 
         return () => {
             isActive = false

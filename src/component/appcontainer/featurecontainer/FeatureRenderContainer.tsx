@@ -1,11 +1,11 @@
 
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import { DownloadEnums, BuyEnums, ProfileEnums, ServicesEnums, FaqEnums, PurchaseEnums } from '../../constants/Feature.ts'
 import ErrorBoundary from '../../shared/errorboundary/ErrorBoundary.tsx'
 import { Loader } from '../../shared/loader/Loader.tsx'
 import { IFeatureRenderContainer } from '../allinterface/IFeatureRenderContainer.ts'
 import { GenerateReport } from '../../features/buy/generatereport/GenerateReport.tsx'
-import { FnGetPublicAssetUrl } from '../../features/allcommon/FnGetPublicAssetUrl.ts'
+import { useResourceContext } from '../../shared/context/hooks/ResourceHooks.ts'
 import {
     sampleOrderAddressFields,
     sampleOrderDataset1,
@@ -16,51 +16,12 @@ import {
 /** Shown when a feature route has no component yet. */
 const FeaturePendingInfo = () => <p>Y will provide information.</p>
 
-const ORDER_FORM_JSON = 'OrderForm.json'
-
-/* Loads OrderForm.json from public and passes sample order data into GenerateReport. */
+/* Passes context-loaded OrderForm.json sample order data into GenerateReport. */
 const GenerateReportHost = () => {
-    const [reportTemplate, setReportTemplate] = useState<Record<string, unknown> | null>(null)
-    const [loadError, setLoadError] = useState('')
-
-    useEffect(() => {
-        let isActive = true
-
-        const loadOrderFormTemplate = async () => {
-            setLoadError('')
-            setReportTemplate(null)
-
-            try {
-                const response = await fetch(FnGetPublicAssetUrl(ORDER_FORM_JSON))
-
-                if (!response.ok) {
-                    throw new Error(`Failed to load ${ORDER_FORM_JSON} (${response.status})`)
-                }
-
-                const template = await response.json() as Record<string, unknown>
-
-                if (isActive) {
-                    setReportTemplate(template)
-                }
-            } catch (error) {
-                if (isActive) {
-                    setLoadError(
-                        error instanceof Error ? error.message : `Failed to load ${ORDER_FORM_JSON}`
-                    )
-                }
-            }
-        }
-
-        loadOrderFormTemplate()
-
-        return () => {
-            isActive = false
-        }
-    }, [])
-
-    if (loadError) {
-        return <div style={{ color: 'var(--error-color, #b00020)', padding: 12 }}>{loadError}</div>
-    }
+    const { orderFormJson } = useResourceContext()
+    const reportTemplate = orderFormJson && typeof orderFormJson === 'object'
+        ? orderFormJson as Record<string, unknown>
+        : null
 
     if (!reportTemplate) {
         return <Loader />

@@ -2,7 +2,8 @@
  * Icon resolver for service menus.
  * Imports only icons needed for Labels in feature.json (+ small shared/fallback set).
  */
-import featureSample from "../../../../sampledata/auth/feature.json";
+
+import { getfeaturesData } from "../../context/contextandprovider/MainApp";
 
 import {
     // Fallback / shared
@@ -148,6 +149,25 @@ const FnResolveIcons = (options?: ResolverOptions) => {
                 if (!fileName) return defaultIcon;
 
                 const key = fileName.toLowerCase();
+
+                // 1. Try to check if the feature has an Alias in the dynamic context features
+                const features = getfeaturesData();
+                if (features && Array.isArray(features)) {
+                    // Check if key matches feature label (normalized to look like an icon key, e.g. "label24x24")
+                    const foundFeature = features.find(f => {
+                        if (!f.Label) return false;
+                        const labelKey = toFeatureIconKey(f.Label).toLowerCase();
+                        return labelKey === key;
+                    });
+                    if (foundFeature && foundFeature.Alias) {
+                        const aliasKey = foundFeature.Alias.replace(/\.svg$/i, "").toLowerCase();
+                        if (iconMap[aliasKey]) {
+                            return iconMap[aliasKey];
+                        }
+                    }
+                }
+
+                // 2. Fall back to static aliases
                 const resolvedKey = normalizedAliases[key] || key;
 
                 return iconMap[resolvedKey] || defaultIcon;
@@ -163,13 +183,16 @@ const FnResolveIcons = (options?: ResolverOptions) => {
 };
 
 /** Unique icon keys expected from feature.json Labels (for diagnostics). */
-const featureIconKeys = [
-    ...new Set(
-        (featureSample as Array<{ Label?: string }>)
-            .map((item) => item.Label)
-            .filter((label): label is string => Boolean(label))
-            .map(toFeatureIconKey)
-    ),
-];
+const featureIconKeys = (): string[] => {
+    const features = getfeaturesData() || [];
+    return [
+        ...new Set(
+            features
+                .map((item) => item.Label)
+                .filter((label): label is string => Boolean(label))
+                .map(toFeatureIconKey)
+        ),
+    ];
+};
 
 export { FnResolveIcons, N, Setting24x24, featureIconKeys, toFeatureIconKey };

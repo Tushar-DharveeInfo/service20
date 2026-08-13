@@ -2,6 +2,7 @@ import { IAppContextWrapper } from "./allinterface/IAppContextWrapper";
 import { CommonVariableProvider } from "./contextandprovider/CommonVariable";
 import { HelpTipProvider } from "./contextandprovider/Helptip";
 import { MainAppProvider } from "./contextandprovider/MainApp";
+import { ResourceProvider } from "./contextandprovider/Resource";
 import { SessionProvider } from "./contextandprovider/Session";
 import { StatusBarProvider } from "./contextandprovider/StatusBar";
 
@@ -13,6 +14,7 @@ const AppContextWrapper = ({ children }: IAppContextWrapper) => {
         HelpTipProvider,
         StatusBarProvider,
         CommonVariableProvider,
+        ResourceProvider
     ];
 
     const wrappedChildren = providers.reduceRight((acc, Comp) => {

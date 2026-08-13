@@ -135,7 +135,7 @@ const TitleContainer = (titleContainerProps: ITitleContainer) => {
 
             {menuImageObject && <MenuImage {...menuImageObject}
                 handleMouse={handleMouse}
-                handleMouseEnter={!menuImageClick ? handleMouse : undefined}
+            // handleMouseEnter={!menuImageClick ? handleMouse : undefined}
 
             />}
             {appqaData && <AppQaMenuContainer

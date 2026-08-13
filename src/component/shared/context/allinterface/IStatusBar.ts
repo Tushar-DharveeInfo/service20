@@ -19,6 +19,7 @@ interface IStatusBar {
     TestApiData: string | undefined;
     statusBarStringData?: string[];
     actionLogData?: IErrorData[];
+    userSessionId: string;
     setFetchDataError: (fatchDataError: IErrorData[] | null) => void;
     setFetchError: (FetchError: string[] | null) => void;
     setIsLoading: (isLoading: boolean) => void;
@@ -27,6 +28,7 @@ interface IStatusBar {
     setUserActionData: (actionData: string | undefined) => void;
     setActionLogData: (actionLogData?: IErrorData[]) => void;
     setStatusBarStringData: (statusBarStringData?: string[]) => void;
+    setUserSessionId: (sessionId: string) => void;
     clearAllStatus: () => void;
 }
 

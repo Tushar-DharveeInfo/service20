@@ -507,10 +507,14 @@ const ExpandableList = (props: IExpandableList) => {
             },
         });
     }, [activeMainIndex, activeSubIndex, mainMenu, resolveSelectionIndices]);
-    const handleIconForMenu = (label: string) => {
-        const name = label.replace(/\s*\(.*?\)/, "")
 
-        const Icon = FnGetIconForExpandableMenu(name.replace(/[^0-9A-Za-z_-]/g, '') + "24x24");
+    const handleIconForMenu = (label: string) => {
+        const name = label.replace(/\s*\(.*?\)/, "").replace('24x24', '')
+
+        const iconName = name.replace(/[^0-9A-Za-z_-]/g, '');
+        const Icon = FnGetIconForExpandableMenu(
+            /\d$/.test(iconName) ? iconName : iconName + "24x24"
+        );
         return <Icon size={FnGetCssVariable('--image-size-2')}
             fill='none'
             strokeWidth={1} />
@@ -606,7 +610,7 @@ const ExpandableList = (props: IExpandableList) => {
                                             {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
                                                 <div className="nz-feature-icon">
                                                     <Image uniqueName='menu-image' source={
-                                                        handleIconForMenu(element.Label)}
+                                                        handleIconForMenu(element.Alias.length ? element.Alias : element.Label,)}
                                                         type='svg' w='var(--image-size-2)' />
 
                                                 </div>
@@ -654,7 +658,7 @@ const ExpandableList = (props: IExpandableList) => {
                                                                 className='nz-nav-li-button nz-nav-sub-menu'
                                                                 onClick={(event) => handleSubListItemClick(event, subIndex, subEle)}>
                                                                 {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
-                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Label)}
+                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Alias.length ? subEle.Alias : subEle.Label)}
                                                                         type='svg' w='var(--image-size-2)' />
                                                                 </ListItemIcon>}
                                                                 <ListItemText primary={subEle.Label} className='nz-nav-sub-menu-text' />

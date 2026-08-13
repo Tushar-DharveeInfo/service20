@@ -8,6 +8,7 @@ interface IPdfDocumentViewer {
     scale?: number;// render scale, defaults to DefaultPdfScale
     downloadFileName?: string;// saved file name for the download overlay
     hideDownloadIcon?: boolean;// hide the download overlay icon
+    pdfSource?: 'local' | 'api';// resolve pdf from local public or call api
 }
 
 export type { IPdfDocumentViewer }

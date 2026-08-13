@@ -24,6 +24,7 @@ interface IFeatureItem {
     LastUpdated: string;
     EntityName: string;
     Lock?: boolean;
+    Alias?: string;
     [key: string]: string | any;
 }
 

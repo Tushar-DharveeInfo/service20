@@ -39,7 +39,7 @@ const MyProfile = (myProfileProps: IMyProfile) => {
                     controls={myProfileControls}
                     profileString={profileString}
                     featureId={myProfileProps.featureId}
-                    allowShowHeader={false}
+                    allowShowHeader={true}
                     allowShowSectionHeader={true}
                     isDisableForm={false}
                     isAddressFormRequired={true}
