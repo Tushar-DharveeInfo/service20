@@ -11,7 +11,7 @@ import {
     sampleOrderDataset1,
     sampleOrderDataset2,
     sampleOrderDocType,
-} from '../../../sampledata/genaretreport/OrderFormSampleData.ts'
+} from '../../features/buy/generatereport/OrderFormSampleData.ts'
 
 /** Shown when a feature route has no component yet. */
 const FeaturePendingInfo = () => <p>Y will provide information.</p>
@@ -49,7 +49,7 @@ const VisioStencils = lazy(() => import('../../features/buy/visiostencils/VisioS
 
 const RequestVisioStencils = lazy(() => import('../../features/services/requestvisiostencils/RequestVisioStencils.tsx'))
 const RequestDeviceModelsContainer = lazy(() => import('../../features/services/requestdevicemodels/RequestDeviceModels.tsx'))
-const RequestSupport = lazy(() => import('../../appqa/AppQaContactUs.tsx'))
+const RequestSupport = lazy(() => import('../../features/services/requestsupport/RequestSupport.tsx'))
 
 const DownloadVisioStencils = lazy(() => import('../../features/download/downloadvisiostencils/DownloadVisioStencils.tsx'))
 const DownloadNetZoom = lazy(() => import('../../features/download/downloadnetzoom/DownloadNetZoom.tsx'))
@@ -237,7 +237,8 @@ function FeatureRenderContainer(featureRenderContainerProps: IFeatureRenderConta
                     <Suspense fallback={<Loader />}>
                         <RequestSupport
                             uniqueName={'feature-request-support'}
-                            headerText={"Request Support"} />
+                            featureId={featureContainerProps.featureId}
+                            headerText={featureContainerProps.headerText ?? "Request Support"} />
                     </Suspense>
                 </ErrorBoundary>
             );

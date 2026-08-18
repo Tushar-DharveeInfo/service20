@@ -1,8 +1,8 @@
 /*
  * SAMPLE DATA: tickets from sampletickets.json for ticket explorer.
  */
-import sampleTicketsJson from './sampletickets.json'
-import type { ITicket, TicketId, TicketStatus } from '../../component/shared/allinterface/tree/ITicket'
+import sampleTicketsJson from '../../../sampledata/ticket/sampletickets.json'
+import type { ITicket, TicketId, TicketStatus } from '../allinterface/tree/ITicket'
 
 type ITicketJson = {
     Business: string

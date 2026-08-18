@@ -34,7 +34,7 @@ import { FnGetCssVariable } from '../../appcontainer/allcommon/FnGetCssVariable'
 import { FnGetSessionVariableFromStorage } from '../allcommon/basic/FnGetSessionVariableFromStorage';
 
 // import { useSessionContext } from '../context/hooks/SessionHooks';
-import { sampleSessionContextFallback } from '../../../sampledata/sidebar/SampleContextFallbacks';
+// import { sampleSessionContextFallback } from '../../../sampledata/sidebar/SampleContextFallbacks';
 import { OptionsFilter } from '../basic/optionsfilter/OptionsFilter';
 import { IOptionItem } from '../allinterface/basic/IOptionsFilter';
 
@@ -79,7 +79,7 @@ const BasicGrid = (gridProps: IBasicGrid) => {
     const [columnDefs, setColumnDefs] = useState<IBasicGridColDef[]>([]);
     const [indexColumnAdded, setIndexColumnAdded] = useState<boolean>(false);
     const gridParentStyle = useMemo(() => (ContainerStyle), []);
-    const sessionData = sampleSessionContextFallback;
+    const sessionData = { SessionList: [] };
     const isColumnResizingRef = useRef(false);
 
     const [isLoading, setIsLoading] = useState(true);
@@ -656,7 +656,7 @@ const BasicGrid = (gridProps: IBasicGrid) => {
         if (params.finished && params.source == "uiColumnResized") {
             isColumnResizingRef.current = true;
             let userId: string | undefined;
-            var user_var = FnGetSessionVariableFromStorage("RequestedBy", "LoginUserID", sessionData.SessionList);
+            var user_var = sessionData && sessionData.SessionList ? FnGetSessionVariableFromStorage("RequestedBy", "LoginUserID", sessionData.SessionList) : []
             if (user_var && user_var.length > 0) {
                 userId = user_var[0].SessionValue ?? undefined;
             }

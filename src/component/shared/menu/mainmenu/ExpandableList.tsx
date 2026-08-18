@@ -508,18 +508,28 @@ const ExpandableList = (props: IExpandableList) => {
         });
     }, [activeMainIndex, activeSubIndex, mainMenu, resolveSelectionIndices]);
 
-    const handleIconForMenu = (label: string) => {
-        const name = label.replace(/\s*\(.*?\)/, "").replace('24x24', '')
+    const handleIconForMenu = (
+        label: string,
+    ) => {
+        // Remove anything inside (...) and trim spaces
+        const name = label.replace(/\s*\([^)]*\)/g, "").trim();
+        const sanitizedName = name.replace(/[^0-9A-Za-z_-]/g, "");
 
-        const iconName = name.replace(/[^0-9A-Za-z_-]/g, '');
-        const Icon = FnGetIconForExpandableMenu(
-            /\d$/.test(iconName) ? iconName : iconName + "24x24"
+        // If name already ends with a number, don't append 24x24
+        const iconName = /\d$/.test(sanitizedName)
+            ? sanitizedName
+            : `${sanitizedName}`;
+
+        const Icon = FnGetIconForExpandableMenu(iconName);
+
+        return (
+            <Icon
+                size={FnGetCssVariable('--image-size-2')}
+                fill="none"
+                strokeWidth={1}
+            />
         );
-        return <Icon size={FnGetCssVariable('--image-size-2')}
-            fill='none'
-            strokeWidth={1} />
-    }
-
+    };
     useEffect(() => {
         const id = setTimeout(() => {
             if (activeMainIndex == null) {
@@ -610,7 +620,7 @@ const ExpandableList = (props: IExpandableList) => {
                                             {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
                                                 <div className="nz-feature-icon">
                                                     <Image uniqueName='menu-image' source={
-                                                        handleIconForMenu(element.Alias.length ? element.Alias : element.Label,)}
+                                                        handleIconForMenu(element.Alias ? element.Alias : (element.Name || element.name || element.Label || ''))}
                                                         type='svg' w='var(--image-size-2)' />
 
                                                 </div>
@@ -658,7 +668,7 @@ const ExpandableList = (props: IExpandableList) => {
                                                                 className='nz-nav-li-button nz-nav-sub-menu'
                                                                 onClick={(event) => handleSubListItemClick(event, subIndex, subEle)}>
                                                                 {!props.hideIcon && <ListItemIcon className='nz-nav-li-icon'>
-                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Alias.length ? subEle.Alias : subEle.Label)}
+                                                                    <Image uniqueName='menu-image' source={handleIconForMenu(subEle.Alias ? subEle.Alias : (subEle.Name || subEle.name || subEle.Label || ''))}
                                                                         type='svg' w='var(--image-size-2)' />
                                                                 </ListItemIcon>}
                                                                 <ListItemText primary={subEle.Label} className='nz-nav-sub-menu-text' />

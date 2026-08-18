@@ -81,7 +81,7 @@
     "Tooltip": "MyActivities",
     "SortOrder": "2",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "MyActvities"
   },
   {
     "Secured": "1",
@@ -137,11 +137,11 @@
     "MenuID": "120",
     "Feature": "126",
     "NodeType": "",
-    "Label": "NetZoom",
+    "Label": "NetZoom-Brochure",
     "Tooltip": "NetZoom Subscriptions",
     "SortOrder": "3",
     "DefaultQA": "",
-    "Alias": "N.svg"
+    "Alias": "N"
   },
   {
     "Secured": "",
@@ -149,23 +149,11 @@
     "MenuID": "120",
     "Feature": "128",
     "NodeType": "",
-    "Label": "Visio Stencils",
+    "Label": "Visio Stencils-Brochure",
     "Tooltip": "Visio Stencils Subscriptions",
     "SortOrder": "4",
     "DefaultQA": "",
-    "Alias": "Visio.svg"
-  },
-  {
-    "Secured": "",
-    "EntityName": "Feature",
-    "MenuID": "120",
-    "Feature": "130",
-    "NodeType": "",
-    "Label": "Other",
-    "Tooltip": "Other Products and Services",
-    "SortOrder": "5",
-    "DefaultQA": "",
-    "Alias": ""
+    "Alias": "Visio"
   },
   {
     "Secured": "1",
@@ -185,10 +173,10 @@
     "MenuID": "150",
     "Feature": "152",
     "NodeType": "",
-    "Label": "Request Support",
-    "Tooltip": "Request Support",
+    "Label": "My Requests",
+    "Tooltip": "My Requests",
     "SortOrder": "1",
-    "DefaultQA": "1",
+    "DefaultQA": "",
     "Alias": ""
   },
   {
@@ -197,11 +185,11 @@
     "MenuID": "150",
     "Feature": "154",
     "NodeType": "",
-    "Label": "Request Visio Stencils",
-    "Tooltip": "Request Visio Stencils",
+    "Label": "Request Support",
+    "Tooltip": "Request Support",
     "SortOrder": "2",
-    "DefaultQA": "",
-    "Alias": "Visio.svg"
+    "DefaultQA": "1",
+    "Alias": ""
   },
   {
     "Secured": "1",
@@ -209,11 +197,11 @@
     "MenuID": "150",
     "Feature": "156",
     "NodeType": "",
-    "Label": "Request Device Models",
-    "Tooltip": "Request Device Models",
+    "Label": "Request Visio Stencils",
+    "Tooltip": "Request Visio Stencils",
     "SortOrder": "3",
     "DefaultQA": "",
-    "Alias": "N.svg"
+    "Alias": "Visio"
   },
   {
     "Secured": "1",
@@ -221,47 +209,23 @@
     "MenuID": "150",
     "Feature": "158",
     "NodeType": "",
-    "Label": "My Requests",
-    "Tooltip": "My Requests",
+    "Label": "Request Device Models",
+    "Tooltip": "Request Device Models",
     "SortOrder": "4",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "N"
   },
   {
     "Secured": "1",
     "EntityName": "Feature",
-    "MenuID": "200",
-    "Feature": "200",
-    "NodeType": "",
-    "Label": "Download",
-    "Tooltip": "Download",
-    "SortOrder": "200",
-    "DefaultQA": "",
-    "Alias": ""
-  },
-  {
-    "Secured": "1",
-    "EntityName": "Feature",
-    "MenuID": "200",
-    "Feature": "202",
-    "NodeType": "",
-    "Label": "Download Visio Stencils",
-    "Tooltip": "Download Visio Stencils",
-    "SortOrder": "1",
-    "DefaultQA": "1",
-    "Alias": "Visio.svg"
-  },
-  {
-    "Secured": "1",
-    "EntityName": "Feature",
-    "MenuID": "200",
-    "Feature": "204",
+    "MenuID": "150",
+    "Feature": "160",
     "NodeType": "",
     "Label": "Download NetZoom",
     "Tooltip": "Download NetZoom files",
-    "SortOrder": "2",
+    "SortOrder": "5",
     "DefaultQA": "",
-    "Alias": "N.svg"
+    "Alias": "N"
   },
   {
     "Secured": "1",
@@ -285,7 +249,7 @@
     "Tooltip": "Visio Stencils",
     "SortOrder": "1",
     "DefaultQA": "",
-    "Alias": ""
+    "Alias": "Visio"
   },
   {
     "Secured": "1",
@@ -297,7 +261,7 @@
     "Tooltip": "NetZoom",
     "SortOrder": "2",
     "DefaultQA": "1",
-    "Alias": ""
+    "Alias": "N"
   },
   {
     "Secured": "",
@@ -326,8 +290,8 @@
   {
     "Secured": "",
     "EntityName": "Feature",
-    "MenuID": "158",
-    "Feature": "1582",
+    "MenuID": "152",
+    "Feature": "1522",
     "NodeType": "",
     "Label": "Details",
     "Tooltip": "Ticket Details",
@@ -338,8 +302,32 @@
   {
     "Secured": "",
     "EntityName": "Feature",
-    "MenuID": "158",
-    "Feature": "1584",
+    "MenuID": "152",
+    "Feature": "1524",
+    "NodeType": "",
+    "Label": "Notes",
+    "Tooltip": "Notes",
+    "SortOrder": "2",
+    "DefaultQA": "",
+    "Alias": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "Feature": "1542",
+    "NodeType": "",
+    "Label": "Details",
+    "Tooltip": "Ticket Details",
+    "SortOrder": "1",
+    "DefaultQA": "1",
+    "Alias": ""
+  },
+  {
+    "Secured": "",
+    "EntityName": "Feature",
+    "MenuID": "154",
+    "Feature": "1544",
     "NodeType": "",
     "Label": "Notes",
     "Tooltip": "Notes",

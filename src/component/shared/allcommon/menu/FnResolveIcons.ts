@@ -87,19 +87,7 @@ const featureIconMap: IconMap = {
     Orders24x24,
     Details24x24,
     Notes24x24,
-};
 
-/**
- * feature.json Labels without an exact libicon name → closest available icon.
- * Keys match ExpandableList / MainMenu icon lookup (`Label` + `24x24`).
- */
-const featureAliases: Record<string, string> = {
-    MyActivities24x24: "MyActvities24x24",
-    EULA24x24: "Eula24x24",
-    Settings24x24: "Setting24x24",
-    VisioStencils24x24: "Visio",
-    NetZoom24x24: "N",
-    NZIcon24x24: "N",
 };
 
 /** Shared icons used by tree/submenu aliases and Settings. */
@@ -119,13 +107,9 @@ const rawIconMap: IconMap = {
     ...sharedIconMap,
 };
 
+// normalize once
 const iconMap: IconMap = Object.fromEntries(
     Object.entries(rawIconMap).map(([k, v]) => [k.toLowerCase(), v])
-);
-
-/** Built-in aliases: feature.json gaps + normalize lowercase lookup. */
-const builtInAliases: Record<string, string> = Object.fromEntries(
-    Object.entries(featureAliases).map(([k, v]) => [k.toLowerCase(), v.toLowerCase()])
 );
 
 type ResolverOptions = {
@@ -138,39 +122,31 @@ const FnResolveIcons = (options?: ResolverOptions) => {
         const { defaultIcon = N, aliases = {} } = options || {};
 
         const normalizedAliases = Object.fromEntries(
-            Object.entries({ ...builtInAliases, ...aliases }).map(([k, v]) => [
+            Object.entries(aliases).map(([k, v]) => [
                 k.toLowerCase(),
-                v.toLowerCase(),
+                v.toLowerCase()
             ])
         );
 
         return (fileName?: string): ComponentType<any> => {
+            console.log('fileName FnResolveIcons:', fileName);
             try {
                 if (!fileName) return defaultIcon;
 
                 const key = fileName.toLowerCase();
-
-                // 1. Try to check if the feature has an Alias in the dynamic context features
-                const features = getfeaturesData();
-                if (features && Array.isArray(features)) {
-                    // Check if key matches feature label (normalized to look like an icon key, e.g. "label24x24")
-                    const foundFeature = features.find(f => {
-                        if (!f.Label) return false;
-                        const labelKey = toFeatureIconKey(f.Label).toLowerCase();
-                        return labelKey === key;
-                    });
-                    if (foundFeature && foundFeature.Alias) {
-                        const aliasKey = foundFeature.Alias.replace(/\.svg$/i, "").toLowerCase();
-                        if (iconMap[aliasKey]) {
-                            return iconMap[aliasKey];
-                        }
-                    }
-                }
-
-                // 2. Fall back to static aliases
                 const resolvedKey = normalizedAliases[key] || key;
 
-                return iconMap[resolvedKey] || defaultIcon;
+                // 1. Exact match first
+                if (iconMap[resolvedKey]) {
+                    return iconMap[resolvedKey];
+                }
+
+                // 2. Find first key that starts with the filename
+                const matchedEntry = Object.entries(iconMap).find(([iconKey]) =>
+                    iconKey.startsWith(resolvedKey)
+                );
+
+                return matchedEntry?.[1] || defaultIcon;
             } catch (error) {
                 console.error("FnResolveIcons resolver error:", error);
                 return defaultIcon;
@@ -182,17 +158,5 @@ const FnResolveIcons = (options?: ResolverOptions) => {
     }
 };
 
-/** Unique icon keys expected from feature.json Labels (for diagnostics). */
-const featureIconKeys = (): string[] => {
-    const features = getfeaturesData() || [];
-    return [
-        ...new Set(
-            features
-                .map((item) => item.Label)
-                .filter((label): label is string => Boolean(label))
-                .map(toFeatureIconKey)
-        ),
-    ];
-};
 
-export { FnResolveIcons, N, Setting24x24, featureIconKeys, toFeatureIconKey };
+export { FnResolveIcons, N, Setting24x24, toFeatureIconKey };

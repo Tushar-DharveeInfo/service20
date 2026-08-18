@@ -24,6 +24,9 @@ import type { IImage } from "../shared/allinterface/basic/IImage.ts"
 interface IContactUsNotes {
     uniqueName: string;
     selectedNode: ITreeNode;
+    onSelectNote?: (item: INoteItems) => void;
+    selectedNoteItem?: INoteItems | null;
+    isAppQa?: boolean
 }
 
 /*
@@ -31,7 +34,7 @@ interface IContactUsNotes {
  * It intentionally uses the same note editor, list, search, delete confirmation,
  * sample response, class names and local add/delete behavior as the sidebar.
  */
-const ContactUsNotes = ({ uniqueName, selectedNode }: IContactUsNotes) => {
+const ContactUsNotes = ({ uniqueName, selectedNode, onSelectNote, selectedNoteItem, isAppQa }: IContactUsNotes) => {
     const [notesItems, setNotesItems] = useState<INoteItems[]>([]);
     const [originalNotesItems, setOriginalNotesItems] = useState<INoteItems[]>([]);
     const [noteDetails, setNoteDetails] = useState<INote>();
@@ -72,8 +75,11 @@ const ContactUsNotes = ({ uniqueName, selectedNode }: IContactUsNotes) => {
 
         setNotesItems(sampleNotes);
         setOriginalNotesItems(sampleNotes);
+        if (sampleNotes.length > 0 && onSelectNote && !selectedNoteItem) {
+            onSelectNote(sampleNotes[0]);
+        }
         resetEditor();
-    }, [selectedNode, resetEditor]);
+    }, [selectedNode, resetEditor, onSelectNote]);
 
     const sendNotes = useCallback((message: INote) => {
         const noteText = message.notecontent?.trim() ?? "";
@@ -182,62 +188,72 @@ const ContactUsNotes = ({ uniqueName, selectedNode }: IContactUsNotes) => {
                         />
                     </div>
                     <div className="nz-notes-list-scroll">
-                        {notesItems.map((item, index) => (
-                            <div
-                                className="nz-node-list-box"
-                                key={`${item.LastUpdated}-${index}`}
-                            >
-                                <div className="nz-node-list-delete">
-                                    <ActionImage
-                                        image={deleteImage}
-                                        w="var(--node_height)"
-                                        h="var(--node_height)"
-                                        uniqueName={`${uniqueName}-delete-${index}`}
-                                        actionCode="delete"
-                                        disabled={false}
-                                        handleMouse={() => handleDelete(item)}
-                                    />
-                                    <div className="nz-note-date">
-                                        <Label
-                                            uniqueName={`${uniqueName}-date-${index}`}
-                                            label={`${FnConvertDateToUtcOrUtcToDate(
-                                                item.LastUpdated,
-                                                false,
-                                                true
-                                            )}`}
+                        {notesItems.map((item, index) => {
+                            const isSelected = isAppQa ? false : selectedNoteItem
+                                ? (selectedNoteItem.LastUpdated === item.LastUpdated && selectedNoteItem.NotesMAX === item.NotesMAX)
+                                : index === 0;
+                            return (
+                                <div
+                                    className={`nz-node-list-box ${isSelected ? "nz-node-list-box-selected" : ""}`}
+                                    key={`${item.LastUpdated}-${index}`}
+                                    onClick={() => onSelectNote?.(item)}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div className="nz-node-list-delete">
+                                        <ActionImage
+                                            image={deleteImage}
+                                            w="var(--node_height)"
+                                            h="var(--node_height)"
+                                            uniqueName={`${uniqueName}-delete-${index}`}
+                                            actionCode="delete"
+                                            disabled={false}
+                                            handleMouse={(e) => {
+                                                e?.stopPropagation?.();
+                                                handleDelete(item);
+                                            }}
                                         />
+                                        <div className="nz-note-date">
+                                            <Label
+                                                uniqueName={`${uniqueName}-date-${index}`}
+                                                label={`${FnConvertDateToUtcOrUtcToDate(
+                                                    item.LastUpdated,
+                                                    false,
+                                                    true
+                                                )}`}
+                                            />
+                                        </div>
+                                        <div className="nz-note-user">
+                                            <Label
+                                                uniqueName={`${uniqueName}-user-${index}`}
+                                                label={`${item.UserName}`}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="nz-note-user">
-                                        <Label
-                                            uniqueName={`${uniqueName}-user-${index}`}
-                                            label={`${item.UserName}`}
-                                        />
+                                    <div className="nz-info-div">
+                                        <div className="nz-info-image">
+                                            <Image
+                                                uniqueName={`${uniqueName}-info-${index}`}
+                                                source={
+                                                    <Info24x24
+                                                        size={FnGetCssVariable("--image-size-1")}
+                                                        fill="none"
+                                                        strokeWidth={1}
+                                                    />
+                                                }
+                                                w="var(--image-size-2)"
+                                                tooltip={item.NotesType}
+                                            />
+                                        </div>
+                                        <div className="nz-nodes-text">
+                                            <Label
+                                                uniqueName={`${uniqueName}-note-${index}`}
+                                                label={item.NotesMAX}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="nz-info-div">
-                                    <div className="nz-info-image">
-                                        <Image
-                                            uniqueName={`${uniqueName}-info-${index}`}
-                                            source={
-                                                <Info24x24
-                                                    size={FnGetCssVariable("--image-size-1")}
-                                                    fill="none"
-                                                    strokeWidth={1}
-                                                />
-                                            }
-                                            w="var(--image-size-2)"
-                                            tooltip={item.NotesType}
-                                        />
-                                    </div>
-                                    <div className="nz-nodes-text">
-                                        <Label
-                                            uniqueName={`${uniqueName}-note-${index}`}
-                                            label={item.NotesMAX}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                     <div className="nz-notes-container">
                         {noteDetails && (
@@ -296,46 +312,12 @@ const AppQaContactUs = (contactUsProps: IAppQaContactUs) => {
                 <ContactUsNotes
                     uniqueName={`${contactUsProps.uniqueName}-notes`}
                     selectedNode={contactUsSelectedNode}
+                    isAppQa={true}
                 />
             </div>
         </div>
     )
 }
 
-
-const RequestSupport = () => {
-    /* Same selected-node shape the sidebar notes expects. */
-    const contactUsSelectedNode = useMemo<ITreeNode>(() => ({
-        key: "contact-us",
-        NodeEntityname: "ContactUs",
-        NodeEntID: "CONTACT-US",
-        stepNo: 0,
-        parentEntID: null,
-        NodeState: null,
-        Description: "ContactUs",
-        title: "ContactUs",
-        children: [],
-        treetype: "ContactUs",
-        Name: "ContactUs",
-        Type: "ContactUs",
-        icon: null,
-        HasChildren: 0,
-        NodeType: "ContactUs",
-    }), []);
-
-    return (
-        <div className="nz-w-100 nz-h-100 nz-contact-us-container" tabIndex={1} onKeyDown={handleContainerKeyDown} key={`requestsupport-uniqueName`}>
-            <div className='nz-sub-header'>
-                <Label uniqueName={`requestsupport-task-header`} label={`Request Support`} />
-            </div>
-            <div className="nz-w-100 nz-h-100 nz-contact-us-notes-pane">
-                <ContactUsNotes
-                    uniqueName={`requestsupport-notes`}
-                    selectedNode={contactUsSelectedNode}
-                />
-            </div>
-        </div>
-    )
-}
-export { RequestSupport, AppQaContactUs }
+export { AppQaContactUs, ContactUsNotes }
 export default AppQaContactUs

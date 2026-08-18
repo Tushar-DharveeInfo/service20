@@ -15,7 +15,7 @@ import { AppContainer } from '../component/appcontainer/AppContainer';
 import { FnSetSessionStorageItem } from './appcontainer/allcommon/FnSetSessionStorageItem';
 import { sampleDeploymentEnvResponse } from '../sampledata/auth/DeploymentEnvSampleData';
 import { sampleSessionId, sampleSessionVariables } from '../sampledata/auth/AuthorizationSampleData';
-import { sampleUserLicenses } from '../sampledata/features/MySubscriptionsSampleData';
+import { sampleUserLicenses } from '../sampledata/auth/MySubscriptionsSampleData';
 import type { IFeatureItem, IUserInfoAndSubscription } from './shared/context/allinterface/IMainApp';
 import { FnGetAuthDisplayName } from './appcontainer/allcommon/FnGetLoggedInStatusMessage';
 

@@ -3,7 +3,7 @@ import type {
     TReportAddressFields,
     TReportDocTypeInput,
     TReportDataset,
-} from "../../component/features/allcommon/FnBuildReportLayoutConfig";
+} from "../../allcommon/FnBuildReportLayoutConfig";
 
 const sampleOrderAddressFields: TReportAddressFields = {
     contact: [

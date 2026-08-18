@@ -48,10 +48,11 @@ enum BuyEnums {
 // Services menu feature ids
 enum ServicesEnums {
     Services = "150",
-    RequestSupport = "152",
-    RequestVisioStencils = "154",
-    RequestDeviceModels = "156",
-    MyRequests = "158",
+    RequestSupport = "154",
+    RequestVisioStencils = "156",
+    RequestDeviceModels = "158",
+    MyRequests = "152",
+    DownloadNetZoom = "160",
 }
 
 // Download menu feature ids
@@ -80,11 +81,25 @@ enum deviceModelTabs {
 }
 
 
+enum SidebarEnum {
+    Property = "Property",
+    Log = "Log",
+    Notes = "Notes",
+    Alerts = "Alerts",
+    ActionLog = "ActionLog",
+    Assign = "Assign",
+    Profile = "Profile",
+    Device = "Device",
+    List = "List",
+    ListContacts = "List Contacts"
+}
+
 export {
     FeatureMenuRange, AppQA, AppQARange
     , ProfileEnums, BuyEnums, ServicesEnums, DownloadEnums
     , FaqEnums, PurchaseEnums
     , FeatureQARange
     , KebabMenuRange,
-    deviceModelTabs
+    deviceModelTabs,
+    SidebarEnum
 }

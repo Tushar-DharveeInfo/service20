@@ -71,9 +71,7 @@ const MainMenu = (menuProps: IMainMenu) => {
       } else {
         setMenuData(null)
         const getIconForSubMenu = (fileName: string, item: IMenuItem) => {
-          const iconName = /\d$/.test(fileName) ? fileName : fileName + "24x24";
-          const Icon = FnGetIconForSubMenu(iconName);
-
+          const Icon = FnGetIconForSubMenu(fileName);
           return <Icon size={menuProps.imageW ? menuProps.imageW : item.PopupQa ? 24 : FnGetCssVariable('--image-size-2')}
             fill='none'
             strokeWidth={1} />
@@ -84,7 +82,7 @@ const MainMenu = (menuProps: IMainMenu) => {
             uniqueName: item.Label, // uniqueName for the control and required
             image: {
               uniqueName: `${item.Label}-image`,
-              source: getIconForSubMenu(item.Alias.length ? item.Alias : `${item.Label.replace(/[^0-9A-Za-z_-]/g, "")}24x24`, item),
+              source: getIconForSubMenu(item.Alias ? item.Alias : `${(item.Name || item.name || item.Label || '').replace(/[^0-9A-Za-z_-]/g, "")}24x24`, item),
               w: menuProps.imageW ? menuProps.imageW : item.PopupQa ? 24 : FnGetCssVariable('--image-size-2'),
               h: menuProps.imageH ? menuProps.imageH : item.PopupQa ? 24 : FnGetCssVariable('--image-size-2'),
               type: "svg"

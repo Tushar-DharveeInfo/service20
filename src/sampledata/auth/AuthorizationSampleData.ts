@@ -19,8 +19,6 @@ const sampleSessionVariables: ISession[] = [
     { VariableContext: "RequestedBy", VariableName: "LoginUserEmail", SessionValue: "demo.user@example.com" },
     { VariableContext: "RequestedBy", VariableName: "LoginShortName", SessionValue: "Admin" },
     { VariableContext: "RequestedBy", VariableName: "LoginUserBasicRoleName", SessionValue: "Administrator" },
-
-
     { VariableContext: "Node", VariableName: "SelectedNodeID", SessionValue: null },
     { VariableContext: "Node", VariableName: "SelectedNodeEntity", SessionValue: null },
     { VariableContext: "Node", VariableName: "SelectedNodeName", SessionValue: null },

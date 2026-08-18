@@ -5,7 +5,7 @@ import { Label } from '../../../shared/basic/label/Label.tsx'
 import { CardLayout } from '../../../shared/cardlayout/CardLayout.tsx'
 import { ICardLayoutField } from '../../../shared/allinterface/cardlayout/ICardLayout.ts'
 import { FnConvertDateToUtcOrUtcToDate } from '../../../appcontainer/allcommon/FnConvertDateToUtcOrUtcToDate.ts'
-import { sampleUserLicenses, type ISampleUserLicense } from '../../../../sampledata/features/MySubscriptionsSampleData.ts'
+import { sampleUserLicenses, type ISampleUserLicense } from '../../../../sampledata/auth/MySubscriptionsSampleData.ts'
 import { IMySubscriptions } from '../../allinterface/profile/IMySubscriptions.ts'
 import { useMainAppContext } from '../../../shared/context/hooks/MainAppHooks.ts'
 

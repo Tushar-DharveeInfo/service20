@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Key } from 'rc-tree/lib/interface'
 import { Splitter, SplitterPanel } from 'primereact/splitter'
 import '../allcss/TicketExplorerContainer.css';
-import { sampleTickets } from '../../../sampledata/ticket/TicketSampleData'
+import { sampleTickets } from './TicketSampleData'
 import {
     buildTicketTree,
     findFirstTicketLeaf,

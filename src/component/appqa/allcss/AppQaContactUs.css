@@ -45,3 +45,8 @@
     height: 100%;
     width: 100%;
 }
+
+.nz-contact-us-notes-pane .nz-node-list-box.nz-node-list-box-selected {
+    border: 1px solid var(--selection-text);
+    box-shadow: none !important;
+}

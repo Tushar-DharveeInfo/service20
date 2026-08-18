@@ -8,6 +8,8 @@ interface IForensicLog {
     loginType: string // we are passing user and node base on setting and logs
     selectedNode?: ITreeNode // selected node for tree
     allowSort?: boolean // allow sort column or not
+    hideSearchControl?: boolean,
+    handleUpdateHeaderTitle?: (title: string) => void
     handleShowUserMessage?: (messageText: string) => void;
 }
 

@@ -1,4 +1,4 @@
-import { IControl } from "../../component/shared/allinterface/settingsform/ISettingsLibForm";
+import { IControl } from "../../allinterface/settingsform/ISettingsLibForm";
 
 export const formControls: IControl[] = [
     {

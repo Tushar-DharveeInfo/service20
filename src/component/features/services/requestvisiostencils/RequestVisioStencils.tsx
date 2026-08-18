@@ -9,9 +9,7 @@ import { ITreeNode } from '../../../shared/allinterface/tree/ITreeControl';
 import { type IRequestShapeFormData } from '../requestdevicemodels/RequestDeviceModels';
 import { RequestShapeFormContainer } from '../requestshapeformcontainer/RequestShapeFormContainer';
 import './RequestVisioStencils.css';
-// import downloadSampleCart from '../../../../sampledata/downloadsampleCart.json';
 
-// const typedInitialCart = downloadSampleCart as IDownloadCart[];
 
 interface IRequest {
     uniqueName?: string;

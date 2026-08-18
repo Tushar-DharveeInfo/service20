@@ -15,7 +15,7 @@ import { SearchTab } from './SearchTab';
 import { ActionLabelTabs } from '../basic/actionlabeltabs/ActionLabelTabs';
 import { OverlayTab } from '../basic/overlaytab/OverlayTab';
 import { PropertyTab } from './PropertyTab';
-import { formControls } from '../../../sampledata/devicemodel/formControlsJsonDeviceModel';
+import { formControls } from '../allcommon/devicemodel/formControlsJsonDeviceModel';
 import { FnConvertFlatDataToHierarchyData } from '../allcommon/tree/FnConvertFlatDataToHierarchyData';
 import { FnGetAutoExpandNodeKeys } from '../allcommon/tree/FnGetAutoExpandNodeKeys';
 import { FnUpdateNodeWithTitleAndIcon } from '../allcommon/tree/FnUpdateNodeWithTitleAndIcon';
