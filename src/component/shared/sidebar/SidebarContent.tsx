@@ -18,6 +18,8 @@ import { useHelpTipContext } from '../context/hooks/HelptipHooks'
 // import { Assign } from './assign/Assign'
 import { AlertLog } from './alertlog/AlertLog'
 import { buildPropertyFormDataFromSelectedNode } from '../../../sampledata/sidebar/PropertySampleData'
+import { FnIsRootBusinessNode } from '../allcommon/tree/FnIsRootBusinessNode'
+import { Label as LabelComponent } from '../basic/label/Label'
 
 
 const SidebarContent = (sidebarProps: ISidebarContent) => {
@@ -111,7 +113,7 @@ const SidebarContent = (sidebarProps: ISidebarContent) => {
 
     // SAMPLE DATA: build EditTextControl property form from selected-node key/value record.
     const propertyFormPackage = useMemo(() => {
-        if (!selectedNode) {
+        if (!selectedNode || FnIsRootBusinessNode(selectedNode)) {
             return undefined;
         }
         return buildPropertyFormDataFromSelectedNode(selectedNode);
@@ -149,6 +151,24 @@ const SidebarContent = (sidebarProps: ISidebarContent) => {
     ]);
 
     const renderPropertyContainer = () => {
+        if (selectedNode && FnIsRootBusinessNode(selectedNode)) {
+            return (
+                <div
+                    className="nz-wh-100 nz-d-flex-hv-center"
+                    style={{
+                        padding: 'var(--spacing-3)',
+                        textAlign: 'center',
+                        color: 'var(--text-color-secondary, #757575)'
+                    }}
+                >
+                    <LabelComponent
+                        uniqueName={`${sidebarProps.uniqueName}-root-message`}
+                        label="Select a component node to view details."
+                    />
+                </div>
+            );
+        }
+
         const shouldShowPropertyContainer =
             selectedNode &&
             (sidebarProps.isPropertyFound || Label === "Details") &&
@@ -206,6 +226,9 @@ const SidebarContent = (sidebarProps: ISidebarContent) => {
 
     // Render sidebar content based on selected sidebar tab.
     const renderSidebarContent = () => {
+        if (selectedNode && FnIsRootBusinessNode(selectedNode)) {
+            return null;
+        }
         switch (Label) {
             case SidebarEnum.Alerts:
                 return (

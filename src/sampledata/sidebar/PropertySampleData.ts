@@ -1,6 +1,7 @@
 import type { IMenuItem } from "../../component/shared/allinterface/menu/IMainMenu";
 import type { IDataset } from "../../component/shared/allinterface/sidebar/IPropertyFormContainer";
 import type { ITreeNode } from "../../component/shared/allinterface/tree/ITreeControl";
+import { FnIsRootBusinessNode } from "../../component/shared/allcommon/tree/FnIsRootBusinessNode";
 
 import getTableVsPropertySample from "./GetTableVsPropertySample.json";
 
@@ -230,7 +231,10 @@ const resolvePropertyRecordFromSelectedNode = (
  */
 const buildPropertyFormDataFromSelectedNode = (
     node: ITreeNode
-): IPropertyFormPackage => {
+): IPropertyFormPackage | undefined => {
+    if (FnIsRootBusinessNode(node)) {
+        return undefined;
+    }
     const entityName = String(node.NodeEntityname || node.NodeType || "Business");
     const record = resolvePropertyRecordFromSelectedNode(node);
     return buildEditTextPropertyFormFromRecord(record, {

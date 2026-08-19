@@ -16,6 +16,7 @@ import { ActionImage } from '../../../shared/basic/actionimage/ActionImage';
 import { FnGetCssVariable } from '../../../appcontainer/allcommon/FnGetCssVariable';
 import { SidebarContainer } from '../../../appcontainer/sidebarcontainer/SidebarContainer';
 import { handleContainerKeyDown } from '../../../shared/allcommon/basic/FnHandleContainerKeyDown';
+import { FnIsRootBusinessNode } from '../../../shared/allcommon/tree/FnIsRootBusinessNode';
 import { ContactUsNotes } from '../../../appqa/AppQaContactUs';
 import { RequestSupportForm } from './RequestSupportForm';
 import '../../../appcontainer/allcss/ExplorerContainer.css';

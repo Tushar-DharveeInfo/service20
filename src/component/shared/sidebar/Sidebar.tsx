@@ -23,6 +23,7 @@ import {
     sampleContactPropertyKebabMenuResponse,
     samplePropertyKebabMenuResponse,
 } from '../../../sampledata/sidebar/PropertySampleData';
+import { FnIsRootBusinessNode } from '../allcommon/tree/FnIsRootBusinessNode';
 
 const SUB_MENU_OPEN_DELAY_MS = 200;
 
@@ -716,7 +717,8 @@ const Sidebar = (sidebarProps: ISidebar) => {
         if (
             !isPropertyLikeSidebarTab(label) ||
             !sidebarProps.selectedNode ||
-            sidebarProps.selectedNode.NodeType?.toLowerCase() === "alldatacenters"
+            sidebarProps.selectedNode.NodeType?.toLowerCase() === "alldatacenters" ||
+            FnIsRootBusinessNode(sidebarProps.selectedNode)
         ) {
             setMenuData([]);
             return;

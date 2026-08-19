@@ -37,110 +37,10 @@ const onGridReady = (params: GridReadyEvent, props: IBasicGrid) => {
 
     }
 
-    if (props?.allowAutoSizeColumn) {
-        // Initial auto-size when grid is ready
-        if (props.instanceName == "CablingGrid") {
-            params.api.deselectAll();
-            if (props.id === 'cabling-last-grid') {
-                deferGridTask(() => {
-                    const cablingDiv = document.querySelectorAll('.nz-cabling-div .ag-row-focus')
-                    const cablingDivHighlightedGrids = document.querySelectorAll('.nz-cabling-div .nz-highlight-header')
-                    const cablingDivLastGridHeader = document.querySelector('#cabling-last-grid .ag-header')
-                    if (cablingDivHighlightedGrids) {
-                        cablingDivHighlightedGrids.forEach(row => {
-                            row.classList.remove('nz-highlight-header');
-                        });
-                    }
-                    if (cablingDivLastGridHeader) {
-                        cablingDivLastGridHeader.classList.add('nz-highlight-header');
-                    }
-                    if (cablingDiv) {
-                        cablingDiv.forEach(row => {
-                            row.classList.remove('ag-row-focus');
-                        });
-                    }
 
-                    const firstRow = params.api.getDisplayedRowAtIndex(0);
-                    if (firstRow) {
-                        firstRow.setSelected(true); // Select it
-                        params.api.ensureIndexVisible(0); // Scroll to first row
-                        params.api.setFocusedCell(0, params.api.getAllDisplayedColumns()[0].getColId());
-                    }
-                }, 100); // 100ms delay helps with async rowData
-            }
-            function autoSizeHtmlColumn(params: any, colId: string) {
-                const { api } = params;
+    document.getElementById('gc-app-para')?.classList.remove('hidden');
 
-                const cellEls = document.querySelectorAll(`.ag-cell[col-id="${colId}"]`);
-                let maxWidth = 0;
 
-                cellEls.forEach(cell => {
-                    // Find the innermost value-containing element
-                    const valueEl = cell.querySelector('span.ag-cell-value span:last-child') || cell;
-
-                    const computedStyle = getComputedStyle(valueEl);
-                    const width = valueEl.scrollWidth +
-                        parseInt(computedStyle.marginLeft) +
-                        parseInt(computedStyle.marginRight);
-
-                    if (width > maxWidth) {
-                        maxWidth = width;
-                    }
-                });
-
-                if (maxWidth > 0) {
-                    api?.setColumnWidth && api?.setColumnWidth(colId, maxWidth + 24); // add padding to avoid clipping
-                }
-            }
-
-            const colIds: string[] = params.api?.getAllGridColumns().filter((col: any) => {
-                const colDef = col.getColDef();
-                return (
-                    !colDef.flex &&
-                    // Non-empty header name (you mentioned this)
-                    colDef.headerName !== '' &&
-                    // Not hidden (you mentioned this)
-                    !colDef.hide
-                );
-
-            }).map(c => c.getColId());
-            deferGridTask(() => {
-                for (let index = 0; index < colIds.length; index++) {
-                    const element = colIds[index];
-                    autoSizeHtmlColumn(params, element)
-                }
-            }, 200);
-        }
-    }
-    else {
-        document.getElementById('gc-app-para')?.classList.remove('hidden');
-    }
-
-    if (props.instanceName === 'cabling-navigation') {
-        deferGridTask(() => {
-            if (props.id == 'cabling-navigation0') {
-                const gridContainer = document.querySelector('#cabling-navigation-other-grid') ||
-                    document.querySelector('.ag-center-cols-container');
-
-                if (gridContainer) {
-                    // Remove row focus from all rows
-                    const focusedRows = gridContainer.querySelectorAll('.ag-row-focus');
-                    focusedRows.forEach(row => row.classList.remove('ag-row-focus'));
-
-                    // Remove cell focus from all cells
-                    const focusedCells = gridContainer.querySelectorAll('.ag-cell-focus');
-                    focusedCells.forEach(cell => cell.classList.remove('ag-cell-focus'));
-                }
-            }
-            if (props.rowData.length === 1) {
-                const cablingDiv = document.querySelector(`#${props.id} .ag-center-cols-container .ag-column-last`)
-                if (cablingDiv) {
-                    cablingDiv.classList.add('nz-cabling-navigation-cell-highlight');
-                    cablingDiv.classList.add('ag-row-focus');
-                }
-            }
-        }, 2000);
-    }
 
 
     const headerElement = document.querySelector('.nz-jsonPropertyGrid .ag-pinned-left-header');
@@ -169,50 +69,40 @@ const handleMouseEvent = async (event: CellClickedEvent | RowClickedEvent | Cell
         isHandlingClick = true;
         let pointerEvent = null
         try {
-            if (
-                props?.instanceName === "CablingGrid" ||
-                props?.instanceName === "cabling-navigation" ||
-                props?.instanceName === "PatchPanelGrid" ||
-                props?.instanceName === "open_session"
-            ) {
 
-                if (props?.onCellClicked)
-                    props?.onCellClicked(event, gridRef);
-            } else {
-                pointerEvent = event.event;
+            pointerEvent = event.event;
 
-                const observePopupEditor = () => {
-                    const popupEditor = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-popup-editor`) as HTMLDivElement;
-                    const cellEditor = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-cell-popup-editing`) as HTMLDivElement;
-                    const gridBody = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-root`) as HTMLDivElement;
+            const observePopupEditor = () => {
+                const popupEditor = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-popup-editor`) as HTMLDivElement;
+                const cellEditor = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-cell-popup-editing`) as HTMLDivElement;
+                const gridBody = document.querySelector(`div[data-key*="${props.uniqueName}"] .ag-root`) as HTMLDivElement;
 
-                    if (!popupEditor || !cellEditor || !gridBody) return;
+                if (!popupEditor || !cellEditor || !gridBody) return;
 
-                    const rowRect = cellEditor.getBoundingClientRect();
-                    const gridRect = gridBody.getBoundingClientRect();
-                    const topOffset = rowRect.top - gridRect.top;
+                const rowRect = cellEditor.getBoundingClientRect();
+                const gridRect = gridBody.getBoundingClientRect();
+                const topOffset = rowRect.top - gridRect.top;
 
-                    const computedStyles = window.getComputedStyle(cellEditor);
-                    const width = computedStyles.width;
+                const computedStyles = window.getComputedStyle(cellEditor);
+                const width = computedStyles.width;
 
-                    const overridePosition = () => {
-                        popupEditor.style.setProperty('top', `calc(${topOffset}px - var(--spacing-0))`, 'important');
-                        popupEditor.style.setProperty('width', width, 'important');
-                    };
-
-                    overridePosition();
-
-                    const observer = new MutationObserver(() => {
-                        overridePosition();
-                    });
-
-                    observer.observe(popupEditor, { attributes: true, attributeFilter: ['style'] });
-
-                    deferGridTask(() => observer.disconnect(), 2000);
+                const overridePosition = () => {
+                    popupEditor.style.setProperty('top', `calc(${topOffset}px - var(--spacing-0))`, 'important');
+                    popupEditor.style.setProperty('width', width, 'important');
                 };
 
-                deferGridTask(observePopupEditor, 0);
-            }
+                overridePosition();
+
+                const observer = new MutationObserver(() => {
+                    overridePosition();
+                });
+
+                observer.observe(popupEditor, { attributes: true, attributeFilter: ['style'] });
+
+                deferGridTask(() => observer.disconnect(), 2000);
+            };
+
+            deferGridTask(observePopupEditor, 0);
             if (props.handleMouseEvent)
                 props.handleMouseEvent(event, gridRef)
             return pointerEvent
@@ -220,12 +110,6 @@ const handleMouseEvent = async (event: CellClickedEvent | RowClickedEvent | Cell
             isHandlingClick = false; // reset after a small delay
         }
 
-    } else if (event.type === "cellMouseDown") {
-        if (
-            props?.instanceName === "CablingGrid") {
-            if (props?.onCellClicked)
-                props?.onCellClicked(event, gridRef);
-        }
     }
 };
 

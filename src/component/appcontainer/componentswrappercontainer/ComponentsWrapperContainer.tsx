@@ -79,11 +79,11 @@ const ComponentsWrapperContainer = (props: IComponentsWrapperContainer) => {
             style={{ position: 'relative' }}
         >
             {props.helptipContainer.isVisible && <Helptip uniqueName={`${props.uniqueName}-helptip`} mdString={props.helptipContainer.helptext} />}
-            {props.chartContainer && props.chartContainer.isVisible && (
+            {/* {props.chartContainer && props.chartContainer.isVisible && (
                 <div className="nz-wrapper-chart-container" style={{ minHeight: '100px', alignItems: 'center', justifyContent: 'start', display: 'flex', padding: '5px' }}>
                     There is no chart to show.
                 </div>
-            )}
+            )} */}
 
             <div className='nz-wrapper-componets-container'>
                 {props.PropsComponent && <OptionalContainer

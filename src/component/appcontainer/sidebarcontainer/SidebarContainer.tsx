@@ -2,6 +2,7 @@ import '../allcss/SidebarContainer.css';
 import { ISidebarContainer } from '../allinterface/ISidebarContainer';
 import { Sidebar } from "../../shared/sidebar/Sidebar";
 import { handleContainerKeyDown } from '../../shared/allcommon/basic/FnHandleContainerKeyDown';
+import { FnIsRootBusinessNode } from '../../shared/allcommon/tree/FnIsRootBusinessNode';
 
 const SidebarContainer = (sidebarContainerProps: ISidebarContainer) => {
   return (

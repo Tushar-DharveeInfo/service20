@@ -193,20 +193,11 @@ const PropertyFormContainer = (propertyFormContainerProps: IPropertyFormContaine
         return undefined;
     }, [entityTables, selectedNodeMenu?.Name, pgTableToShow]);
 
-    //Check whether Audit approval pending
-    const isAuditPendingApproval = useMemo(() => {
-        return (
-            selectedNodeKey.nodeType?.toLowerCase() === "auditsessionnode" &&
-            !selectedNodeKey.dateApproved
-        );
-    }, [selectedNodeKey.nodeType, selectedNodeKey.dateApproved]);
-
     // Determines whether the property form should be read-only for this context.
     const isReadOnly = useMemo(() => {
 
         return (
-            propertyFormContainerProps.isReadOnly || (selectedNodeKey.dateApproved &&
-                selectedNodeKey.nodeType?.toLowerCase() === "auditsessionnode")
+            propertyFormContainerProps.isReadOnly || (selectedNodeKey.dateApproved)
         );
     }, [featureId, selectedNodeKey, propertyFormContainerProps.isReadOnly]);
 
@@ -271,26 +262,8 @@ const PropertyFormContainer = (propertyFormContainerProps: IPropertyFormContaine
                     String(pgClassTable.tableName) +
                     (pgTable?.tableName ? `;${pgTable.tableName}` : "")
             };
-            if (isAuditPendingApproval) {
-                columns.map((item) => {
-                    if (!["desc250", "_auditsession", "containedbydeviceonly"].includes(item.PName.toLowerCase())) {
-                        item.Disabled = true
-                    }
-                })
-            }
-            if (
-                selectedNodeKey.type?.toLowerCase() === "deviceview" &&
-                !selectedNodeKey.mountedId
-            ) {
-                kebabMenuPayload.entID = selectedNodeKey.parentEntId;
-            } else if (selectedNodeKey.type?.toLowerCase() == "devicepowerport"
-                || selectedNodeKey.type?.toLowerCase() == "devicenetworkport") {
-                kebabMenuPayload.nodeID = selectedNodeKey.entId;
-                kebabMenuPayload.nodeType = selectedNodeKey.type == "DevicePowerPort" ? "PowerPort" : selectedNodeKey.type == "DeviceNetworkPort" ? "NetworkPort" : selectedNodeKey.type;
-            } else if (selectedNodeKey.type?.toLowerCase() == "deviceslot") {
-                kebabMenuPayload.nodeID = selectedNodeKey.entId;
-                kebabMenuPayload.nodeType = "Slot";
-            }
+
+
             const kebabData = (
                 propertyFormContainerProps.kebabMenuData
                     ? propertyFormContainerProps.kebabMenuData

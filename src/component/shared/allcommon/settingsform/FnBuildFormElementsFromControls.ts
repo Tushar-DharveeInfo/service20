@@ -8,7 +8,6 @@ import { DELIMITER } from "../../alldefaultprops/basic/DefaultPropsChekedListBox
 import { FnConvertDateToUtcOrUtcToDate } from "../../../appcontainer/allcommon/FnConvertDateToUtcOrUtcToDate";
 import { hideGridData } from "../../alldefaultprops/tablegrid/DefaultPropsBasicGrid";
 import { IControl, IControlProperties } from "../../allinterface/settingsform/ISettingsLibForm";
-import { FnGetSourceAndDisplayUnit } from "../basic/FnGetSourceAndDisplayUnit";
 import { FnGetPrefixedPropertyValue } from "./FnGetPrefixedPropertyValue";
 import { FnFormatDateWithAppFormat } from "../../../appcontainer/allcommon/FnFormatDateWithAppFormat";
 
@@ -339,12 +338,6 @@ const FnBuildFormElementsFromControls = (
                     }
                     else if (displayControl === "date") {
                         value = FnConvertDateToUtcOrUtcToDate(value, false, true)
-                    }
-                    else if (Measurement.includes(fieldName) && measurementUnit) {
-
-                        const unitsData = FnGetSourceAndDisplayUnit(measurementUnit, value, col.Name)
-                        displayUnit = unitsData.displayUnit
-                        sourceUnit = unitsData.sourceUnit;
                     }
                     else if (col?.Name?.toLowerCase() === "entityname" && !value) {
                         value = entityName;

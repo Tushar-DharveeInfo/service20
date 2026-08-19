@@ -10,7 +10,6 @@ import { FnConvertDateToUtcOrUtcToDate } from "../../../appcontainer/allcommon/F
 import { hideGridData } from "../../alldefaultprops/tablegrid/DefaultPropsBasicGrid";
 import { IControlProperties } from "../../allinterface/settingsform/ISettingsLibForm";
 import { ITreeNode } from "../../allinterface/tree/ITreeControl";
-import { FnGetSourceAndDisplayUnit } from "../basic/FnGetSourceAndDisplayUnit";
 
 const FnGetDisplayControlForForm = (controlName: string): ControlType => {
     const map: Record<string, ControlType> = {
@@ -293,15 +292,7 @@ const FnBuildFormElementsFromDataset = (
                     else if (displayControl === "date") {
                         value = FnConvertDateToUtcOrUtcToDate(value, false, true)
                     }
-                    else if (Measurement.includes(fieldName) && measurementUnit) {
-                        if (selectedNode && selectedNode[col.PName]) {
-                            value = selectedNode[col.PName];
-                        }
-                        const unitsData = FnGetSourceAndDisplayUnit(measurementUnit, value, col.PName)
-                        displayUnit = unitsData.displayUnit
-                        sourceUnit = unitsData.sourceUnit;
 
-                    }
                     else if (col?.PName?.toLowerCase() === "entityname" && !value) {
                         value = entityName;
                     }

@@ -62,24 +62,24 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         }
     }
     const getNodeMenuForProperty = () => {
-        const handleApiGetKebabMenu = (data: any) => {
-            if (data.kebabJson) {
-                const nodeData = FnParseJsonSafely(data.kebabJson)
-                if (nodeData.KebabMenu) {
-                    const data = nodeData.KebabMenu.fitler((item: any) => (item.TotalCount !== 0))
-                    setMenuData(data)
-                    setShowKebabIcon(true)
-                } else {
-                    setShowKebabIcon(false)
-                }
-            } else {
-                setShowKebabIcon(false)
-            }
-        }
-        const payload = {
-            selectedNodeEntity: nodeMenuProps.selectedNode?.NodeEntityname,
-            selectedNodeType: nodeMenuProps.selectedNode?.NodeType
-        }
+        // const handleApiGetKebabMenu = (data: any) => {
+        //     if (data.kebabJson) {
+        //         const nodeData = FnParseJsonSafely(data.kebabJson)
+        //         if (nodeData.KebabMenu) {
+        //             const data = nodeData.KebabMenu.fitler((item: any) => (item.TotalCount !== 0))
+        //             setMenuData(data)
+        //             setShowKebabIcon(true)
+        //         } else {
+        //             setShowKebabIcon(false)
+        //         }
+        //     } else {
+        //         setShowKebabIcon(false)
+        //     }
+        // }
+        // const payload = {
+        //     selectedNodeEntity: nodeMenuProps.selectedNode?.NodeEntityname,
+        //     selectedNodeType: nodeMenuProps.selectedNode?.NodeType
+        // }
 
         // axiosInterceptor({
         //     url: PROPERTY.GetKebabMenu,
@@ -107,30 +107,7 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
 
 
     }
-    const getKebabMenuForCablingGridRow = (featureId: string | null) => {
-        const menu: IFeatureItem[] = [];
-        if (selectedNodeData) {
-            nodeMenuProps.featureData.forEach((item) => {
-                if ((item.MenuID === featureId || featureId === null) && item._Feature && (item._Feature as number) > KebabMenuRange.MIN && item.Label !== "") {
-                    if (item.NodeType && item.NodeType?.toLowerCase().includes('fnportnormalallowed')) {
-                        if (FnPortNormalAllowed(selectedNodeData, nodeMenuProps)) {
-                            menu.push(item)
-                        }
-                    } else if (item.NodeType && item.NodeType?.toLowerCase().includes('fnportnormal')) {
-                        if (FnPortNormal(selectedNodeData, nodeMenuProps)) {
-                            menu.push(item)
-                        }
-                    } else if (item.NodeType && item.NodeType?.toLowerCase().includes("fnportconnected")) {
-                        if (FnPortConnected(selectedNodeData, nodeMenuProps)) {
-                            menu.push(item)
-                        }
-                    }
-                }
-                return;
-            });
-        }
-        return menu;
-    }
+
     function handleSelectNode(value: any, _actionCode?: string | undefined, payload?: any): void {
         handleAnimationImage(false);
         setIsShowMenu(false);
@@ -150,9 +127,7 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         nodeMenuProps.handleSelect(value)
 
     }
-    const getCheckFunctionAndNodeTypeData = (featureItem: IFeatureItem, selectedNodeData: ISelectedNodeInfo, isRecordFoundInWaterMark: boolean) => {
 
-    }
     // const getRecordForWaterMarks = (selectedNodeData: ITreeNode): Promise<Record<string, unknown>[]> => {
     //     // return new Promise((resolve) => {
     //     //     axiosInterceptor(
@@ -249,40 +224,6 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
             return menu;
         }
     }
-    const getExplorerMenuDataRef = useRef(getExplorerMenuData)
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-    // function work flow
-    //     FnDisplayOrder()
-    //     {
-    // 	If ExplorerNode.DisplayOrder === 0
-    //         then
-    //         {
-    //             ExplorerNode.DisplayOrder = !ExplorerNode.DisplayOrder
-    //             return true
-    //         }
-    // else
-    // {
-    //     ExplorerNode.DisplayOrder = !ExplorerNode.DisplayOrder
-    //     return false
-    // }
-    // }
-    ///////////////////////////////////////////////////////////////////////////////////////
-
-    const FnDisplayOrder = (selectednode: any) => {
-        let data: any = selectednode
-        if (selectednode?.node?.DisplayOrder === 1) {
-            data = { node: { ...selectednode.node, DisplayOrder: !selectednode?.node?.DisplayOrder } }
-            setSelectedNodeData(data)
-            return true
-        }
-        else {
-            data = { node: { ...selectednode.node, DisplayOrder: !selectednode?.node?.DisplayOrder } }
-            setSelectedNodeData(data)
-            return false
-
-        }
-    }
 
     const getKebabMenuForGridRow = (selectedRow: any) => {
         const menu: IFeatureItem[] = [];
@@ -331,13 +272,8 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         if (nodeMenuProps.selectedRow) {
             handleClick(null)
             const menuItems: IFeatureItem[] = getKebabMenuForGridRowRef.current(nodeMenuProps.selectedRow);
-            if (nodeMenuProps.selectedRow && (nodeMenuProps.container === "cabling_componet_deviceA" || nodeMenuProps.container === "cabling_componet_cableB" || nodeMenuProps.container === "cabling_componet_deviceC" || nodeMenuProps.container === "mapping_FrontA" || nodeMenuProps.container === "mapping_FrontB")) {
-                setShowKebabIcon(true);
-                setSelectedNodeData({ node: nodeMenuProps.selectedRow } as ISelectedNodeInfo)
 
-            } else {
-                setShowKebabIcon(false);
-            }
+            setShowKebabIcon(false);
             if (menuItems?.length > 0) {
                 setShowKebabIcon(true);
             } else {
@@ -349,77 +285,77 @@ const NodeMenu = (nodeMenuProps: INodeMenu) => {
         }
     }, [nodeMenuProps?.selectedRow?.NodeType, getKebabMenuForGridRowRef])
 
-    useEffect(() => {
-        const init = async () => {
-            if (nodeMenuProps.container === "explorer_tree") {
+    // useEffect(() => {
+    //     const init = async () => {
+    //         if (nodeMenuProps.container === "explorer_tree") {
 
-                if (nodeMenuProps.featureData) {
-                    if (selectedNodeData && selectedNodeData.node) {
-                        let menuData = await getExplorerMenuData();
-                        if (menuData && menuData?.length > 0) {
+    //             if (nodeMenuProps.featureData) {
+    //                 if (selectedNodeData && selectedNodeData.node) {
+    //                     let menuData = await getExplorerMenuData();
+    //                     if (menuData && menuData?.length > 0) {
 
-                            setShowKebabIcon(true);
-                        }
-                        else {
-                            setShowKebabIcon(false);
-                        }
-                        handleClick(null)
+    //                         setShowKebabIcon(true);
+    //                     }
+    //                     else {
+    //                         setShowKebabIcon(false);
+    //                     }
+    //                     handleClick(null)
 
-                    }
-                }
-            }
-            else if (nodeMenuProps.container === "fqa_property_tab") {
+    //                 }
+    //             }
+    //         }
+    //         else if (nodeMenuProps.container === "fqa_property_tab") {
 
-                if (selectedNodeData) {
-                    setSelectedItem(undefined)
-                    getNodeMenuForProperty()
-                    handleClick(null)
-                }
-                else {
-                    setShowKebabIcon(false);
-                }
-            } else if (nodeMenuProps.container === 'helpTip') {
+    //             if (selectedNodeData) {
+    //                 setSelectedItem(undefined)
+    //                 getNodeMenuForProperty()
+    //                 handleClick(null)
+    //             }
+    //             else {
+    //                 setShowKebabIcon(false);
+    //             }
+    //         } else if (nodeMenuProps.container === 'helpTip') {
 
-                if (nodeMenuProps.featureData.length > 0) {
-                    setShowKebabIcon(true);
-                    handleClick(null)
-                }
-            }
-            else if (nodeMenuProps.container === "edit_report_layout") {
+    //             if (nodeMenuProps.featureData.length > 0) {
+    //                 setShowKebabIcon(true);
+    //                 handleClick(null)
+    //             }
+    //         }
+    //         else if (nodeMenuProps.container === "edit_report_layout") {
 
-                const type = nodeMenuProps.selectedNode?.type?.toLowerCase();
-                const isCustom = nodeMenuProps.selectedNode?.custom;
-                if (type && (type === "layout" || type === "header" || type === "footer"
-                    || type === "page" || type === "group" || type === "text" || type === "image"
-                    || type === "table" || type === "chart" || type === "hspace"
-                    || type === "vspace")) {
+    //             const type = nodeMenuProps.selectedNode?.type?.toLowerCase();
+    //             const isCustom = nodeMenuProps.selectedNode?.custom;
+    //             if (type && (type === "layout" || type === "header" || type === "footer"
+    //                 || type === "page" || type === "group" || type === "text" || type === "image"
+    //                 || type === "table" || type === "chart" || type === "hspace"
+    //                 || type === "vspace")) {
 
-                    setShowKebabIcon(true);
-                    handleClick(null)
-                }
-                else if (isCustom !== undefined) {
-                    setShowKebabIcon(true);
-                    handleClick(null)
-                }
-            }
-            else if (nodeMenuProps.container === "edit_floor_layout") {
+    //                 setShowKebabIcon(true);
+    //                 handleClick(null)
+    //             }
+    //             else if (isCustom !== undefined) {
+    //                 setShowKebabIcon(true);
+    //                 handleClick(null)
+    //             }
+    //         }
+    //         else if (nodeMenuProps.container === "edit_floor_layout") {
 
-                const type = nodeMenuProps.selectedNode?.type?.toLowerCase();
-                if (type && (type === "layout" || type === "location" || type === "device"
-                    || type === "text" || type === "image" || type === "rect" || type === "circle" || type === "chart" || type === "hspace" || type === "vspace"
-                )) {
+    //             const type = nodeMenuProps.selectedNode?.type?.toLowerCase();
+    //             if (type && (type === "layout" || type === "location" || type === "device"
+    //                 || type === "text" || type === "image" || type === "rect" || type === "circle" || type === "chart" || type === "hspace" || type === "vspace"
+    //             )) {
 
-                    setShowKebabIcon(true);
-                }
-                handleClick(null)
-            }
-            else {
-                setShowKebabIcon(true);
-                handleClick(null)
-            }
-        }
-        init();
-    }, [selectedNodeData, isRecordFoundInWaterMark])
+    //                 setShowKebabIcon(true);
+    //             }
+    //             handleClick(null)
+    //         }
+    //         else {
+    //             setShowKebabIcon(true);
+    //             handleClick(null)
+    //         }
+    //     }
+    //     init();
+    // }, [selectedNodeData, isRecordFoundInWaterMark])
 
 
     useEffect(() => {
